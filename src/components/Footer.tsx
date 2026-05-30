@@ -1,9 +1,11 @@
 import { ArrowUp, Github, Linkedin, Mail } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import { Container } from './Container';
 import { IconLink } from './IconLink';
 
 export function Footer() {
+  const { c } = useI18n();
+
   return (
     <footer className="relative border-t border-white/[0.06] py-10">
       <Container>
@@ -13,26 +15,26 @@ export function Footer() {
               CM
             </span>
             <div>
-              <p className="text-sm font-medium text-slate-200">{portfolioData.shortName}</p>
+              <p className="text-sm font-medium text-slate-200">{c.portfolio.shortName}</p>
               <p className="text-xs text-slate-500">
-                © {new Date().getFullYear()} · Construido con React, Vite, Tailwind & Framer Motion
+                © {new Date().getFullYear()} · {c.footer.builtWith}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <IconLink href={portfolioData.socials.github.href} label="GitHub">
+            <IconLink href={c.portfolio.socials.github.href} label="GitHub">
               <Github size={18} />
             </IconLink>
-            <IconLink href={portfolioData.socials.linkedin.href} label="LinkedIn">
+            <IconLink href={c.portfolio.socials.linkedin.href} label="LinkedIn">
               <Linkedin size={18} />
             </IconLink>
-            <IconLink href={portfolioData.socials.email.href} label="Email" accent>
+            <IconLink href={c.portfolio.socials.email.href} label="Email" accent>
               <Mail size={18} />
             </IconLink>
             <a
               href="#home"
-              aria-label="Volver arriba"
+              aria-label={c.a11y.backToTop}
               className="ml-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.08]"
             >
               <ArrowUp size={18} />

@@ -1,6 +1,7 @@
 import { ArrowUpRight, Github, Lock, Star } from 'lucide-react';
 import type { Project } from '../types/portfolio';
 import { accentMap } from '../lib/accents';
+import { useI18n } from '../i18n/context';
 import { ButtonLink } from './ButtonLink';
 import { StatusBadge } from './StatusBadge';
 import { OruxVisual } from './OruxVisual';
@@ -8,6 +9,7 @@ import { Reveal } from './fx/Reveal';
 import { TiltCard } from './fx/TiltCard';
 
 export function ProjectFeatured({ project }: { project: Project }) {
+  const { c } = useI18n();
   const a = accentMap[project.accent];
 
   return (
@@ -29,7 +31,7 @@ export function ProjectFeatured({ project }: { project: Project }) {
               <div className="flex flex-wrap items-center gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/30 bg-amber-300/10 px-3 py-1 text-xs font-semibold text-amber-200">
                   <Star size={12} className="fill-amber-300/80" />
-                  Proyecto destacado
+                  {c.projectsUi.featured}
                 </span>
                 <StatusBadge status={project.status} privateRepo={project.repoPrivate} />
               </div>
@@ -60,19 +62,19 @@ export function ProjectFeatured({ project }: { project: Project }) {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 {project.liveUrl && (
                   <ButtonLink href={project.liveUrl} variant="primary">
-                    Visitar {project.domain}
+                    {c.projectsUi.visit} {project.domain}
                     <ArrowUpRight size={16} />
                   </ButtonLink>
                 )}
                 {project.githubUrl && (
                   <ButtonLink href={project.githubUrl} icon={<Github size={18} />}>
-                    Código
+                    {c.projectsUi.code}
                   </ButtonLink>
                 )}
                 {project.repoPrivate && (
                   <span className="inline-flex items-center gap-1.5 rounded-2xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-sm text-slate-400">
                     <Lock size={14} />
-                    Repo privado
+                    {c.projectsUi.privateRepo}
                   </span>
                 )}
               </div>

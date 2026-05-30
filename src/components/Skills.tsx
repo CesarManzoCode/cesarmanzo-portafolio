@@ -1,5 +1,5 @@
 import { BrainCircuit, Cloud, MonitorSmartphone, Server } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import type { SkillCategory } from '../types/portfolio';
 import { Container } from './Container';
 import { Reveal } from './fx/Reveal';
@@ -21,18 +21,20 @@ const accentMap: Record<SkillCategory, string> = {
 };
 
 export function Skills() {
+  const { c } = useI18n();
+
   return (
     <section id="skills" className="section-shell">
       <Container>
         <SectionHeading
           index="03"
-          eyebrow="Stack"
-          title="Las herramientas con las que construyo"
-          description="Un stack que cubre todo el camino — del primer endpoint al dominio en producción con TLS automático."
+          eyebrow={c.sections.skills.eyebrow}
+          title={c.sections.skills.title}
+          description={c.sections.skills.description}
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {portfolioData.skillGroups.map((group, index) => {
+          {c.portfolio.skillGroups.map((group, index) => {
             const Icon = iconMap[group.category];
 
             return (

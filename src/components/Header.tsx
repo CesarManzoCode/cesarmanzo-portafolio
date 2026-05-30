@@ -1,21 +1,25 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Github, Linkedin, Mail, Menu, X } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import { Container } from './Container';
 import { IconLink } from './IconLink';
+import { LanguageToggle } from './LanguageToggle';
 
-const navItems = [
-  { label: 'Sobre mí', href: '#about', id: 'about' },
-  { label: 'Proyectos', href: '#projects', id: 'projects' },
-  { label: 'Stack', href: '#skills', id: 'skills' },
-  { label: 'Contacto', href: '#contact', id: 'contact' },
-];
+const navConfig = [
+  { key: 'about', href: '#about', id: 'about' },
+  { key: 'projects', href: '#projects', id: 'projects' },
+  { key: 'skills', href: '#skills', id: 'skills' },
+  { key: 'contact', href: '#contact', id: 'contact' },
+] as const;
 
 export function Header() {
+  const { c } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState('home');
   const [open, setOpen] = useState(false);
+
+  const navItems = navConfig.map((n) => ({ ...n, label: c.nav[n.key] }));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -25,7 +29,7 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    const ids = ['home', ...navItems.map((n) => n.id)];
+    const ids = ['home', ...navConfig.map((n) => n.id)];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -56,8 +60,8 @@ export function Header() {
               CM
             </span>
             <span className="hidden sm:block">
-              <span className="block text-sm font-semibold text-white">{portfolioData.shortName}</span>
-              <span className="block text-xs text-slate-400">Software Engineer · Full-Stack</span>
+              <span className="block text-sm font-semibold text-white">{c.portfolio.shortName}</span>
+              <span className="block text-xs text-slate-400">{c.brandRole}</span>
             </span>
           </a>
 
@@ -83,11 +87,12 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <LanguageToggle />
             <div className="hidden items-center gap-2 md:flex">
-              <IconLink href={portfolioData.socials.github.href} label="GitHub">
+              <IconLink href={c.portfolio.socials.github.href} label="GitHub">
                 <Github size={18} />
               </IconLink>
-              <IconLink href={portfolioData.socials.linkedin.href} label="LinkedIn">
+              <IconLink href={c.portfolio.socials.linkedin.href} label="LinkedIn">
                 <Linkedin size={18} />
               </IconLink>
             </div>
@@ -95,13 +100,13 @@ export function Header() {
               href="#contact"
               className="hidden items-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-300 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_-12px_rgba(79,157,255,0.8)] transition hover:-translate-y-0.5 sm:inline-flex"
             >
-              Hablemos
+              {c.nav.cta}
               <ArrowUpRight size={16} />
             </a>
 
             <button
               type="button"
-              aria-label="Abrir menú"
+              aria-label={c.a11y.menu}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
               className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-200 transition hover:bg-white/[0.08] lg:hidden"
@@ -138,13 +143,13 @@ export function Header() {
                   </motion.a>
                 ))}
                 <div className="mt-3 flex items-center gap-2 px-3">
-                  <IconLink href={portfolioData.socials.github.href} label="GitHub">
+                  <IconLink href={c.portfolio.socials.github.href} label="GitHub">
                     <Github size={18} />
                   </IconLink>
-                  <IconLink href={portfolioData.socials.linkedin.href} label="LinkedIn">
+                  <IconLink href={c.portfolio.socials.linkedin.href} label="LinkedIn">
                     <Linkedin size={18} />
                   </IconLink>
-                  <IconLink href={portfolioData.socials.email.href} label="Email" accent>
+                  <IconLink href={c.portfolio.socials.email.href} label="Email" accent>
                     <Mail size={18} />
                   </IconLink>
                 </div>

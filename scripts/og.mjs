@@ -488,7 +488,7 @@ strokeRoundRect(PAD, 70, 88, 88, 22, 2, cyan, 0.5);
 
 // availability pill
 {
-  const label = 'Disponible  ·  Software Engineer';
+  const label = 'Available  ·  Software Engineer';
   const ts = 22;
   const tw = measure(fontReg, label, ts, 0.3);
   const px = PAD + 112;
@@ -512,7 +512,7 @@ drawText(fontBold, 'César Manzo', PAD, 332, 92, {
 });
 
 // subtitle
-drawText(fontReg, 'Full-Stack  ·  Tiempo real  ·  IA aplicada', PAD, 392, 33, {
+drawText(fontReg, 'Full-Stack  ·  Real-time  ·  Applied AI', PAD, 392, 33, {
   color: textSub,
   tracking: 0.4,
 });

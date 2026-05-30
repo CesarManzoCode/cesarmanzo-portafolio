@@ -1,12 +1,14 @@
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import { Marquee } from './fx/Marquee';
 
 export function TechRibbon() {
+  const { c } = useI18n();
+
   return (
-    <section aria-label="Stack tecnológico" className="relative border-y border-white/[0.06] bg-white/[0.012] py-6">
+    <section aria-label="Stack" className="relative border-y border-white/[0.06] bg-white/[0.012] py-6">
       <div className="[mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
         <Marquee>
-          {portfolioData.marquee.map((tech) => (
+          {c.portfolio.marquee.map((tech) => (
             <span
               key={tech}
               className="mx-4 inline-flex items-center gap-4 font-display text-base font-medium text-slate-400 transition-colors hover:text-white sm:text-lg"

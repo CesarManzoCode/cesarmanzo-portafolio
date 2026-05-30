@@ -1,6 +1,7 @@
 import { ArrowUpRight, Github, Lock } from 'lucide-react';
 import type { Project } from '../types/portfolio';
 import { accentMap } from '../lib/accents';
+import { useI18n } from '../i18n/context';
 import { StatusBadge } from './StatusBadge';
 import { TiltCard } from './fx/TiltCard';
 
@@ -12,11 +13,14 @@ type ProjectCardProps = {
 const MAX_TECH = 6;
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
+  const { c } = useI18n();
   const a = accentMap[project.accent];
   const extraTech = project.technologies.length - MAX_TECH;
 
   const primaryHref = project.liveUrl ?? project.githubUrl;
-  const primaryLabel = project.liveUrl ? `Visitar ${project.domain ?? ''}`.trim() : 'Ver código';
+  const primaryLabel = project.liveUrl
+    ? `${c.projectsUi.visit} ${project.domain ?? ''}`.trim()
+    : c.projectsUi.viewCode;
 
   return (
     <TiltCard max={6} className="h-full">
@@ -78,7 +82,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <div className="ml-auto flex items-center gap-2">
             {project.repoPrivate ? (
               <span
-                title="Repositorio privado"
+                title={c.projectsUi.privateRepo}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-slate-500"
               >
                 <Lock size={15} />
@@ -89,7 +93,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Código de ${project.name}`}
+                  aria-label={`${project.name} · GitHub`}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:border-white/25 hover:bg-white/[0.08]"
                 >
                   <Github size={15} />

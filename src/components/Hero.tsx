@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, ArrowUpRight, Github, Linkedin, MapPin } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import { Container } from './Container';
 import { ButtonLink } from './ButtonLink';
 import { Reveal } from './fx/Reveal';
@@ -17,13 +17,8 @@ const logLines: TypewriterLine[] = [
   { text: '▲ live → orux.space', className: 'text-cyan-300' },
 ];
 
-const signals = [
-  { k: 'En producción', v: 'orux.space · cpp-ceti.vercel.app' },
-  { k: 'Foco', v: 'Tiempo real · IA aplicada · Pagos' },
-  { k: 'Forma de construir', v: 'Por capas, con tests desde el commit 1' },
-];
-
 export function Hero() {
+  const { c } = useI18n();
   const reduce = useReducedMotion();
   const isMobile = useIsMobile();
   const noParallax = reduce || isMobile;
@@ -39,47 +34,45 @@ export function Hero() {
   return (
     <section id="home" ref={ref} className="section-shell pt-14 sm:pt-20 lg:pt-24">
       <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
           <motion.div style={noParallax ? undefined : { y: contentY }}>
             <Reveal y={14} blur={false}>
               <span className="kicker">
                 <span className="ping-dot" />
-                Disponible · remoto / Guadalajara
+                {c.hero.availability}
               </span>
             </Reveal>
 
             <Reveal delay={0.06} y={14}>
               <p className="mt-7 flex items-center gap-2 font-mono text-sm text-slate-400">
                 <MapPin size={14} className="text-cyan-300/80" />
-                Software Engineer — Full-Stack
+                {c.hero.roleLine}
               </p>
             </Reveal>
 
-            <h1 className="mt-3 font-display text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
-              <span className="gradient-text">{portfolioData.shortName}</span>
+            <h1 className="mt-3 font-display text-[2.7rem] font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl sm:leading-none lg:text-7xl">
+              <span className="gradient-text">{c.portfolio.shortName}</span>
             </h1>
 
             <div className="mt-4 text-xl font-medium text-slate-200 sm:text-2xl">
               <span className="font-mono text-cyan-300/80">{'> '}</span>
-              <RotatingText items={portfolioData.roles} className="align-middle" />
+              <RotatingText items={c.portfolio.roles} className="align-middle" />
             </div>
 
             <Reveal delay={0.18}>
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300/90">
-                {portfolioData.pitch}
-              </p>
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300/90">{c.portfolio.pitch}</p>
             </Reveal>
 
             <Reveal delay={0.26}>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <ButtonLink href="#projects" variant="primary">
-                  Ver proyectos
+                  {c.hero.ctaProjects}
                   <ArrowUpRight size={16} />
                 </ButtonLink>
-                <ButtonLink href={portfolioData.socials.github.href} icon={<Github size={18} />}>
+                <ButtonLink href={c.portfolio.socials.github.href} icon={<Github size={18} />}>
                   GitHub
                 </ButtonLink>
-                <ButtonLink href={portfolioData.socials.linkedin.href} icon={<Linkedin size={18} />}>
+                <ButtonLink href={c.portfolio.socials.linkedin.href} icon={<Linkedin size={18} />}>
                   LinkedIn
                 </ButtonLink>
               </div>
@@ -87,7 +80,7 @@ export function Hero() {
 
             <Reveal delay={0.34}>
               <div className="mt-9 flex flex-wrap gap-2.5">
-                {portfolioData.highlights.map((item) => (
+                {c.portfolio.highlights.map((item) => (
                   <span key={item} className="chip">
                     {item}
                   </span>
@@ -124,14 +117,12 @@ export function Hero() {
                 />
 
                 <div className="mt-5 grid gap-3">
-                  {signals.map((s) => (
+                  {c.hero.signals.map((s) => (
                     <div
                       key={s.k}
                       className="rounded-2xl border border-white/8 bg-white/[0.03] p-3.5 transition hover:border-cyan-200/20"
                     >
-                      <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">
-                        {s.k}
-                      </p>
+                      <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">{s.k}</p>
                       <p className="mt-1.5 text-sm font-medium text-slate-100">{s.v}</p>
                     </div>
                   ))}
@@ -143,7 +134,7 @@ export function Hero() {
 
         <motion.a
           href="#about"
-          aria-label="Ir a la siguiente sección"
+          aria-label={c.hero.scroll}
           initial={reduce ? false : { opacity: 0 }}
           animate={reduce ? undefined : { opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
@@ -155,7 +146,7 @@ export function Hero() {
             className="flex items-center gap-2"
           >
             <ArrowDown size={14} />
-            Scroll
+            {c.hero.scroll}
           </motion.span>
         </motion.a>
       </Container>

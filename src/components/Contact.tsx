@@ -1,5 +1,5 @@
 import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+import { useI18n } from '../i18n/context';
 import { Container } from './Container';
 import { ButtonLink } from './ButtonLink';
 import { Reveal } from './fx/Reveal';
@@ -13,14 +13,16 @@ const methods = [
 ] as const;
 
 export function Contact() {
+  const { c } = useI18n();
+
   return (
     <section id="contact" className="section-shell pb-24 sm:pb-32">
       <Container>
         <SectionHeading
           index="04"
-          eyebrow="Contacto"
-          title="Construyamos algo que llegue a producción"
-          description="Roles full-time, freelance o una idea que quieras volver real — el primer mensaje es el más fácil."
+          eyebrow={c.sections.contact.eyebrow}
+          title={c.sections.contact.title}
+          description={c.sections.contact.description}
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -31,27 +33,27 @@ export function Contact() {
                 <div className="relative">
                   <span className="kicker">
                     <span className="ping-dot" />
-                    {portfolioData.availability}
+                    {c.portfolio.availability}
                   </span>
                   <h3 className="mt-6 font-display text-3xl font-semibold text-white sm:text-4xl">
-                    ¿Hablamos?
+                    {c.contactUi.heading}
                   </h3>
-                  <p className="mt-5 max-w-xl text-base leading-8 text-slate-300/90">
-                    {portfolioData.summary}
-                  </p>
+                  <p className="mt-5 max-w-xl text-base leading-8 text-slate-300/90">{c.portfolio.summary}</p>
 
                   <div className="mt-8 flex flex-wrap items-center gap-3">
-                    <ButtonLink href={portfolioData.socials.email.href} variant="primary" icon={<Mail size={18} />}>
-                      Escríbeme
+                    <ButtonLink href={c.portfolio.socials.email.href} variant="primary" icon={<Mail size={18} />}>
+                      {c.contactUi.ctaEmail}
                     </ButtonLink>
-                    <ButtonLink href={portfolioData.socials.github.href} icon={<Github size={18} />}>
-                      GitHub
+                    <ButtonLink href={c.portfolio.socials.github.href} icon={<Github size={18} />}>
+                      {c.contactUi.cta2}
                     </ButtonLink>
                   </div>
 
                   <div className="mt-8 rounded-2xl border border-white/10 bg-[#04050b]/60 p-5">
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">Nota</p>
-                    <p className="mt-2.5 text-sm leading-7 text-slate-300">{portfolioData.contactNote}</p>
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">
+                      {c.contactUi.noteLabel}
+                    </p>
+                    <p className="mt-2.5 text-sm leading-7 text-slate-300">{c.portfolio.contactNote}</p>
                   </div>
                 </div>
               </div>
@@ -61,7 +63,7 @@ export function Contact() {
           <div className="grid gap-5">
             {methods.map((method, index) => {
               const Icon = method.icon;
-              const entry = portfolioData.socials[method.key];
+              const entry = c.portfolio.socials[method.key];
               const isMail = entry.href.startsWith('mailto:');
 
               return (
