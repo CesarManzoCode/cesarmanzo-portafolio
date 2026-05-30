@@ -14,12 +14,19 @@ import { ScrollProgress } from './components/fx/ScrollProgress';
 export default function App() {
   return (
     <div className="relative min-h-screen overflow-x-hidden text-white">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900"
+      >
+        Saltar al contenido
+      </a>
+
       <Background />
       <CursorGlow />
       <ScrollProgress />
 
       <Header />
-      <main>
+      <main id="main">
         <Hero />
         <TechRibbon />
         <Stats />
