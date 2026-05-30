@@ -1,13 +1,43 @@
+import { ArrowUp, Github, Linkedin, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolio';
 import { Container } from './Container';
+import { IconLink } from './IconLink';
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/6 py-8">
+    <footer className="relative border-t border-white/[0.06] py-10">
       <Container>
-        <div className="flex flex-col items-start justify-between gap-4 text-sm text-slate-400 sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} {portfolioData.name} Portafolio </p>
-          <p>Diseño oscuro, responsive y optimizado con React, Vite, Tailwind y Framer Motion.</p>
+        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3">
+            <span className="border-glow flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.04] font-display text-xs font-bold tracking-[0.18em] text-white">
+              CM
+            </span>
+            <div>
+              <p className="text-sm font-medium text-slate-200">{portfolioData.shortName}</p>
+              <p className="text-xs text-slate-500">
+                © {new Date().getFullYear()} · Construido con React, Vite, Tailwind & Framer Motion
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <IconLink href={portfolioData.socials.github.href} label="GitHub">
+              <Github size={18} />
+            </IconLink>
+            <IconLink href={portfolioData.socials.linkedin.href} label="LinkedIn">
+              <Linkedin size={18} />
+            </IconLink>
+            <IconLink href={portfolioData.socials.email.href} label="Email" accent>
+              <Mail size={18} />
+            </IconLink>
+            <a
+              href="#home"
+              aria-label="Volver arriba"
+              className="ml-1 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.08]"
+            >
+              <ArrowUp size={18} />
+            </a>
+          </div>
         </div>
       </Container>
     </footer>

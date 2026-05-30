@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
+import { Magnetic } from './fx/Magnetic';
 
-const baseClasses =
-  'group inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-medium transition duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-2 focus:ring-offset-slate-950';
+const base =
+  'group relative inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-[transform,box-shadow,border-color,background-color] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05060c]';
 
 const variants = {
   primary:
-    'border-cyan-300/20 bg-cyan-300/10 text-cyan-100 hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-cyan-300/16',
+    'shine text-slate-950 bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-300 shadow-[0_10px_34px_-10px_rgba(79,157,255,0.7)] hover:-translate-y-0.5 hover:shadow-[0_16px_44px_-12px_rgba(79,157,255,0.85)]',
   secondary:
-    'border-white/10 bg-white/[0.03] text-slate-100 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.08]',
+    'border border-white/12 bg-white/[0.04] text-slate-100 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.08]',
 };
 
 type ButtonLinkProps = {
@@ -15,20 +16,31 @@ type ButtonLinkProps = {
   children: ReactNode;
   icon?: ReactNode;
   variant?: keyof typeof variants;
+  magnetic?: boolean;
 };
 
-export function ButtonLink({ href, children, icon, variant = 'secondary' }: ButtonLinkProps) {
+export function ButtonLink({ href, children, icon, variant = 'secondary', magnetic = true }: ButtonLinkProps) {
   const isMail = href.startsWith('mailto:');
+  const isAnchor = href.startsWith('#');
+  const external = !isMail && !isAnchor;
 
-  return (
+  const anchor = (
     <a
-      className={`${baseClasses} ${variants[variant]}`}
+      className={`${base} ${variants[variant]}`}
       href={href}
-      target={isMail ? undefined : '_blank'}
-      rel={isMail ? undefined : 'noreferrer'}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noreferrer' : undefined}
     >
       {icon}
       <span>{children}</span>
     </a>
+  );
+
+  if (!magnetic) return anchor;
+
+  return (
+    <Magnetic className="inline-flex" strength={0.45}>
+      {anchor}
+    </Magnetic>
   );
 }

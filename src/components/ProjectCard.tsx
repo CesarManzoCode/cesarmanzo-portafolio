@@ -1,65 +1,104 @@
-import { ArrowUpRight, Github } from 'lucide-react';
+import { ArrowUpRight, Github, Lock } from 'lucide-react';
 import type { Project } from '../types/portfolio';
+import { accentMap } from '../lib/accents';
+import { StatusBadge } from './StatusBadge';
+import { TiltCard } from './fx/TiltCard';
 
 type ProjectCardProps = {
   project: Project;
   index: number;
 };
 
-export function ProjectCard({ project, index }: ProjectCardProps) {
-  return (
-    <article className="group glass-card project-card-hover relative overflow-hidden p-6 sm:p-7">
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.12),transparent_28%)]" />
+const MAX_TECH = 6;
 
-      <div className="relative flex h-full flex-col">
-        <div className="flex items-center justify-between gap-4">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium uppercase tracking-[0.22em] text-slate-400">
-            Proyecto {String(index + 1).padStart(2, '0')}
+export function ProjectCard({ project, index }: ProjectCardProps) {
+  const a = accentMap[project.accent];
+  const extraTech = project.technologies.length - MAX_TECH;
+
+  const primaryHref = project.liveUrl ?? project.githubUrl;
+  const primaryLabel = project.liveUrl ? `Visitar ${project.domain ?? ''}`.trim() : 'Ver código';
+
+  return (
+    <TiltCard max={6} className="h-full">
+      <article className="group glass relative flex h-full flex-col overflow-hidden rounded-3xl p-6 sm:p-7">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ background: `radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), ${a.glow}, transparent 62%)` }}
+        />
+
+        <div className="relative flex items-center justify-between">
+          <span className={`font-mono text-sm font-medium ${a.text}`}>
+            {String(index).padStart(2, '0')}
           </span>
-          <div className="flex items-center gap-2">
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Abrir repositorio de ${project.name}`}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-200 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.08]"
-            >
-              <Github size={18} />
-            </a>
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Abrir demo de ${project.name}`}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-100 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-cyan-300/16"
-            >
-              <ArrowUpRight size={18} />
-            </a>
-          </div>
+          <StatusBadge status={project.status} privateRepo={project.repoPrivate} />
         </div>
 
-        <h3 className="mt-6 text-2xl font-semibold text-white">{project.name}</h3>
-        <p className="mt-4 flex-1 text-sm leading-7 text-slate-400 sm:text-base">{project.description}</p>
+        <h3 className="relative mt-5 font-display text-2xl font-semibold text-white">{project.name}</h3>
+        <p className={`relative mt-1 text-sm font-medium ${a.text}`}>{project.tagline}</p>
+        <p className="relative mt-4 flex-1 text-sm leading-7 text-slate-400">{project.description}</p>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.technologies.map((tech) => (
+        <div className="relative mt-5 flex flex-wrap gap-2">
+          {project.metrics.map((m) => (
             <span
-              key={tech}
-              className="rounded-full border border-white/10 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300"
+              key={m.label}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/8 bg-white/[0.03] px-2.5 py-1 text-xs text-slate-400"
             >
-              {tech}
+              <span className={`font-semibold ${a.text}`}>{m.value}</span>
+              {m.label}
             </span>
           ))}
         </div>
 
-        <div className="mt-8 flex items-center justify-between gap-4 border-t border-white/8 pt-5 text-sm text-slate-400">
-          <span>Placeholder editable</span>
-          <div className="inline-flex items-center gap-2 text-slate-200">
-            Ver repo y demo
-            <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <div className="relative mt-4 flex flex-wrap gap-1.5">
+          {project.technologies.slice(0, MAX_TECH).map((tech) => (
+            <span key={tech} className="chip">
+              {tech}
+            </span>
+          ))}
+          {extraTech > 0 && <span className="chip">+{extraTech}</span>}
+        </div>
+
+        <div className="relative mt-6 flex items-center gap-3 border-t border-white/8 pt-5">
+          {primaryHref && (
+            <a
+              href={primaryHref}
+              target="_blank"
+              rel="noreferrer"
+              className="group/cta inline-flex items-center gap-1.5 text-sm font-medium text-slate-100 transition-colors hover:text-white"
+            >
+              {primaryLabel}
+              <ArrowUpRight
+                size={16}
+                className="transition-transform group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
+              />
+            </a>
+          )}
+
+          <div className="ml-auto flex items-center gap-2">
+            {project.repoPrivate ? (
+              <span
+                title="Repositorio privado"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] text-slate-500"
+              >
+                <Lock size={15} />
+              </span>
+            ) : (
+              project.githubUrl && project.liveUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Código de ${project.name}`}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:border-white/25 hover:bg-white/[0.08]"
+                >
+                  <Github size={15} />
+                </a>
+              )
+            )}
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </TiltCard>
   );
 }

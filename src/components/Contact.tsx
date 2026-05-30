@@ -1,22 +1,15 @@
 import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolio';
 import { Container } from './Container';
-import { Reveal } from './Reveal';
+import { ButtonLink } from './ButtonLink';
+import { Reveal } from './fx/Reveal';
+import { TiltCard } from './fx/TiltCard';
 import { SectionHeading } from './SectionHeading';
 
-const contactItems = [
-  {
-    key: 'email',
-    icon: Mail,
-  },
-  {
-    key: 'github',
-    icon: Github,
-  },
-  {
-    key: 'linkedin',
-    icon: Linkedin,
-  },
+const methods = [
+  { key: 'email', icon: Mail, accent: true },
+  { key: 'github', icon: Github, accent: false },
+  { key: 'linkedin', icon: Linkedin, accent: false },
 ] as const;
 
 export function Contact() {
@@ -24,61 +17,85 @@ export function Contact() {
     <section id="contact" className="section-shell pb-24 sm:pb-32">
       <Container>
         <SectionHeading
+          index="04"
           eyebrow="Contacto"
-          title=""
-          description=""
+          title="Construyamos algo que llegue a producción"
+          description="Roles full-time, freelance o una idea que quieras volver real — el primer mensaje es el más fácil."
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <Reveal className="glass-card panel-glow p-6 sm:p-8">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-400">
-              Disponible para colaborar
-            </p>
-            <h3 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">
-              ¿Buscas un perfil fuerte en backend, automatización e IA aplicada?
-            </h3>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-              Este portafolio está pensado para transmitir solidez técnica, criterio profesional y capacidad para construir soluciones reales listas para producción.
-            </p>
+          <Reveal className="h-full">
+            <TiltCard max={2.5} className="h-full">
+              <div className="glass-strong border-glow spotlight relative h-full overflow-hidden p-7 sm:p-9">
+                <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(56,225,255,0.18),transparent_60%)]" />
+                <div className="relative">
+                  <span className="kicker">
+                    <span className="ping-dot" />
+                    {portfolioData.availability}
+                  </span>
+                  <h3 className="mt-6 font-display text-3xl font-semibold text-white sm:text-4xl">
+                    ¿Hablamos?
+                  </h3>
+                  <p className="mt-5 max-w-xl text-base leading-8 text-slate-300/90">
+                    {portfolioData.summary}
+                  </p>
 
-            <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/65 p-5">
-              <p className="text-xs font-medium uppercase tracking-[0.24em] text-slate-500">Nota</p>
-              <p className="mt-3 text-sm leading-7 text-slate-300">{portfolioData.contactNote}</p>
-            </div>
+                  <div className="mt-8 flex flex-wrap items-center gap-3">
+                    <ButtonLink href={portfolioData.socials.email.href} variant="primary" icon={<Mail size={18} />}>
+                      Escríbeme
+                    </ButtonLink>
+                    <ButtonLink href={portfolioData.socials.github.href} icon={<Github size={18} />}>
+                      GitHub
+                    </ButtonLink>
+                  </div>
+
+                  <div className="mt-8 rounded-2xl border border-white/10 bg-[#04050b]/60 p-5">
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">Nota</p>
+                    <p className="mt-2.5 text-sm leading-7 text-slate-300">{portfolioData.contactNote}</p>
+                  </div>
+                </div>
+              </div>
+            </TiltCard>
           </Reveal>
 
-          <div className="grid gap-6">
-            {contactItems.map((item, index) => {
-              const Icon = item.icon;
-              const entry = portfolioData.socials[item.key];
+          <div className="grid gap-5">
+            {methods.map((method, index) => {
+              const Icon = method.icon;
+              const entry = portfolioData.socials[method.key];
               const isMail = entry.href.startsWith('mailto:');
 
               return (
-                <Reveal key={item.key} delay={index * 0.08} className="glass-card p-6">
-                  <a
-                    href={entry.href}
-                    target={isMail ? undefined : '_blank'}
-                    rel={isMail ? undefined : 'noreferrer'}
-                    className="group block"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-slate-100">
+                <Reveal key={method.key} delay={index * 0.08} className="h-full">
+                  <TiltCard max={5} className="h-full">
+                    <a
+                      href={entry.href}
+                      target={isMail ? undefined : '_blank'}
+                      rel={isMail ? undefined : 'noreferrer'}
+                      className="glass spotlight group flex h-full items-center justify-between gap-4 p-6 transition hover:border-white/20"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span
+                          className={`flex h-12 w-12 items-center justify-center rounded-2xl border ${
+                            method.accent
+                              ? 'border-cyan-300/25 bg-cyan-300/10 text-cyan-200'
+                              : 'border-white/10 bg-white/[0.04] text-slate-100'
+                          }`}
+                        >
                           <Icon size={20} />
-                        </div>
+                        </span>
                         <div>
-                          <p className="text-xs font-medium uppercase tracking-[0.24em] text-slate-500">
+                          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">
                             {entry.label}
                           </p>
-                          <p className="mt-2 text-base font-medium text-slate-100">{entry.displayValue}</p>
+                          <p className="mt-1 text-sm font-medium text-slate-100">{entry.displayValue}</p>
                         </div>
                       </div>
                       <ArrowUpRight
                         size={18}
-                        className="text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-slate-100"
+                        className="text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-slate-100"
                       />
-                    </div>
-                  </a>
+                    </a>
+                  </TiltCard>
                 </Reveal>
               );
             })}

@@ -1,16 +1,15 @@
-<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="128" height="128" rx="28" fill="#050816"/>
-  <rect x="10" y="10" width="108" height="108" rx="22" fill="url(#paint0_linear)" fill-opacity="0.12" stroke="url(#paint1_linear)"/>
-  <path d="M40 39C46.5 32.5 55.1667 29.25 66 29.25C76.8333 29.25 85.5833 32.5833 92.25 39.25L83.75 47C78.75 42.1667 72.8333 39.75 66 39.75C59.1667 39.75 53.25 42.1667 48.25 47C43.4167 51.8333 41 57.6667 41 64.5C41 71.3333 43.4167 77.1667 48.25 82C53.0833 86.8333 58.9167 89.25 65.75 89.25C72.75 89.25 78.6667 86.9167 83.5 82.25L92 90C85.3333 96.6667 76.6667 100 66 100C55.3333 100 46.6667 96.75 40 90.25C33.5 83.5833 30.25 74.9167 30.25 64.25C30.25 53.75 33.5 45.3333 40 39Z" fill="#E5F3FF"/>
-  <path d="M72 48.5H82L92.5 80H82.5L80.5 73.25H68.75L66.5 80H57L68.25 48.5H72ZM70.75 66.25H78.5L74.75 53.75L70.75 66.25Z" fill="#7DD3FC"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="paint0_linear" x1="18" y1="16" x2="108" y2="112" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#22D3EE"/>
-      <stop offset="1" stop-color="#8B5CF6"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b1024" />
+      <stop offset="1" stop-color="#05060c" />
     </linearGradient>
-    <linearGradient id="paint1_linear" x1="20" y1="18" x2="107" y2="109" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#22D3EE" stop-opacity="0.75"/>
-      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0.5"/>
+    <linearGradient id="mark" x1="14" y1="16" x2="50" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5ce6ff" />
+      <stop offset="0.55" stop-color="#5b9bff" />
+      <stop offset="1" stop-color="#b79bff" />
     </linearGradient>
   </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bg)" stroke="url(#mark)" stroke-width="2" stroke-opacity="0.6" />
+  <text x="32" y="33" dy="0.36em" text-anchor="middle" font-family="'Space Grotesk', Inter, system-ui, sans-serif" font-size="29" font-weight="700" fill="url(#mark)">CM</text>
 </svg>
