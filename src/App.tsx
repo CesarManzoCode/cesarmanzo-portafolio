@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
@@ -10,8 +11,17 @@ import { TechRibbon } from './components/TechRibbon';
 import { Background } from './components/fx/Background';
 import { CursorGlow } from './components/fx/CursorGlow';
 import { ScrollProgress } from './components/fx/ScrollProgress';
+import { useIsMobile } from './hooks/useIsMobile';
 
 export default function App() {
+  const isMobile = useIsMobile();
+
+  // Keep the phone flag in sync on resize / orientation change. The initial
+  // value is already set pre-paint by the inline script in index.html.
+  useEffect(() => {
+    document.documentElement.classList.toggle('is-phone', isMobile);
+  }, [isMobile]);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden text-white">
       <a

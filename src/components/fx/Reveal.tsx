@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import type { PropsWithChildren } from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 type RevealProps = PropsWithChildren<{
   className?: string;
@@ -18,8 +19,11 @@ export function Reveal({
   once = true,
 }: RevealProps) {
   const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
 
-  if (reduce) {
+  // On phones, render statically: scroll-reveal jank is the main cause of the
+  // "loads block by block" feel. Desktop keeps the full animation.
+  if (reduce || isMobile) {
     return <div className={className}>{children}</div>;
   }
 

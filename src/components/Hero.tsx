@@ -7,6 +7,7 @@ import { ButtonLink } from './ButtonLink';
 import { Reveal } from './fx/Reveal';
 import { RotatingText } from './fx/RotatingText';
 import { Typewriter, type TypewriterLine } from './fx/Typewriter';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const logLines: TypewriterLine[] = [
   { text: '$ ssh deploy@orux.space', className: 'text-slate-400' },
@@ -24,6 +25,8 @@ const signals = [
 
 export function Hero() {
   const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
+  const noParallax = reduce || isMobile;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -37,7 +40,7 @@ export function Hero() {
     <section id="home" ref={ref} className="section-shell pt-14 sm:pt-20 lg:pt-24">
       <Container>
         <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.div style={reduce ? undefined : { y: contentY }}>
+          <motion.div style={noParallax ? undefined : { y: contentY }}>
             <Reveal y={14} blur={false}>
               <span className="kicker">
                 <span className="ping-dot" />
@@ -94,7 +97,7 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            style={reduce ? undefined : { y: panelY, opacity: panelOpacity }}
+            style={noParallax ? undefined : { y: panelY, opacity: panelOpacity }}
             className="lg:justify-self-end"
           >
             <motion.div

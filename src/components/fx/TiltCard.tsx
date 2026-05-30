@@ -1,5 +1,6 @@
 import { useRef, type MouseEvent, type PropsWithChildren } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 type TiltCardProps = PropsWithChildren<{
   className?: string;
@@ -14,6 +15,8 @@ type TiltCardProps = PropsWithChildren<{
  */
 export function TiltCard({ children, className, max = 5 }: TiltCardProps) {
   const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
+  const disabled = reduce || isMobile;
   const ref = useRef<HTMLDivElement>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -30,7 +33,7 @@ export function TiltCard({ children, className, max = 5 }: TiltCardProps) {
     el.style.setProperty('--mx', `${px * 100}%`);
     el.style.setProperty('--my', `${py * 100}%`);
 
-    if (reduce) return;
+    if (disabled) return;
     ry.set((px - 0.5) * max * 2);
     rx.set(-(py - 0.5) * max * 2);
   };
@@ -40,12 +43,14 @@ export function TiltCard({ children, className, max = 5 }: TiltCardProps) {
     ry.set(0);
   };
 
+  // On phones the 3D transform/perspective forces extra compositing layers
+  // for every card — skip it entirely there.
   return (
     <motion.div
       ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={reset}
-      style={reduce ? undefined : { rotateX: srx, rotateY: sry, transformPerspective: 1100 }}
+      onMouseMove={isMobile ? undefined : handleMove}
+      onMouseLeave={isMobile ? undefined : reset}
+      style={disabled ? undefined : { rotateX: srx, rotateY: sry, transformPerspective: 1100 }}
       className={className}
     >
       {children}

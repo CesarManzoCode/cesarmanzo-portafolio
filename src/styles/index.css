@@ -484,3 +484,53 @@ canvas {
   width: 0.6ch;
   animation: blink 1.05s step-end infinite;
 }
+
+/* ------------------------------------------------------------------ *
+ * Mobile performance — gated by the `.is-phone` class on <html>.
+ * The class is set before first paint by an inline script in index.html
+ * and kept in sync by useIsMobile, so this applies on every phone
+ * (including older browsers without CSS range-media syntax). Desktop
+ * never gets the class, so it is completely untouched.
+ *
+ * backdrop-filter, large blur blobs and blend modes are the main causes
+ * of scroll jank on mobile GPUs — we swap them for cheap equivalents.
+ * ------------------------------------------------------------------ */
+.is-phone .glass {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: linear-gradient(180deg, rgba(22, 27, 45, 0.92), rgba(13, 17, 30, 0.9));
+}
+
+.is-phone .glass-strong {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: linear-gradient(180deg, rgba(16, 21, 38, 0.95), rgba(9, 12, 23, 0.94));
+}
+
+.is-phone .kicker {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Replace the animated, heavily-blurred aurora blobs with a static,
+   pre-softened gradient — same vibe, zero per-frame cost. */
+.is-phone .aurora-blob {
+  display: none;
+}
+
+.is-phone .aurora {
+  background:
+    radial-gradient(60% 48% at 10% 0%, rgba(56, 225, 255, 0.16), transparent 60%),
+    radial-gradient(58% 46% at 94% 6%, rgba(167, 139, 255, 0.16), transparent 60%),
+    linear-gradient(180deg, #05060c 0%, #06070f 52%, #04050a 100%);
+}
+
+/* Blend-mode grain and the continuously-animated gradient text are
+   dropped on phones. */
+.is-phone .grain {
+  display: none;
+}
+
+.is-phone .gradient-text {
+  animation: none;
+}

@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Flag phones before first paint so the lighter, phone-optimized CSS
+      // applies immediately (no flash of the GPU-heavy desktop effects).
+      try {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          document.documentElement.classList.add('is-phone');
+        }
+      } catch (e) {}
+    </script>
     <meta
       name="description"
       content="César Manzo — Software Engineer full-stack. Construyo y despliego productos SaaS de punta a punta: sistemas en tiempo real, IA aplicada, pagos e infraestructura. Orux, Studymation y cpp-ceti en producción."

@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 type TextRevealProps = {
   text: string;
@@ -21,9 +22,10 @@ const word: Variants = {
 /** Headline reveal that lifts each word from behind a mask, word by word. */
 export function TextReveal({ text, className, delay = 0, stagger = 0.05 }: TextRevealProps) {
   const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
   const words = text.split(' ');
 
-  if (reduce) {
+  if (reduce || isMobile) {
     return <span className={className}>{text}</span>;
   }
 
