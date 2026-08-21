@@ -12,7 +12,7 @@ import { useIsMobile } from '../hooks/useIsMobile';
 const logLines: TypewriterLine[] = [
   { text: '$ ssh deploy@orux.space', className: 'text-slate-400' },
   { text: '› build ............. passing', className: 'text-slate-300' },
-  { text: '› tests ............. 478 passed', className: 'text-emerald-300/90' },
+  { text: '› tests ............. 541 passed', className: 'text-emerald-300/90' },
   { text: '› containers ........ 4 up', className: 'text-slate-300' },
   { text: '▲ live → orux.space', className: 'text-cyan-300' },
 ];
