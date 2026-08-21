@@ -93,6 +93,19 @@ export type SiteContent = {
 
   more: { text: string; link: Link };
 
+  method: {
+    eyebrow: string;
+    title: string;
+    lede: string;
+    toolingLabel: string;
+    tooling: string;
+    loopLabel: string;
+    loop: { step: string; title: string; body: string }[];
+    loopNote: string;
+    endsLabel: string;
+    ends: string;
+  };
+
   about: {
     eyebrow: string;
     title: string;
@@ -483,12 +496,59 @@ int main() {
     link: { label: 'github.com/CesarManzoCode', href: GITHUB },
   },
 
+  method: {
+    eyebrow: 'How I work',
+    title: 'The same loop, six times.',
+    lede:
+      'An operating system and a hardware store’s catalogue have nothing in common except how they were made: fix the constraints, build against them, then find out what the machine actually does. The stack changes with the problem. The loop is what carries over.',
+    toolingLabel: 'Tooling',
+    tooling:
+      'I use whatever raises the rate at which a decision becomes working software — compilers and type systems, static analysis, debuggers and profilers, test harnesses, continuous integration, automation, coding agents and language models. The list changes every year; what I ask of it does not — more attempts, sooner, with the cost of a wrong one kept low.',
+    loopLabel: 'The loop',
+    loop: [
+      {
+        step: '01',
+        title: 'Frame',
+        body: 'What the system has to do, what it must never do, and what it has to survive. Most of the design is settled here, before there is anything to run.',
+      },
+      {
+        step: '02',
+        title: 'Build',
+        body: 'The fastest route to something standing up: code I write, a library that already solved it, a coding agent working from the constraints above.',
+      },
+      {
+        step: '03',
+        title: 'Inspect',
+        body: 'Read what came out against what was asked for — the diff, the schema, the boundary, the failure paths. A design mistake is never cheaper than it is here.',
+      },
+      {
+        step: '04',
+        title: 'Test',
+        body: 'Types, static analysis, unit and integration tests, and fault injection wherever losing power at the wrong moment would matter.',
+      },
+      {
+        step: '05',
+        title: 'Run',
+        body: 'Against the thing that decides: real hardware, a real dataset, the protocol, somebody at a counter with a customer waiting.',
+      },
+      {
+        step: '06',
+        title: 'Correct',
+        body: 'What came back wrong goes in as a new constraint and the loop runs again. Publishing what is still unproven is part of this, not an appendix to it.',
+      },
+    ],
+    loopNote: '06 → 01 · on a commit, on a feature, on a whole system.',
+    endsLabel: 'Where it ends',
+    ends:
+      'An implementation can come from anywhere. Whether it is correct gets settled somewhere else — by the compiler, by the test, by the invariant Postgres refuses to break, by a protocol that either converges or does not, by a board that either boots or does not. None of it negotiates. That is what makes it worth building against, and it is where a system has to get before I call it finished.',
+  },
+
   about: {
     eyebrow: 'About',
     title: 'Who is building this',
     body: [
       'I’m César Manzo, a software engineer in Guadalajara, México. I gravitate to the part most projects skip: taking something from an idea to a thing that runs, survives being killed at the wrong moment, and can be checked by somebody who has no reason to trust me.',
-      'That is why the six projects above look nothing like each other. An operating system, a collaboration layer, a hardware store’s catalogue and three pieces of teaching software share no stack. What they share is the working method: decide what the thing is for, build all of it — schema, service, interface, deployment — and keep the evidence that it does what it says.',
+      'That is why the six projects above look nothing like each other. An operating system, a collaboration layer, a hardware store’s catalogue and three pieces of teaching software share no stack. What they share is the loop above, and the range it demands: schema, service, interface, deployment, and the evidence that each part does what it says.',
     ],
     practiceLabel: 'Where that work happens',
     practice: [
@@ -875,12 +935,59 @@ int main() {
     link: { label: 'github.com/CesarManzoCode', href: GITHUB },
   },
 
+  method: {
+    eyebrow: 'Cómo trabajo',
+    title: 'El mismo ciclo, seis veces.',
+    lede:
+      'Un sistema operativo y el catálogo de una ferretería no comparten nada, salvo la forma en que se hicieron: fijar las restricciones, construir contra ellas y después averiguar qué hace la máquina de verdad. El stack cambia con el problema. El ciclo es lo que se traslada.',
+    toolingLabel: 'Herramientas',
+    tooling:
+      'Uso lo que aumente el ritmo al que una decisión se convierte en software que funciona: compiladores y sistemas de tipos, análisis estático, depuradores y perfiladores, suites de pruebas, integración continua, automatización, agentes de código y modelos de lenguaje. La lista cambia cada año; lo que le pido, no: más intentos, más pronto, y que equivocarse salga barato.',
+    loopLabel: 'El ciclo',
+    loop: [
+      {
+        step: '01',
+        title: 'Definir',
+        body: 'Qué tiene que hacer el sistema, qué no puede hacer nunca y a qué tiene que sobrevivir. Casi todo el diseño se decide aquí, antes de que haya algo que ejecutar.',
+      },
+      {
+        step: '02',
+        title: 'Construir',
+        body: 'La vía más rápida a algo que se sostenga: código que escribo, una librería que ya lo resolvió, un agente de código trabajando contra las restricciones de arriba.',
+      },
+      {
+        step: '03',
+        title: 'Inspeccionar',
+        body: 'Leer lo que salió contra lo que se pedía: el diff, el esquema, la frontera, los caminos de fallo. Un error de diseño nunca vuelve a ser tan barato como aquí.',
+      },
+      {
+        step: '04',
+        title: 'Probar',
+        body: 'Tipos, análisis estático, pruebas unitarias y de integración, e inyección de fallos donde perder la corriente en el peor momento importe.',
+      },
+      {
+        step: '05',
+        title: 'Ejecutar',
+        body: 'Contra lo que decide: hardware real, datos reales, el protocolo, alguien en un mostrador con un cliente esperando.',
+      },
+      {
+        step: '06',
+        title: 'Corregir',
+        body: 'Lo que volvió mal entra como restricción nueva y el ciclo vuelve a correr. Publicar lo que todavía no está probado es parte de esto, no un apéndice.',
+      },
+    ],
+    loopNote: '06 → 01 · en un commit, en una función, en un sistema entero.',
+    endsLabel: 'Dónde termina',
+    ends:
+      'Una implementación puede venir de donde sea. Si es correcta se decide en otro lado: en el compilador, en la prueba, en la invariante que PostgreSQL se niega a romper, en un protocolo que converge o no, en una placa que arranca o no. Nada de eso negocia. Por eso vale la pena construir contra ello, y por eso llevo cada sistema hasta ahí antes de darlo por terminado.',
+  },
+
   about: {
     eyebrow: 'Sobre mí',
     title: 'Quién construye esto',
     body: [
       'Soy César Manzo, ingeniero de software en Guadalajara, México. Me atrae la parte que casi todos los proyectos se saltan: llevar algo de idea a cosa que corre, que sobrevive a que la maten en el peor momento y que alguien sin motivos para confiar en mí puede comprobar.',
-      'Por eso los seis proyectos de arriba no se parecen entre sí. Un sistema operativo, una capa de colaboración, el catálogo de una ferretería y tres piezas de software educativo no comparten stack. Lo que comparten es la forma de trabajar: decidir para qué es la cosa, construirla entera — esquema, servicio, interfaz, despliegue — y guardar la evidencia de que hace lo que dice.',
+      'Por eso los seis proyectos de arriba no se parecen entre sí. Un sistema operativo, una capa de colaboración, el catálogo de una ferretería y tres piezas de software educativo no comparten stack. Lo que comparten es el ciclo de arriba y el alcance que exige: esquema, servicio, interfaz, despliegue, y la evidencia de que cada parte hace lo que dice.',
     ],
     practiceLabel: 'Dónde ocurre ese trabajo',
     practice: [

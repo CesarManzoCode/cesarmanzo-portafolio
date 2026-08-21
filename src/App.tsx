@@ -7,6 +7,7 @@ import { Ferrol } from './components/Ferrol';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { Method } from './components/Method';
 import { More } from './components/More';
 import { Orux } from './components/Orux';
 import { Studymation } from './components/Studymation';
@@ -55,6 +56,7 @@ export default function App() {
         <CppCeti />
         <More />
 
+        <Method />
         <About />
         <Contact />
       </main>
