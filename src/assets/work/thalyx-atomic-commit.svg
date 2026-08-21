@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="633" height="563" viewBox="0 0 633 563" role="img" aria-label="thalyx — the atomic commit, killed at its most dangerous instant">
+<rect width="633" height="563" rx="8" fill="#0f1116"/>
+<path d="M0 8a8 8 0 0 1 8-8h617a8 8 0 0 1 8 8v20H0Z" fill="#161a21"/>
+<line x1="0" y1="28" x2="633" y2="28" stroke="#232935" stroke-width="1"/>
+<text x="20" y="19.5" fill="#8b95a6" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10.5" letter-spacing="0.9">thalyx — the atomic commit, killed at its most dangerous instant</text>
+<g font-family="ui-monospace,SFMono-Regular,&quot;JetBrains Mono&quot;,Menlo,Consolas,&quot;DejaVu Sans Mono&quot;,monospace" font-size="13.0">
+<text xml:space="preserve" x="20" y="50.4" fill="#7fd8a4" textLength="569.4" lengthAdjust="spacing">$ THALYX_FAULT_POINT=mid-commit thalyx module install greeter.thmod --yes</text>
+<text xml:space="preserve" x="20" y="67.8" fill="#d3dae6" textLength="171.6" lengthAdjust="spacing">  confirmed with --yes</text>
+<text xml:space="preserve" x="20" y="85.2" fill="#d3dae6" textLength="358.8" lengthAdjust="spacing">thalyx: injected fault at mid-commit, aborting</text>
+<text xml:space="preserve" x="20" y="102.7" fill="#d3dae6" textLength="54.6" lengthAdjust="spacing">Aborted</text>
+<text xml:space="preserve" x="20" y="120.1" fill="#7d8899" textLength="475.8" lengthAdjust="spacing">  (SIGABRT between the directory rename and the symlink swap)</text>
+<text xml:space="preserve" x="20" y="154.9" fill="#7fd8a4" textLength="156.0" lengthAdjust="spacing">$ thalyx module list</text>
+<text xml:space="preserve" x="20" y="172.3" fill="#d3dae6" textLength="156.0" lengthAdjust="spacing">no modules installed</text>
+<text xml:space="preserve" x="20" y="207.2" fill="#7fd8a4" textLength="163.8" lengthAdjust="spacing">$ thalyx store status</text>
+<text xml:space="preserve" x="20" y="224.6" fill="#d3dae6" textLength="202.8" lengthAdjust="spacing">root      /tmp/thalyx-demo</text>
+<text xml:space="preserve" x="20" y="242.0" fill="#d3dae6" textLength="85.8" lengthAdjust="spacing">modules   0</text>
+<text xml:space="preserve" x="20" y="259.4" fill="#d3dae6" textLength="265.2" lengthAdjust="spacing">staging   0 leftover director(ies)</text>
+<text xml:space="preserve" x="20" y="276.9" fill="#d3dae6" textLength="171.6" lengthAdjust="spacing">intents   1 unresolved</text>
+<text xml:space="preserve" x="20" y="294.3" fill="#d3dae6" textLength="592.8" lengthAdjust="spacing">          dev.thalyx.greeter 1.0.0  announced 2026-08-21T04:53:02.895026479Z</text>
+<text xml:space="preserve" x="20" y="311.7" fill="#d3dae6" textLength="390.0" lengthAdjust="spacing">orphans   1 version(s) not pointed at by `current`</text>
+<text xml:space="preserve" x="20" y="329.1" fill="#d3dae6" textLength="265.2" lengthAdjust="spacing">          dev.thalyx.greeter 1.0.0</text>
+<text xml:space="preserve" x="20" y="364.0" fill="#d3dae6" textLength="514.8" lengthAdjust="spacing">an unresolved intent is a question, not a lost operation: the disk</text>
+<text xml:space="preserve" x="20" y="381.4" fill="#d3dae6" textLength="421.2" lengthAdjust="spacing">has the answer. `thalyx store reconcile` settles them.</text>
+<text xml:space="preserve" x="20" y="416.2" fill="#d3dae6" textLength="468.0" lengthAdjust="spacing">leftovers are inert: nothing points at them, so no module is</text>
+<text xml:space="preserve" x="20" y="433.6" fill="#d3dae6" textLength="436.8" lengthAdjust="spacing">half-installed. `thalyx store clean` reclaims the space.</text>
+<text xml:space="preserve" x="20" y="468.5" fill="#7fd8a4" textLength="335.4" lengthAdjust="spacing">$ thalyx module install greeter.thmod --yes</text>
+<text xml:space="preserve" x="20" y="503.3" fill="#d3dae6" textLength="265.2" lengthAdjust="spacing">dev.thalyx.greeter 1.0.0 installed</text>
+<text xml:space="preserve" x="20" y="520.7" fill="#d3dae6" textLength="319.8" lengthAdjust="spacing">  1 file(s), 1 permission(s) now in force</text>
+<text xml:space="preserve" x="20" y="538.2" fill="#d3dae6" textLength="468.0" lengthAdjust="spacing">  runs as user 700000, which is this module&#x27;s and no other&#x27;s</text>
+</g></svg>

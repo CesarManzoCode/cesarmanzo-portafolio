@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="430" viewBox="0 0 920 430" role="img"
+     aria-label="How a change moves through Orux: a developer edits a file; if they own it the edit applies live, otherwise it stays local as a tentative edit; Ctrl+S is the checkpoint that runs the impact analysis; the owner of the file gets a proposal to approve or reject and the owners of every affected file get an impact notice; the result is a commit in a real Git repository.">
+  <style>
+    .t   { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+    .h   { font-size: 12.5px; font-weight: 600; letter-spacing: .05em; }
+    .b   { font-size: 10.5px; }
+    .fg  { fill: #dbe2ec; }
+    .dim { fill: #8792a3; }
+    .grn { fill: #6ddba0; }
+    .amb { fill: #e0b978; }
+    .box { fill: #14181e; stroke: #262d38; stroke-width: 1; }
+    .ln  { stroke: #3b4453; stroke-width: 1.2; fill: none; }
+  </style>
+  <defs>
+    <marker id="o" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#3b4453"/></marker>
+  </defs>
+  <rect width="920" height="430" rx="10" fill="#0b0e12"/>
+
+  <!-- stage 1 -->
+  <rect class="box" x="40" y="112" width="176" height="86" rx="6"/>
+  <text class="t h fg"  x="58" y="138">SOMEONE EDITS</text>
+  <text class="t b dim" x="58" y="159">no branch, no ticket,</text>
+  <text class="t b dim" x="58" y="175">no asking in Slack first</text>
+
+  <path class="ln" d="M216 155 L244 155"/>
+
+  <!-- ownership fork -->
+  <rect class="box" x="272" y="48" width="216" height="86" rx="6"/>
+  <text class="t h grn" x="290" y="74">THEY OWN IT</text>
+  <text class="t b dim" x="290" y="95">the edit applies live —</text>
+  <text class="t b dim" x="290" y="111">everyone sees it as it lands</text>
+
+  <rect class="box" x="272" y="176" width="216" height="86" rx="6"/>
+  <text class="t h amb" x="290" y="202">SOMEONE ELSE DOES</text>
+  <text class="t b dim" x="290" y="223">the edit stays local — a</text>
+  <text class="t b dim" x="290" y="239">tentative change, not applied</text>
+
+  <path class="ln" marker-end="url(#o)" d="M244 155 L244 91 L268 91"/>
+  <path class="ln" marker-end="url(#o)" d="M244 155 L244 219 L268 219"/>
+  <circle cx="244" cy="155" r="2.6" fill="#3b4453"/>
+
+  <path class="ln" marker-end="url(#o)" d="M488 91 L520 91 L520 210 L556 210"/>
+  <path class="ln" marker-end="url(#o)" d="M488 219 L520 219 L520 210 L556 210"/>
+
+  <!-- checkpoint -->
+  <rect x="560" y="168" width="150" height="84" rx="6" fill="#14181e" stroke="#6ddba0" stroke-width="1.3"/>
+  <text class="t h fg"  x="578" y="194">Ctrl+S</text>
+  <text class="t b dim" x="578" y="215">the checkpoint —</text>
+  <text class="t b dim" x="578" y="231">not every keystroke</text>
+
+  <path class="ln" marker-end="url(#o)" d="M710 210 L748 210"/>
+
+  <!-- analysis -->
+  <rect class="box" x="752" y="152" width="132" height="116" rx="6"/>
+  <text class="t h fg"  x="768" y="178">IMPACT</text>
+  <text class="t h fg"  x="768" y="196">ANALYSIS</text>
+  <text class="t b dim" x="768" y="218">which symbols</text>
+  <text class="t b dim" x="768" y="234">changed — and</text>
+  <text class="t b dim" x="768" y="250">who uses them</text>
+
+  <!-- outputs -->
+  <path class="ln" marker-end="url(#o)" d="M818 268 L818 296 L640 296 L640 320"/>
+  <path class="ln" marker-end="url(#o)" d="M818 268 L818 296 L300 296 L300 320"/>
+
+  <rect class="box" x="40" y="324" width="520" height="72" rx="6"/>
+  <text class="t h fg"  x="58" y="348">THE OWNER DECIDES — approve or reject, one click</text>
+  <text class="t b dim" x="58" y="370">a tentative change reaches the owner as a diff. Nothing applies until they</text>
+  <text class="t b dim" x="58" y="386">say so — and nothing was blocked before it was tried.</text>
+
+  <rect class="box" x="580" y="324" width="304" height="72" rx="6"/>
+  <text class="t h fg"  x="598" y="348">EVERY AFFECTED OWNER IS TOLD</text>
+  <text class="t b dim" x="598" y="370">with a severity, before the break exists.</text>
+  <text class="t b dim" x="598" y="386">Nobody had to ask, and nobody had to know.</text>
+
+  <text class="t b dim" x="40" y="30">The workspace underneath is a real Git repository — one per team. `git clone` is enough to leave.</text>
+</svg>

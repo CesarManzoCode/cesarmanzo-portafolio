@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="758" height="406" viewBox="0 0 758 406" role="img" aria-label="thalyx — installing a signed module">
+<rect width="758" height="406" rx="8" fill="#0f1116"/>
+<path d="M0 8a8 8 0 0 1 8-8h742a8 8 0 0 1 8 8v20H0Z" fill="#161a21"/>
+<line x1="0" y1="28" x2="758" y2="28" stroke="#232935" stroke-width="1"/>
+<text x="20" y="19.5" fill="#8b95a6" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10.5" letter-spacing="0.9">thalyx — installing a signed module</text>
+<g font-family="ui-monospace,SFMono-Regular,&quot;JetBrains Mono&quot;,Menlo,Consolas,&quot;DejaVu Sans Mono&quot;,monospace" font-size="13.0">
+<text xml:space="preserve" x="20" y="50.4" fill="#7fd8a4" textLength="288.6" lengthAdjust="spacing">$ thalyx module install greeter.thmod</text>
+<text xml:space="preserve" x="20" y="67.8" fill="#d3dae6" textLength="429.0" lengthAdjust="spacing">┌─ Thalyx — capability authorisation ──────────────────</text>
+<text xml:space="preserve" x="20" y="85.2" fill="#d3dae6" textLength="234.0" lengthAdjust="spacing">│ Greeter (dev.thalyx.greeter)</text>
+<text xml:space="preserve" x="20" y="102.7" fill="#d3dae6" textLength="117.0" lengthAdjust="spacing">│ version 1.0.0</text>
+<text xml:space="preserve" x="20" y="120.1" fill="#d3dae6" textLength="7.8" lengthAdjust="spacing">│</text>
+<text xml:space="preserve" x="20" y="137.5" fill="#d3dae6" textLength="273.0" lengthAdjust="spacing">│ This module permanently requests:</text>
+<text xml:space="preserve" x="20" y="154.9" fill="#d3dae6" textLength="429.0" lengthAdjust="spacing">│   · read access to /opt/thalyx/data/greeter/notes.txt</text>
+<text xml:space="preserve" x="20" y="172.3" fill="#d3dae6" textLength="7.8" lengthAdjust="spacing">│</text>
+<text xml:space="preserve" x="20" y="189.8" fill="#d3dae6" textLength="460.2" lengthAdjust="spacing">│ These permissions come from the module&#x27;s signed manifest.</text>
+<text xml:space="preserve" x="20" y="207.2" fill="#d3dae6" textLength="397.8" lengthAdjust="spacing">│ They stay in force until you revoke them by hand.</text>
+<text xml:space="preserve" x="20" y="224.6" fill="#d3dae6" textLength="429.0" lengthAdjust="spacing">└──────────────────────────────────────────────────────</text>
+<text xml:space="preserve" x="20" y="242.0" fill="#d3dae6" textLength="140.4" lengthAdjust="spacing">  Confirm? [y/N] y</text>
+<text xml:space="preserve" x="20" y="276.9" fill="#d3dae6" textLength="265.2" lengthAdjust="spacing">dev.thalyx.greeter 1.0.0 installed</text>
+<text xml:space="preserve" x="20" y="294.3" fill="#d3dae6" textLength="319.8" lengthAdjust="spacing">  1 file(s), 1 permission(s) now in force</text>
+<text xml:space="preserve" x="20" y="311.7" fill="#d3dae6" textLength="468.0" lengthAdjust="spacing">  runs as user 700000, which is this module&#x27;s and no other&#x27;s</text>
+<text xml:space="preserve" x="20" y="346.5" fill="#7fd8a4" textLength="156.0" lengthAdjust="spacing">$ thalyx permissions</text>
+<text xml:space="preserve" x="20" y="364.0" fill="#d3dae6" textLength="140.4" lengthAdjust="spacing">dev.thalyx.greeter</text>
+<text xml:space="preserve" x="20" y="381.4" fill="#d3dae6" textLength="717.6" lengthAdjust="spacing">  read /opt/thalyx/data/greeter/notes.txt (persistent) granted 2026-08-21T05:08:41.93440502Z</text>
+</g></svg>

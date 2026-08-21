@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="560" viewBox="0 0 920 560" role="img"
+     aria-label="Thalyx architecture: the human and the agent both reach the Thalyx core, but only the human route is complete and only the core is trusted; the core drives the module sandbox, the Btrfs store and the journal, and the BPF LSM inside the Linux kernel enforces the grants.">
+  <style>
+    .t   { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+    .h   { font-size: 13px; font-weight: 600; letter-spacing: .06em; }
+    .b   { font-size: 11.5px; }
+    .s   { font-size: 10.5px; }
+    .fg  { fill: #d7dee9; }
+    .dim { fill: #8b95a6; }
+    .grn { fill: #7fd8a4; }
+    .amb { fill: #e0b978; }
+    .red { fill: #e59090; }
+    .box { fill: #161a21; stroke: #2a313d; stroke-width: 1; }
+    .ln  { stroke: #3b4453; stroke-width: 1.2; fill: none; }
+    .lng { stroke: #7fd8a4; stroke-width: 1.4; fill: none; }
+    .lna { stroke: #e0b978; stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; }
+    .lnr { stroke: #e59090; stroke-width: 1.4; fill: none; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#3b4453"/></marker>
+    <marker id="ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#7fd8a4"/></marker>
+    <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#e0b978"/></marker>
+    <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#e59090"/></marker>
+  </defs>
+
+  <rect width="920" height="560" rx="10" fill="#0f1116"/>
+
+  <!-- top row: the two routes -->
+  <rect class="box" x="60"  y="34" width="300" height="66" rx="6"/>
+  <text class="t h grn" x="80" y="60">HUMAN</text>
+  <text class="t s dim" x="80" y="80">types a verb at the machine's own prompt</text>
+  <text class="t s dim" x="80" y="94">no login, no shell, no agent in the way</text>
+
+  <rect class="box" x="560" y="34" width="300" height="66" rx="6"/>
+  <text class="t h amb" x="580" y="60">AGENT</text>
+  <text class="t s dim" x="580" y="80">outside the trusted computing base</text>
+  <text class="t s dim" x="580" y="94">proposes a contract — executes nothing</text>
+
+  <path class="lng" marker-end="url(#ag)" d="M210 100 L210 152"/>
+  <text class="t s grn" x="220" y="128">complete route</text>
+  <path class="lna" marker-end="url(#aa)" d="M710 100 L710 152"/>
+  <text class="t s amb" x="688" y="128" text-anchor="end">proposal only</text>
+
+  <!-- the core -->
+  <rect x="60" y="156" width="800" height="96" rx="7" fill="#161a21" stroke="#7fd8a4" stroke-width="1.4"/>
+  <text class="t h fg" x="84" y="182">THALYX CORE — the only thing that is trusted</text>
+  <text class="t b dim" x="84" y="206">verifies the signature and recomputes the digest itself · draws the authorisation</text>
+  <text class="t b dim" x="84" y="223">frame from the signed manifest · revalidates everything the agent produced ·</text>
+  <text class="t b dim" x="84" y="240">stages, commits atomically, journals, and can take it all back</text>
+
+  <!-- three outputs -->
+  <path class="ln" marker-end="url(#a)" d="M185 252 L185 300"/>
+  <path class="ln" marker-end="url(#a)" d="M460 252 L460 300"/>
+  <path class="ln" marker-end="url(#a)" d="M735 252 L735 300"/>
+
+  <rect class="box" x="60"  y="304" width="250" height="84" rx="6"/>
+  <text class="t h fg"  x="80" y="328">MODULE</text>
+  <text class="t s dim" x="80" y="347">signed .thmod · its own uid</text>
+  <text class="t s dim" x="80" y="362">pivot_root · seccomp · cgroup</text>
+  <text class="t s dim" x="80" y="377">speaks to you only through Thalyx</text>
+
+  <rect class="box" x="335" y="304" width="250" height="84" rx="6"/>
+  <text class="t h fg"  x="355" y="328">BTRFS STORE</text>
+  <text class="t s dim" x="355" y="347">subvolumes Thalyx writes itself</text>
+  <text class="t s dim" x="355" y="362">snapshot before, restore after</text>
+  <text class="t s dim" x="355" y="377">rollback undoes only its own</text>
+
+  <rect class="box" x="610" y="304" width="250" height="84" rx="6"/>
+  <text class="t h fg"  x="630" y="328">JOURNAL &amp; MEMORY</text>
+  <text class="t s dim" x="630" y="347">append-only record of what it did</text>
+  <text class="t s dim" x="630" y="362">recall re-checks against the disk</text>
+  <text class="t s dim" x="630" y="377">a stale claim shows up as stale</text>
+
+  <!-- kernel band -->
+  <rect class="box" x="60" y="440" width="800" height="86" rx="7"/>
+  <text class="t h fg"  x="84" y="466">LINUX KERNEL — a component Thalyx manages, not a host it rests on</text>
+  <text class="t b dim" x="84" y="490">BPF LSM, loaded by Thalyx's own loader: no libbpf, no bpftool, no second file.</text>
+  <text class="t b dim" x="84" y="507">A grant becomes a bit in a map; what was not granted is denied in the kernel.</text>
+
+  <path class="ln" marker-end="url(#a)" d="M597 252 L597 436"/>
+  <text class="t s dim" x="609" y="422">grants become kernel policy</text>
+  <path class="lnr" marker-end="url(#ar)" d="M180 440 L180 392"/>
+  <text class="t s red" x="192" y="422">denies what was not granted</text>
+</svg>

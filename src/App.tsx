@@ -1,51 +1,65 @@
 import { useEffect } from 'react';
 import { About } from './components/About';
+import { Acredita } from './components/Acredita';
 import { Contact } from './components/Contact';
+import { CppCeti } from './components/CppCeti';
+import { Ferrol } from './components/Ferrol';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Projects } from './components/Projects';
-import { Skills } from './components/Skills';
-import { Stats } from './components/Stats';
-import { TechRibbon } from './components/TechRibbon';
-import { Background } from './components/fx/Background';
-import { CursorGlow } from './components/fx/CursorGlow';
-import { ScrollProgress } from './components/fx/ScrollProgress';
-import { useIsMobile } from './hooks/useIsMobile';
+import { More } from './components/More';
+import { Orux } from './components/Orux';
+import { Studymation } from './components/Studymation';
+import { Thalyx } from './components/Thalyx';
+import { SecondaryHeading, WorkHeading } from './components/WorkHeading';
+import { useI18n } from './i18n/context';
 
 export default function App() {
-  const isMobile = useIsMobile();
+  const { c, lang } = useI18n();
 
-  // Keep the phone flag in sync on resize / orientation change. The initial
-  // value is already set pre-paint by the inline script in index.html.
+  // Keep the document title and description in the reader's language.
   useEffect(() => {
-    document.documentElement.classList.toggle('is-phone', isMobile);
-  }, [isMobile]);
+    document.title = c.meta.title;
+    document.documentElement.lang = lang;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', c.meta.description);
+  }, [c, lang]);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden text-white">
+    <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-[var(--ink)] focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--paper)]"
       >
-        Saltar al contenido
+        {c.a11y.skip}
       </a>
 
-      <Background />
-      <CursorGlow />
-      <ScrollProgress />
-
       <Header />
+
       <main id="main">
         <Hero />
-        <TechRibbon />
-        <Stats />
+
+        <div className="pt-16 pb-16 sm:pt-20 sm:pb-20 md:pt-24 md:pb-24">
+          <WorkHeading />
+        </div>
+
+        <Thalyx />
+        <Orux />
+        <Ferrol />
+
+        <div className="pt-16 sm:pt-20 md:pt-24">
+          <SecondaryHeading />
+        </div>
+
+        <Acredita />
+        <Studymation />
+        <CppCeti />
+        <More />
+
         <About />
-        <Projects />
-        <Skills />
         <Contact />
       </main>
+
       <Footer />
-    </div>
+    </>
   );
 }

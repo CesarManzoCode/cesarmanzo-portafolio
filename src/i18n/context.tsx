@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
+import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { content, type Lang, type SiteContent } from './content';
 
 type I18nValue = { lang: Lang; setLang: (l: Lang) => void; c: SiteContent };
@@ -12,17 +12,13 @@ function getInitialLang(): Lang {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved === 'es' || saved === 'en') return saved;
   } catch {
-    /* ignore */
+    /* private mode: fall through to the default */
   }
-  return 'en'; // English is the default on first visit.
+  return 'en';
 }
 
 export function LanguageProvider({ children }: PropsWithChildren) {
   const [lang, setLangState] = useState<Lang>(getInitialLang);
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
 
   const setLang = (next: Lang) => {
     setLangState(next);
@@ -33,11 +29,7 @@ export function LanguageProvider({ children }: PropsWithChildren) {
     }
   };
 
-  return (
-    <LanguageContext.Provider value={{ lang, setLang, c: content[lang] }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={{ lang, setLang, c: content[lang] }}>{children}</LanguageContext.Provider>;
 }
 
 export function useI18n(): I18nValue {

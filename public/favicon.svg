@@ -1,15 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0b1024" />
-      <stop offset="1" stop-color="#05060c" />
-    </linearGradient>
-    <linearGradient id="mark" x1="14" y1="16" x2="50" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#5ce6ff" />
-      <stop offset="0.55" stop-color="#5b9bff" />
-      <stop offset="1" stop-color="#b79bff" />
-    </linearGradient>
-  </defs>
-  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bg)" stroke="url(#mark)" stroke-width="2" stroke-opacity="0.6" />
-  <text x="32" y="33" dy="0.36em" text-anchor="middle" font-family="'Space Grotesk', Inter, system-ui, sans-serif" font-size="29" font-weight="700" fill="url(#mark)">CM</text>
+  <rect width="64" height="64" rx="10" fill="#15140f" />
+  <path d="M8 50 h48" stroke="#a8371a" stroke-width="4" />
+  <text x="32" y="30" dy="0.36em" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#f3f0ea">cm</text>
 </svg>

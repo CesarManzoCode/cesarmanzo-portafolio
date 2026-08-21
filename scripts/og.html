@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- Source of public/og.png (1200x630). Render it with any headless browser:
+     open this file at a 1200x630 viewport and screenshot. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Instrument Serif";
+        src: url("../src/assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("../src/assets/fonts/jetbrains-mono-400-normal-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("../src/assets/fonts/inter-400-600-normal-latin.woff2") format("woff2");
+      }
+      * { box-sizing: border-box; margin: 0; }
+      body {
+        width: 1200px;
+        height: 630px;
+        background: #f3f0ea;
+        color: #15140f;
+        font-family: Inter, sans-serif;
+        padding: 62px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .top { display: flex; justify-content: space-between; align-items: baseline; }
+      .mono { font-family: "JetBrains Mono", monospace; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; }
+      .muted { color: #787266; }
+      h1 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 92px; line-height: 0.98; letter-spacing: -0.015em; max-width: 15ch; }
+      .rule { border-top: 1px solid #c3bcab; padding-top: 18px; display: flex; gap: 26px; flex-wrap: wrap; }
+      .rule span { font-family: "Instrument Serif", serif; font-size: 26px; }
+      .rule i { font-family: "JetBrains Mono", monospace; font-size: 13px; font-style: normal; color: #a8371a; margin-right: 6px; vertical-align: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <p class="mono">César Manzo</p>
+      <p class="mono muted">Software engineer · Guadalajara, México</p>
+    </div>
+
+    <h1>I build systems, and I finish them.</h1>
+
+    <div class="rule">
+      <span><i>01</i>Thalyx</span>
+      <span><i>02</i>Orux</span>
+      <span><i>03</i>Ferrol</span>
+      <span><i>04</i>ACREDITA-BACH</span>
+      <span><i>05</i>Studymation</span>
+      <span><i>06</i>C++ CETI</span>
+    </div>
+  </body>
+</html>

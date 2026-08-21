@@ -3,58 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      // Flag phones before first paint so the lighter, phone-optimized CSS
-      // applies immediately (no flash of the GPU-heavy desktop effects).
-      try {
-        if (window.matchMedia('(max-width: 767px)').matches) {
-          document.documentElement.classList.add('is-phone');
-        }
-      } catch (e) {}
-    </script>
+
+    <title>César Manzo — Software Engineer</title>
     <meta
       name="description"
-      content="César Manzo — Full-stack Software Engineer. I build and ship SaaS products end to end: real-time systems, applied AI, payments and infrastructure. Orux, Studymation and cpp-ceti in production."
+      content="Software engineer in Guadalajara, México. An experimental operating system in Rust, a real-time coordination layer over Git, and the catalogue and pricing platform a hardware store runs on."
     />
-    <meta name="theme-color" content="#05060c" />
-    <meta name="color-scheme" content="dark" />
     <meta name="author" content="César Alberto Manzo Olivares" />
+    <meta name="theme-color" content="#f3f0ea" />
+    <meta name="color-scheme" content="light" />
+
     <link rel="canonical" href="https://cesarmanzo-portafolio.vercel.app/" />
     <meta property="og:url" content="https://cesarmanzo-portafolio.vercel.app/" />
-
-    <meta property="og:title" content="César Manzo — Software Engineer · Full-Stack, AI & Real-time Systems" />
-    <meta
-      property="og:description"
-      content="I build and ship SaaS products end to end. Orux, Studymation and cpp-ceti, in production."
-    />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="es_MX" />
+    <meta property="og:title" content="César Manzo — Software Engineer" />
+    <meta
+      property="og:description"
+      content="Six systems, built end to end: an operating system in Rust, a real-time coordination layer over Git, a hardware store's catalogue and price engine, and three teaching platforms."
+    />
     <meta property="og:image" content="https://cesarmanzo-portafolio.vercel.app/og.png" />
-    <meta property="og:image:secure_url" content="https://cesarmanzo-portafolio.vercel.app/og.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="César Manzo — Software Engineer · Full-Stack, AI & real-time systems" />
+    <meta property="og:image:alt" content="César Manzo — Software Engineer" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="César Manzo — Software Engineer" />
     <meta
       name="twitter:description"
-      content="Full-Stack · Applied AI · Real-time systems. Real products in production."
+      content="Six systems, built end to end — with the evidence that they run."
     />
     <meta name="twitter:image" content="https://cesarmanzo-portafolio.vercel.app/og.png" />
-    <meta name="twitter:image:alt" content="César Manzo — Software Engineer" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <title>César Manzo — Software Engineer · Full-Stack, AI & Real-time</title>
 
     <script type="application/ld+json">
       {
@@ -64,8 +47,21 @@
         "alternateName": "César Manzo",
         "url": "https://cesarmanzo-portafolio.vercel.app/",
         "jobTitle": "Software Engineer",
-        "description": "Full-stack Software Engineer. Builds and ships SaaS products end to end: real-time systems, applied AI, payments and infrastructure.",
-        "knowsAbout": ["Full-Stack Development", "Real-time systems", "Applied AI", "Backend", "Infrastructure"],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Guadalajara",
+          "addressRegion": "Jalisco",
+          "addressCountry": "MX"
+        },
+        "description": "Software engineer building complete systems: an experimental operating system in Rust, a real-time coordination layer over Git, and commercial and educational platforms.",
+        "knowsAbout": [
+          "Operating systems",
+          "Rust",
+          "Backend engineering",
+          "Real-time systems",
+          "PostgreSQL",
+          "Infrastructure"
+        ],
         "sameAs": [
           "https://github.com/CesarManzoCode",
           "https://www.linkedin.com/in/c%C3%A9sar-alberto-manzo-olivares-b503383b8/"
