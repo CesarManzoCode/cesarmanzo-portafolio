@@ -64,13 +64,19 @@ export type SiteContent = {
 
   acredita: Head & {
     points: Point[];
-    figures: { today: string; syllabus: string };
+    /** The lead capture, then the two steps that prove the rule. */
+    figures: {
+      today: string;
+      taught: { step: string; caption: string };
+      asked: { step: string; caption: string };
+    };
   };
 
   studymation: Head & {
     points: Point[];
     pipelineLabel: string;
     pipeline: { step: string; title: string; body: string }[];
+    figures: { brief: string; run: string; document: string };
     stackLabel: string;
     stack: string;
   };
@@ -79,16 +85,7 @@ export type SiteContent = {
     points: Point[];
     curriculumLabel: string;
     curriculum: string[];
-    exercise: {
-      label: string;
-      unit: string;
-      title: string;
-      brief: string;
-      code: string;
-      casesLabel: string;
-      cases: { stdin: string; stdout: string; note: string }[];
-      note: string;
-    };
+    figures: { lesson: string; challenge: string; course: string };
   };
 
   more: { text: string; link: Link };
@@ -386,8 +383,16 @@ const en: SiteContent = {
       },
     ],
     figures: {
-      today: 'The daily plan: what today is for, how long it takes, and which topics are new.',
-      syllabus: 'The seven areas of the exam with their 177 topics, each carrying the weight it has in the real paper.',
+      today:
+        'A real day of study with eight days of use behind it: 32 minutes split into 15 review cards, 2 new topics and 10 exam-format items — plus the warning that Mathematics is the area that can fail you, because each area is accredited on its own.',
+      taught: {
+        step: 'Step 16 of 32',
+        caption: 'The new topic arrives explained, in the serif the study material always uses. One button, and it is not an answer.',
+      },
+      asked: {
+        step: 'Step 22 of 32',
+        caption: 'Six steps later in the same session, the question — the format the official guide prescribes, a calculator when the item needs one, and the explanation immediately after.',
+      },
     },
   },
 
@@ -402,11 +407,11 @@ const en: SiteContent = {
     points: [
       {
         title: 'A pipeline, not a prompt',
-        body: 'Four explicit steps, each with its own contract and its own failure mode. Sections are planned globally before they are written, then written in parallel, and the introduction and conclusion are produced from the summaries of what actually got written.',
+        body: 'Explicit steps, each with its own contract and its own failure mode — and which of them run at all is decided by the document type, so a one-page answer and a research essay do not go down the same pipeline. Sections are planned globally before they are written, then written in parallel, and the introduction and conclusion are produced from the summaries of what actually got written.',
       },
       {
         title: 'Sources are verified, or declared missing',
-        body: 'Candidates are searched in Semantic Scholar and Crossref, ranked for relevance and inserted deterministically; the bibliography lists only the sources that were used. When nothing useful is found the step reports found = false rather than inventing a reference — the failure that would matter most to the person handing the work in.',
+        body: 'Candidates are searched in Semantic Scholar, Crossref and Brave, ranked for relevance and inserted deterministically; the bibliography lists only the sources that were used. When nothing useful is found the step reports found = false rather than inventing a reference — the failure that would matter most to the person handing the work in.',
       },
       {
         title: 'Institutional formatting',
@@ -424,6 +429,14 @@ const en: SiteContent = {
       { step: '03', title: 'Citations', body: 'Search, rank, verify, insert. Nothing found is reported as nothing found.' },
       { step: '04', title: 'Assembly', body: 'The .docx itself: cover, styles, tables, lists and figures.' },
     ],
+    figures: {
+      brief:
+        'The brief is the contract with the student: topic, subject, personal and academic data, and the teacher’s rubric pasted in whole. Seven of seven fields before anything can be generated.',
+      run:
+        'The progress screen is not an animation — it reads the document’s real state on the backend: analysis and structure done, content being written, assembly still ahead.',
+      document:
+        'What comes back: the school’s own cover page with the student’s data, then heading styles, body text and an in-text citation. Produced by running the real assembler against the repository’s own test fixtures — cover, styles, citation and reference page are the system’s output, and the prose is fixture text, because that run had no model keys.',
+    },
     stackLabel: 'Built with',
     stack: 'FastAPI · PostgreSQL · SQLAlchemy 2.0 · Alembic · Redis · Stripe · Next.js 15. The model layer is a provider abstraction — which one runs is configuration, not architecture.',
   },
@@ -446,7 +459,7 @@ const en: SiteContent = {
       },
       {
         title: 'Your code is really compiled',
-        body: 'The editor is Monaco — the one from VS Code — and what you write is compiled and run against test cases, so feedback is the output of your program rather than a checkbox someone wrote.',
+        body: 'The editor is Monaco — the one from VS Code — and what you write is compiled and run against test cases, so feedback is the output of your program rather than a checkbox someone wrote. Which service compiles it is an adapter — Wandbox by default — and the app never learns who answered.',
       },
       {
         title: 'Progress that means something',
@@ -466,28 +479,13 @@ const en: SiteContent = {
       'Files: saving to and reading from disk',
       'Matrices: arrays in two dimensions',
     ],
-    exercise: {
-      label: 'One real exercise, from the course data',
-      unit: 'Unit 05 · Loops · easy · 14 XP',
-      title: 'Count from 1 to N',
-      brief: 'Read an int n and print the numbers from 1 to n, one per line.',
-      code: `#include <iostream>
-using namespace std;
-
-int main() {
-  int n;
-  cin >> n;
-  // for que imprima de 1 a n
-
-  return 0;
-}`,
-      casesLabel: 'Test cases',
-      cases: [
-        { stdin: '5', stdout: '1 2 3 4 5', note: 'shown to the student' },
-        { stdin: '1', stdout: '1', note: 'hidden' },
-        { stdin: '10', stdout: '1 2 3 … 10', note: 'hidden' },
-      ],
-      note: 'The student gets the starter, writes the loop, and the submission is compiled and run against all three — including the two they cannot see. Hints exist, and none of them is the answer.',
+    figures: {
+      lesson:
+        'One step of Unit 3: the explanation of int, double and char beside the editor, with the example compiled and run. The console underneath is the program’s actual output, not a transcript.',
+      challenge:
+        'The challenge that catches integer division. The feedback does not say “incorrect”: it puts the expected output next to yours, points at the line and column where they part, keeps a hidden case so the fix cannot be fitted to the example, and reveals hints one at a time.',
+      course:
+        'Progress is measured in lessons placed, not screen time: one block per lesson, the ten units and which one you are in, with XP, level and streak around it.',
     },
   },
 
@@ -825,8 +823,16 @@ const es: SiteContent = {
       },
     ],
     figures: {
-      today: 'El plan del día: para qué es hoy, cuánto tarda y qué temas son nuevos.',
-      syllabus: 'Las siete áreas del examen con sus 177 temas, cada una con el peso que tiene en el examen real.',
+      today:
+        'Una jornada real de estudio, con ocho días de uso detrás: 32 minutos repartidos en 15 tarjetas de repaso, 2 temas nuevos y 10 reactivos con el formato del examen — y el aviso de que Matemáticas es el área que te puede reprobar, porque cada área se acredita por separado.',
+      taught: {
+        step: 'Paso 16 de 32',
+        caption: 'El tema nuevo llega explicado, en la serif que siempre lleva el material de estudio. Un solo botón, y no es una respuesta.',
+      },
+      asked: {
+        step: 'Paso 22 de 32',
+        caption: 'Seis pasos después, en la misma sesión, la pregunta — con el formato que marca la guía, calculadora cuando el reactivo la necesita y la explicación al momento.',
+      },
     },
   },
 
@@ -841,11 +847,11 @@ const es: SiteContent = {
     points: [
       {
         title: 'Un pipeline, no un prompt',
-        body: 'Cuatro pasos explícitos, cada uno con su contrato y su modo de fallar. Las secciones se planifican de forma global antes de escribirse, luego se escriben en paralelo, y la introducción y la conclusión se producen a partir de los resúmenes de lo que de verdad se escribió.',
+        body: 'Pasos explícitos, cada uno con su contrato y su modo de fallar — y cuáles corren siquiera lo decide el tipo de documento, así que una respuesta de una cuartilla y un ensayo de investigación no bajan por el mismo pipeline. Las secciones se planifican de forma global antes de escribirse, luego se escriben en paralelo, y la introducción y la conclusión se producen a partir de los resúmenes de lo que de verdad se escribió.',
       },
       {
         title: 'Las fuentes se verifican, o se declaran ausentes',
-        body: 'Los candidatos se buscan en Semantic Scholar y Crossref, se ordenan por relevancia y se insertan de forma determinista; la bibliografía solo lista las fuentes que se usaron. Cuando no aparece nada útil, el paso reporta found = false en vez de inventar una referencia — que es justo el fallo que más le importaría a quien entrega el trabajo.',
+        body: 'Los candidatos se buscan en Semantic Scholar, Crossref y Brave, se ordenan por relevancia y se insertan de forma determinista; la bibliografía solo lista las fuentes que se usaron. Cuando no aparece nada útil, el paso reporta found = false en vez de inventar una referencia — que es justo el fallo que más le importaría a quien entrega el trabajo.',
       },
       {
         title: 'Formato institucional',
@@ -863,6 +869,14 @@ const es: SiteContent = {
       { step: '03', title: 'Citas', body: 'Buscar, ordenar, verificar, insertar. Lo que no se encontró se reporta como no encontrado.' },
       { step: '04', title: 'Ensamblado', body: 'El .docx: portada, estilos, tablas, listas y figuras.' },
     ],
+    figures: {
+      brief:
+        'El brief es el contrato con el estudiante: tema, materia, datos personales y académicos, y la rúbrica del profesor pegada completa. Siete de siete campos antes de poder generar nada.',
+      run:
+        'La pantalla de progreso no es una animación: lee el estado real del documento en el backend — análisis y estructura hechos, contenido escribiéndose, ensamblaje todavía por delante.',
+      document:
+        'Lo que devuelve: la portada de la propia escuela con los datos del alumno y, después, estilos de encabezado, cuerpo de texto y una cita dentro del párrafo. Producido ejecutando el ensamblador real contra los fixtures de prueba del repositorio — portada, estilos, cita y página de referencias son salida del sistema, y la prosa es texto de fixture, porque esa corrida no tenía llaves de modelo.',
+    },
     stackLabel: 'Construido con',
     stack: 'FastAPI · PostgreSQL · SQLAlchemy 2.0 · Alembic · Redis · Stripe · Next.js 15. La capa de modelos es una abstracción de proveedores: cuál corre es configuración, no arquitectura.',
   },
@@ -885,7 +899,7 @@ const es: SiteContent = {
       },
       {
         title: 'Tu código se compila de verdad',
-        body: 'El editor es Monaco — el de VS Code — y lo que escribes se compila y se ejecuta contra casos de prueba, así que la retroalimentación es la salida de tu programa y no una palomita que alguien escribió a mano.',
+        body: 'El editor es Monaco — el de VS Code — y lo que escribes se compila y se ejecuta contra casos de prueba, así que la retroalimentación es la salida de tu programa y no una palomita que alguien escribió a mano. Quién compila es un adapter — Wandbox por defecto — y la app nunca se entera de cuál respondió.',
       },
       {
         title: 'Progreso que significa algo',
@@ -905,28 +919,13 @@ const es: SiteContent = {
       'Archivos: guardar y leer datos del disco',
       'Matrices: arreglos en dos dimensiones',
     ],
-    exercise: {
-      label: 'Un ejercicio real, sacado del contenido del curso',
-      unit: 'Unidad 05 · Ciclos · fácil · 14 XP',
-      title: 'Contar de 1 a N',
-      brief: 'Lee un int n e imprime los números del 1 a n, uno por línea.',
-      code: `#include <iostream>
-using namespace std;
-
-int main() {
-  int n;
-  cin >> n;
-  // for que imprima de 1 a n
-
-  return 0;
-}`,
-      casesLabel: 'Casos de prueba',
-      cases: [
-        { stdin: '5', stdout: '1 2 3 4 5', note: 'visible para el alumno' },
-        { stdin: '1', stdout: '1', note: 'oculto' },
-        { stdin: '10', stdout: '1 2 3 … 10', note: 'oculto' },
-      ],
-      note: 'El alumno recibe el esqueleto, escribe el ciclo y su envío se compila y se ejecuta contra los tres casos — incluidos los dos que no puede ver. Hay pistas, y ninguna de ellas es la respuesta.',
+    figures: {
+      lesson:
+        'Un paso de la Unidad 3: la explicación de int, double y char junto al editor, con el ejemplo compilado y ejecutado. La consola de abajo es la salida real del programa, no una transcripción.',
+      challenge:
+        'El reto que caza la división entera. La retroalimentación no dice «incorrecto»: pone la salida esperada junto a la tuya, señala la línea y la columna donde se separan, guarda un caso oculto para que la solución no se ajuste al ejemplo y revela las pistas de una en una.',
+      course:
+        'El avance se mide en lecciones colocadas, no en tiempo de pantalla: un bloque por lección, las diez unidades y en cuál vas, con XP, nivel y racha alrededor.',
     },
   },
 

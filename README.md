@@ -26,10 +26,13 @@ project it illustrates:
 | `thalyx-*.svg` | `CesarManzoCode/thalyx` → `docs/media/` |
 | `orux-*.webp`, `orux-flow.svg` | `CesarManzoCode/orux` → `docs/img/` |
 | `ferrol-*.webp` | `CesarManzoCode/ferrol` → `docs/capturas/` (private repo) |
-| `acredita-*.webp` | captured from a local build of `CesarManzoCode/study-acreditabach` |
+| `acredita-*.webp` | `CesarManzoCode/study-acreditabach` → `docs/media/` |
+| `studymation-*.webp` | `CesarManzoCode/Studymation` → `docs/media/` |
+| `cpp-*.webp` | `CesarManzoCode/cpp-ceti` → `docs/media/` |
 
-Nothing here is a mock-up. If a project's interface changes, replace the file
-rather than redrawing it.
+Nothing here is a mock-up. PNGs are converted to WebP and, where a capture has
+wide empty margins, cropped — never composited, restyled or redrawn. If a
+project's interface changes, replace the file rather than redrawing it.
 
 ## Develop
 
