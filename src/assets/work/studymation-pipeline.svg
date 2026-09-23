@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 470" width="1280" height="470">
+  <style>
+    .t { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
+    .h { fill:#f2f3fa; }
+    .m { fill:#9aa2bd; }
+    .n { fill:#7c6cf5; }
+  </style>
+  <rect width="1280" height="470" fill="#0d0e18"/>
+  <text class="t m" x="44" y="46" font-size="12" letter-spacing="1.7">FROM ASSIGNMENT TO DELIVERABLE</text>
+  <text class="t h" x="44" y="84" font-size="26" font-weight="600">What happens after you paste the rubric</text>
+  <line x1="44" y1="108" x2="1236" y2="108" stroke="#23253a"/>
+  <g transform="translate(44,140)">
+    <rect width="272" height="212" rx="14" fill="#141733" stroke="#262a4d" stroke-width="1.5"/>
+    <text class="t n" x="20" y="36" font-size="12.5" font-weight="700" letter-spacing="1.2">01</text>
+    <text class="t h" x="20" y="66" font-size="18" font-weight="600">Understand</text>
+    <line x1="20" y1="82" x2="252" y2="82" stroke="#262a4d"/>
+    <text class="t m" x="20" y="106" font-size="12.5">Topic, subject, school data and the</text>
+    <text class="t m" x="20" y="128" font-size="12.5">teacher's rubric (pasted or as a PDF)</text>
+    <text class="t m" x="20" y="150" font-size="12.5">→ contract of deliverables</text>
+    <text class="t m" x="20" y="172" font-size="12.5">→ profile: which steps run at all</text>
+  </g>
+  <line x1="319" y1="246" x2="333" y2="246" stroke="#5b6187" stroke-width="1.5"/>
+  <path d="M333 241 L341 246 L333 251 Z" fill="#5b6187"/>
+  <g transform="translate(340,140)">
+    <rect width="272" height="212" rx="14" fill="#141733" stroke="#262a4d" stroke-width="1.5"/>
+    <text class="t n" x="20" y="36" font-size="12.5" font-weight="700" letter-spacing="1.2">02</text>
+    <text class="t h" x="20" y="66" font-size="18" font-weight="600">Write</text>
+    <line x1="20" y1="82" x2="252" y2="82" stroke="#262a4d"/>
+    <text class="t m" x="20" y="106" font-size="12.5">Structure from the school template</text>
+    <text class="t m" x="20" y="128" font-size="12.5">Content in phases: thesis and claims,</text>
+    <text class="t m" x="20" y="150" font-size="12.5">sections in parallel, then intro and</text>
+    <text class="t m" x="20" y="172" font-size="12.5">conclusion; overlap check between them</text>
+  </g>
+  <line x1="615" y1="246" x2="629" y2="246" stroke="#5b6187" stroke-width="1.5"/>
+  <path d="M629 241 L637 246 L629 251 Z" fill="#5b6187"/>
+  <g transform="translate(636,140)">
+    <rect width="272" height="212" rx="14" fill="#141733" stroke="#262a4d" stroke-width="1.5"/>
+    <text class="t n" x="20" y="36" font-size="12.5" font-weight="700" letter-spacing="1.2">03</text>
+    <text class="t h" x="20" y="66" font-size="18" font-weight="600">Verify</text>
+    <line x1="20" y1="82" x2="252" y2="82" stroke="#262a4d"/>
+    <text class="t m" x="20" y="106" font-size="12.5">Citations searched in Semantic Scholar,</text>
+    <text class="t m" x="20" y="128" font-size="12.5">Crossref and Brave, then ranked and</text>
+    <text class="t m" x="20" y="150" font-size="12.5">validated against the section</text>
+    <text class="t m" x="20" y="172" font-size="12.5">Rubric contract audited, gaps logged</text>
+  </g>
+  <line x1="911" y1="246" x2="925" y2="246" stroke="#5b6187" stroke-width="1.5"/>
+  <path d="M925 241 L933 246 L925 251 Z" fill="#5b6187"/>
+  <g transform="translate(932,140)">
+    <rect width="272" height="212" rx="14" fill="#141733" stroke="#262a4d" stroke-width="1.5"/>
+    <text class="t n" x="20" y="36" font-size="12.5" font-weight="700" letter-spacing="1.2">04</text>
+    <text class="t h" x="20" y="66" font-size="18" font-weight="600">Deliver</text>
+    <line x1="20" y1="82" x2="252" y2="82" stroke="#262a4d"/>
+    <text class="t m" x="20" y="106" font-size="12.5">Word assembly: cover page, styles,</text>
+    <text class="t m" x="20" y="128" font-size="12.5">in-text citations and APA 7 references</text>
+    <text class="t m" x="20" y="150" font-size="12.5">Quality gate scans the rendered file</text>
+    <text class="t m" x="20" y="172" font-size="12.5">Stored and downloaded as .docx</text>
+  </g>
+  <g transform="translate(44,378)">
+    <rect width="1192" height="58" rx="12" fill="#101226" stroke="#262a4d" stroke-width="1.5" stroke-dasharray="7 6"/>
+    <text class="t h" x="22" y="26" font-size="13.5" font-weight="600">No citation is ever invented</text>
+    <text class="t m" x="22" y="46" font-size="12.5">If no source survives validation for a claim, the pipeline records why and the reference list simply does not include it. The audit is stored with the document.</text>
+  </g>
+</svg>

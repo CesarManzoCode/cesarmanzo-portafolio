@@ -339,8 +339,8 @@ export const TECH: TechDoc[] = [
       { value: '8', label: s('bottlenecks found and fixed by measuring', 'cuellos de botella encontrados y corregidos midiendo') },
     ],
     caveat: s(
-      'IPC does not scale: a single machine-wide lock serializes every object-touching kernel entry (1,806 vs. 11,912 round trips per 10 ms on 4 pairs).',
-      'La IPC no escala: un único lock global serializa cada entrada al kernel que toca un objeto (1,806 contra 11,912 idas y vueltas por 10 ms con 4 pares).',
+      'IPC scaling is still open: after the machine-wide lock was split, four pairs reach 8,518 round trips per 10 ms against 11,914 on Linux (71%) — the remaining cost is per-scope accounting along the ancestor chain.',
+      'La escalabilidad de la IPC sigue abierta: tras partir el lock global, cuatro pares llegan a 8,518 idas y vueltas por 10 ms contra 11,914 en Linux (71 %) — el costo que queda es la contabilidad por scope a lo largo de la cadena de ancestros.',
     ),
     sections: [
       {
@@ -424,7 +424,8 @@ export const TECH: TechDoc[] = [
                 [s('IPC round trip', 'Ida y vuelta de IPC'), '2.7 µs', '6.5 µs', s('Comparable, not equivalent: native also stamps origin/scope/causal parent and writes a receipt', 'Comparable, no equivalente: el nativo además sella origen/scope/padre causal y escribe un recibo')],
                 [s('Map / seal / derive', 'Mapear / sellar / derivar'), '0.46×–4.7×', '1×', s('Each difference attributed to a stated guarantee difference', 'Cada diferencia atribuida a una diferencia de garantías declarada')],
                 [s('Compute scaling, 4 CPUs', 'Escalado de cómputo, 4 CPUs'), '3.95×', '4.0×', s('Same shape', 'Misma forma')],
-                [s('IPC scaling, 4 pairs', 'Escalado de IPC, 4 pares'), '1,806', '11,912', s('Round trips / 10 ms. IPC does not scale here', 'Idas y vueltas / 10 ms. Aquí la IPC no escala')],
+                [s('IPC scaling, 4 pairs — reference campaign', 'Escalado de IPC, 4 pares — campaña de referencia'), '1,806', '11,912', s('Round trips / 10 ms. One machine-wide lock: IPC did not scale', 'Idas y vueltas / 10 ms. Un solo lock global: la IPC no escalaba')],
+                [s('IPC scaling, 4 pairs — after the lock split', 'Escalado de IPC, 4 pares — tras partir el lock'), '8,518', '11,914', s('3 rounds, not the 43 the estimator asks for; 71% of Linux', '3 rondas, no las 43 que pide el estimador; 71 % de Linux')],
                 [s('Engine inference', 'Inferencia del motor'), '1.8 ms', '1.63 ms', s('~10% slower; byte-identical output in every repetition', '~10 % más lento; salida idéntica byte a byte en cada repetición')],
               ],
             },
@@ -438,7 +439,7 @@ export const TECH: TechDoc[] = [
             items: [
               {
                 title: s('IPC scalability', 'Escalabilidad de IPC'),
-                body: s('A single global lock serializes object-touching kernel entries. K6 replaced it with a ticket lock to remove starvation, but did not shard it — that is a redesign with its own evidence burden.', 'Un único lock global serializa las entradas al kernel que tocan objetos. K6 lo cambió por un ticket lock para quitar la inanición, pero no lo particionó — eso es un rediseño con su propia carga de evidencia.'),
+                body: s('The reference campaign found a single machine-wide lock serializing object-touching entries. It was then split into a per-CPU reader lock plus per-record locks; the first attempt measured worse (6,411 vs. 7,344 round trips with four pairs) until the atomic operations per round trip came down. Lock waiting is now 4% of machine time; the limit is scope accounting along the ancestor chain, and even with it neutralised in discarded probes four pairs reach 11,070 — still under Linux. Tracked as OQ-04.', 'La campaña de referencia encontró un único lock global serializando las entradas que tocan objetos. Después se partió en un lock de lectores por CPU más locks por registro; el primer intento midió peor (6,411 contra 7,344 idas y vueltas con cuatro pares) hasta que bajaron las operaciones atómicas por ida y vuelta. La espera por locks es hoy el 4 % del tiempo de máquina; el límite es la contabilidad por scope a lo largo de la cadena de ancestros, y aun neutralizándola en sondas desechadas cuatro pares llegan a 11,070 — todavía bajo Linux. Registrado como OQ-04.'),
               },
               {
                 title: s('Physical hardware', 'Hardware físico'),

@@ -56,7 +56,12 @@ export type MediaKey =
   | 'acredita-item'
   | 'studymation-brief'
   | 'studymation-run'
-  | 'studymation-document';
+  | 'studymation-document'
+  | 'studymation-pipeline'
+  | 'indice-cycle'
+  | 'acredita-areas'
+  | 'acredita-simulation'
+  | 'rice-signal';
 
 export type FigureRef = {
   media: MediaKey;
@@ -89,6 +94,10 @@ export type Project = {
   why: T;
   /** 1–3 concrete proof points. The first ones are used on Home. */
   proof: T[];
+  /** Large figures for the room header: each copied from the project’s own record. */
+  stats: { value: string; label: T }[];
+  /** The capture that stands for the project in indexes (none: a chart does). */
+  cover?: MediaKey;
   /** The accessible story: a few titled paragraphs, no jargon walls. */
   points: { title: T; body: T }[];
   tags: TagId[];
@@ -218,6 +227,12 @@ export const PROJECTS: Project[] = [
         es: 'Los permisos se hacen cumplir dentro del kernel de Linux, no con una promesa dentro de una app.',
       },
     ],
+    stats: [
+      { value: '156', label: { en: 'checks proven on a real PC', es: 'comprobaciones probadas en una PC real' } },
+      { value: '0', label: { en: 'failed', es: 'fallidas' } },
+      { value: '1,600+', label: { en: 'tests in the workspace', es: 'pruebas en el workspace' } },
+    ],
+    cover: 'thalyx-authorisation',
     points: [
       {
         title: { en: 'The agent proposes. It executes nothing.', es: 'El agente propone. No ejecuta nada.' },
@@ -304,6 +319,11 @@ export const PROJECTS: Project[] = [
         es: '17 benchmarks pareados contra Linux — incluidos los que pierde.',
       },
     ],
+    stats: [
+      { value: 'K0–K6', label: { en: 'phases, each passed by an independent checker', es: 'fases, cada una aprobada por un verificador independiente' } },
+      { value: '17', label: { en: 'paired benchmarks against Linux', es: 'benchmarks pareados contra Linux' } },
+      { value: '8', label: { en: 'bottlenecks found by measuring, then fixed', es: 'cuellos de botella encontrados midiendo, y corregidos' } },
+    ],
     points: [
       {
         title: { en: 'Authority is a handle, not an identity.', es: 'La autoridad es un handle, no una identidad.' },
@@ -315,8 +335,8 @@ export const PROJECTS: Project[] = [
       {
         title: { en: 'Measured against Linux, honestly.', es: 'Medido contra Linux, con honestidad.' },
         body: {
-          en: 'Some operations are cheaper, some cost several times more, and inter-process calls do not scale across CPUs because of a machine-wide lock. That last one is written up as the largest limitation, not hidden.',
-          es: 'Algunas operaciones salen más baratas, otras cuestan varias veces más, y las llamadas entre procesos no escalan entre CPUs por un lock global de la máquina. Eso último está escrito como la limitación más grande, no escondido.',
+          en: 'Some operations are cheaper, some cost several times more. The first campaign showed inter-process calls did not scale across CPUs because of one machine-wide lock; splitting it took four pairs from 1,806 to 8,518 round trips per 10 ms — still 71% of Linux, and the reason is written down.',
+          es: 'Algunas operaciones salen más baratas, otras cuestan varias veces más. La primera campaña mostró que las llamadas entre procesos no escalaban entre CPUs por un solo lock global; partirlo llevó a cuatro pares de 1,806 a 8,518 idas y vueltas por 10 ms — todavía el 71 % de Linux, y el motivo está escrito.',
         },
       },
     ],
@@ -358,6 +378,11 @@ export const PROJECTS: Project[] = [
         en: 'Release acceptance: 20 gates pass, 2 artifact-only, 0 failed.',
         es: 'Aceptación de release: 20 gates pasan, 2 solo con artefacto, 0 fallidos.',
       },
+    ],
+    stats: [
+      { value: '22', label: { en: 'release gates · 20 pass · 2 artifact-only', es: 'gates de release · 20 pasan · 2 solo con artefacto' } },
+      { value: '0', label: { en: 'failed', es: 'fallidos' } },
+      { value: '3', label: { en: 'databases: PostgreSQL, SQLite, PGlite', es: 'bases de datos: PostgreSQL, SQLite, PGlite' } },
     ],
     points: [
       {
@@ -414,6 +439,10 @@ export const PROJECTS: Project[] = [
         es: 'Cada claim tiene un falsador escrito; hoy todos están «sin probar».',
       },
     ],
+    stats: [
+      { value: '0', label: { en: 'implemented components', es: 'componentes implementados' } },
+      { value: '8', label: { en: 'accepted architecture decisions', es: 'decisiones de arquitectura aceptadas' } },
+    ],
     points: [
       {
         title: { en: 'Honest about where it is.', es: 'Honesto sobre dónde está.' },
@@ -462,6 +491,11 @@ export const PROJECTS: Project[] = [
         en: 'Runs against real targets: Supalite, Supabase over Docker, and a hosted Supabase project.',
         es: 'Corre contra targets reales: Supalite, Supabase sobre Docker y un proyecto de Supabase hospedado.',
       },
+    ],
+    stats: [
+      { value: '2', label: { en: 'real bugs found, both reproducible', es: 'bugs reales encontrados, ambos reproducibles' } },
+      { value: '27', label: { en: 'capabilities checked per target', es: 'capacidades comprobadas por target' } },
+      { value: '6', label: { en: 'real targets, hosted Supabase included', es: 'targets reales, Supabase hospedado incluido' } },
     ],
     points: [
       {
@@ -529,6 +563,11 @@ export const PROJECTS: Project[] = [
         es: 'Más de 500 pruebas automatizadas; todo el stack sigue corriendo en local.',
       },
     ],
+    stats: [
+      { value: '500+', label: { en: 'automated tests', es: 'pruebas automatizadas' } },
+      { value: '4', label: { en: 'analysis tiers: LSP, AST, tree-sitter, regex', es: 'niveles de análisis: LSP, AST, tree-sitter, regex' } },
+    ],
+    cover: 'orux-tentative',
     points: [
       {
         title: { en: 'Nobody is stopped before they try.', es: 'A nadie se le detiene antes de intentarlo.' },
@@ -632,6 +671,12 @@ export const PROJECTS: Project[] = [
         es: 'Encontró y corrigió un flujo de facturación donde el cliente recibía el PDF pero nunca el XML fiscal.',
       },
     ],
+    stats: [
+      { value: '12,027', label: { en: 'real products from the store’s catalogue', es: 'productos reales del catálogo de la tienda' } },
+      { value: '1,642', label: { en: 'visual families', es: 'familias visuales' } },
+      { value: '85%', label: { en: 'fewer image searches', es: 'menos búsquedas de imagen' } },
+    ],
+    cover: 'ferrol-category',
     points: [
       {
         title: { en: 'The real list, end to end.', es: 'La lista real, de principio a fin.' },
@@ -736,6 +781,11 @@ export const PROJECTS: Project[] = [
         es: 'Después de escribir, el contenido se vuelve a leer contra los entregables de la rúbrica.',
       },
     ],
+    stats: [
+      { value: '3', label: { en: 'academic sources checked for every citation', es: 'fuentes académicas consultadas para cada cita' } },
+      { value: '0', label: { en: 'invented references: a gap is recorded instead', es: 'referencias inventadas: se registra el hueco' } },
+    ],
+    cover: 'studymation-brief',
     points: [
       {
         title: { en: 'The rubric is a contract.', es: 'La rúbrica es un contrato.' },
@@ -779,6 +829,19 @@ export const PROJECTS: Project[] = [
           es: 'Producido corriendo el ensamblador real con los fixtures de prueba del repositorio: portada, estilos, cita y referencias son salida del sistema; la prosa es texto de fixture, porque esa corrida no tenía llaves de modelo.',
         },
       },
+      {
+        media: 'studymation-pipeline',
+        zoom: 'lg',
+        dark: true,
+        alt: {
+          en: 'Diagram from the repository: understand the assignment and rubric, write in phases, verify citations against real sources, deliver a formatted .docx.',
+          es: 'Diagrama del repositorio: entender la consigna y la rúbrica, escribir por fases, verificar citas contra fuentes reales, entregar un .docx con formato.',
+        },
+        caption: {
+          en: 'The pipeline as the repository documents it. No citation is invented: if no source survives, the gap is recorded.',
+          es: 'El pipeline como lo documenta el repositorio. Ninguna cita se inventa: si no sobrevive una fuente, se registra el hueco.',
+        },
+      },
     ],
   },
 
@@ -817,6 +880,12 @@ export const PROJECTS: Project[] = [
         es: 'C++, C# y SQL — cada curso trae su propio compilador.',
       },
     ],
+    stats: [
+      { value: '276', label: { en: 'lessons in 4 courses', es: 'lecciones en 4 cursos' } },
+      { value: '227', label: { en: 'exercises graded by a real compiler', es: 'prácticas calificadas por un compilador real' } },
+      { value: '3', label: { en: 'languages: C++, C#, SQL', es: 'lenguajes: C++, C#, SQL' } },
+    ],
+    cover: 'indice-challenge',
     points: [
       {
         title: { en: '90% practice, 10% theory.', es: '90 % práctica, 10 % teoría.' },
@@ -849,6 +918,18 @@ export const PROJECTS: Project[] = [
         caption: {
           en: 'A real attempt with the classic integer-division mistake. Expected vs. actual, the exact column, and a hidden second case.',
           es: 'Un intento real con el error clásico de la división entera. Esperado contra obtenido, la columna exacta y un segundo caso oculto.',
+        },
+      },
+      {
+        media: 'indice-cycle',
+        zoom: 'lg',
+        alt: {
+          en: 'Diagram from the repository: the five kinds of lesson step, and what happens when a challenge is submitted — compiled with g++, run against test cases, then either the differing line and column or XP and progress.',
+          es: 'Diagrama del repositorio: los cinco tipos de paso de una lección, y qué pasa al enviar un reto — se compila con g++, se corre contra casos de prueba y sale la línea y columna que difieren, o XP y progreso.',
+        },
+        caption: {
+          en: 'The lesson cycle of the C++ course, as the repository documents it: every lesson ends in code, and only passing the tests moves progress.',
+          es: 'El ciclo de lección del curso de C++, como lo documenta el repositorio: toda lección termina en código, y solo pasar las pruebas mueve el progreso.',
         },
       },
     ],
@@ -889,6 +970,12 @@ export const PROJECTS: Project[] = [
         es: 'Las comprobaciones automáticas fallan si una pregunta puede aparecer antes que su lección.',
       },
     ],
+    stats: [
+      { value: '177', label: { en: 'topics of the official guide', es: 'temas de la guía oficial' } },
+      { value: '1,708', label: { en: 'written questions', es: 'reactivos escritos' } },
+      { value: '1,032', label: { en: 'review cards', es: 'tarjetas de repaso' } },
+    ],
+    cover: 'acredita-today',
     points: [
       {
         title: { en: 'Teach, then ask.', es: 'Enseñar, luego preguntar.' },
@@ -944,6 +1031,30 @@ export const PROJECTS: Project[] = [
           es: 'Paso 22 de 32 — después se pregunta, con el formato del examen.',
         },
       },
+      {
+        media: 'acredita-areas',
+        zoom: 'lg',
+        alt: {
+          en: 'The calendar and the seven areas: a timeline from today to the exam day, topics seen per area, and a warning that the student is behind schedule.',
+          es: 'El calendario y las siete áreas: una línea de tiempo de hoy al día del examen, los temas vistos por área y el aviso de que el estudiante va por detrás del calendario.',
+        },
+        caption: {
+          en: 'From here to the exam: the plan knows the date, the seven areas that are graded separately, and how far behind the student is.',
+          es: 'De aquí al examen: el plan sabe la fecha, las siete áreas que se acreditan por separado y cuánto va atrasado el estudiante.',
+        },
+      },
+      {
+        media: 'acredita-simulation',
+        zoom: 'md',
+        alt: {
+          en: 'A full simulation: question 1 of 106 with the session clock at 4:29:59 and three options.',
+          es: 'Un simulacro completo: reactivo 1 de 106 con el reloj de la sesión en 4:29:59 y tres opciones.',
+        },
+        caption: {
+          en: 'Session 1 of the mock exam: 106 questions, the real time limit, three options — as in the official guide.',
+          es: 'Sesión 1 del simulacro: 106 reactivos, el tiempo real, tres opciones — como en la guía oficial.',
+        },
+      },
     ],
     note: {
       en: 'Independent study tool. Not affiliated with or endorsed by Ceneval, and it does not guarantee results.',
@@ -984,6 +1095,10 @@ export const PROJECTS: Project[] = [
         en: 'A small local model filters failures for free; the paid model is rationed to one call every ten minutes.',
         es: 'Un modelo local pequeño filtra los fallos gratis; el modelo de pago se raciona a una llamada cada diez minutos.',
       },
+    ],
+    stats: [
+      { value: '22', label: { en: 'tools · 7 always ask first', es: 'herramientas · 7 siempre preguntan antes' } },
+      { value: '181', label: { en: 'tests, plus real use on Linux', es: 'pruebas, más uso real en Linux' } },
     ],
     points: [
       {
@@ -1034,15 +1149,32 @@ export const PROJECTS: Project[] = [
         es: 'Modo de simulación, respaldos automáticos y scripts de validación.',
       },
     ],
+    stats: [],
+    cover: 'rice-signal',
     points: [],
     tags: ['linux'],
     links: [{ label: L.repo, href: `${GH}/cesarmanzocode-rice` }],
-    figures: [],
+    figures: [
+      {
+        media: 'rice-signal',
+        dark: true,
+        alt: {
+          en: 'The monochrome “signal” wallpaper shipped with the environment: thin grey lines and points on black.',
+          es: 'El fondo de pantalla monocromo «signal» que trae el entorno: líneas y puntos grises sobre negro.',
+        },
+        caption: {
+          en: 'One of the wallpapers the repository ships with its monochrome theme.',
+          es: 'Uno de los fondos que el repositorio trae con su tema monocromo.',
+        },
+      },
+    ],
   },
 ];
 
-/** The five projects on Home, in order. Chosen for breadth and clarity, not complexity. */
-export const HOME_SLUGS = ['thalyx', 'ferrol', 'indice-cero', 'orux', 'supadiff'] as const;
+/** The rooms of the Home exhibition, in order: chosen for range and rhythm, not rank. */
+export const EXHIBIT = ['thalyx', 'ferrol', 'indice-cero', 'thalyx-kernel', 'orux', 'supadiff', 'supakernel'] as const;
+/** Smaller rooms, shown together after the exhibition. */
+export const ALSO = ['acredita-bach', 'studymation', 'ennard', 'one', 'cesarmanzocode-rice'] as const;
 
 export function getProject(slug: string): Project | undefined {
   return PROJECTS.find((p) => p.slug === slug);
@@ -1052,10 +1184,15 @@ export function projectsIn(category: CategoryId): Project[] {
   return PROJECTS.filter((p) => p.category === category);
 }
 
-export function homeProjects(): Project[] {
-  return HOME_SLUGS.map((s) => {
-    const p = getProject(s);
-    if (!p) throw new Error(`Home project not found: ${s}`);
+export function bySlugs(slugs: readonly string[]): Project[] {
+  return slugs.map((slug) => {
+    const p = getProject(slug);
+    if (!p) throw new Error(`Project not found: ${slug}`);
     return p;
   });
+}
+
+/** Site order: the exhibition, then the smaller rooms. */
+export function ordered(): Project[] {
+  return bySlugs([...EXHIBIT, ...ALSO]);
 }
