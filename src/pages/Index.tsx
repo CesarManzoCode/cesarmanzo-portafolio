@@ -1,8 +1,9 @@
-import { CATEGORIES, ordered, projectsIn } from '../data/projects';
+import { CATEGORIES, ordered, projectsIn, selection } from '../data/projects';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
 import { Reveal, Shot, Status } from '../components/primitives';
 import { tone } from '../components/Rooms';
+import { Atlas } from '../components/Atlas';
 
 export function Index() {
   const { c, t } = useI18n();
@@ -17,6 +18,15 @@ export function Index() {
         <div className="mt-8 grid gap-6 lg:grid-cols-12">
           <p className="lede max-w-[56ch] lg:col-span-7">{c.index.lede}</p>
           <p className="mono self-end fg-3 lg:col-span-4 lg:col-start-9 lg:text-right">{c.index.count(all.length, CATEGORIES.length)}</p>
+        </div>
+
+        {/* The whole body of work at a glance, before it is sorted by kind. */}
+        <div data-tone="dark" className="surface surface-ink tone-dark mt-14 rounded-[12px] p-2.5 sm:p-3 md:mt-20">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1 px-1.5 pt-1.5">
+            <p className="label fg-2">{c.index.atlasLabel}</p>
+            <p className="max-w-[70ch] text-[0.76rem] fg-3">{c.index.atlasNote}</p>
+          </div>
+          <Atlas />
         </div>
       </div>
 
@@ -44,6 +54,7 @@ export function Index() {
                         <div className="md:col-span-5">
                           <p className="mono text-[0.7rem] fg-3">
                             {n(p.slug)} · {p.year}
+                            {selection(p.slug) && <span className="label ml-3 border border-[var(--line-2)] px-1.5 py-0.5 text-[0.54rem] fg-2">{c.index.selected}</span>}
                           </p>
                           <p className={`name mt-2 break-words transition-colors group-hover:text-[var(--accent)] ${p.name.length > 14 ? "text-[clamp(2rem,3.6vw,3.2rem)]" : "text-[clamp(2.6rem,6vw,5.2rem)]"}`}>
                             {p.name}

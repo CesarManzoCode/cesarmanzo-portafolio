@@ -1,25 +1,40 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/context';
 import { GITHUB, type Lang } from '../i18n/content';
+import { SELECTED, getProject, selection } from '../data/projects';
 import { Link, paths, useRouter } from '../router';
 
 const LANGS: Lang[] = ['en', 'es'];
 
 /* The bar takes on the room it is sitting over: it reads the background
    and tone of whatever section is directly under it, once per frame at
-   most, so a dark room gets a dark bar and a blue room a blue one. */
-function useUnderlay(dep: string) {
-  const [under, setUnder] = useState<{ bg: string; dark: boolean }>({ bg: '', dark: false });
+   most, so a dark room gets a dark bar and a blue room a blue one. On
+   the root page it also reports which chapter is under it, and how far
+   through that chapter the reader is. */
+type Underlay = { bg: string; dark: boolean; chapter: number | null; progress: number };
+
+function useUnderlay(dep: string): Underlay {
+  const [under, setUnder] = useState<Underlay>({ bg: '', dark: false, chapter: null, progress: 0 });
   const raf = useRef(0);
 
   useEffect(() => {
     const read = () => {
       raf.current = 0;
-      const els = document.elementsFromPoint(window.innerWidth / 2, 58);
+      const y = 58;
+      const els = document.elementsFromPoint(window.innerWidth / 2, y);
       const room = els.map((e) => e.closest('[data-tone]')).find((e) => e && !e.closest('header')) as HTMLElement | undefined;
       if (!room) return;
       const bg = getComputedStyle(room).backgroundColor;
-      setUnder((u) => (u.bg === bg ? u : { bg, dark: room.dataset.tone === 'dark' }));
+      const ch = els.map((e) => e.closest('[data-chapter]')).find(Boolean) as HTMLElement | undefined;
+      const chapter = ch ? Number(ch.dataset.chapter) : null;
+      let progress = 0;
+      if (ch) {
+        const r = ch.getBoundingClientRect();
+        progress = Math.round(Math.min(1, Math.max(0, (y - r.top) / Math.max(1, r.height - window.innerHeight + y))) * 200) / 200;
+      }
+      setUnder((u) =>
+        u.bg === bg && u.chapter === chapter && u.progress === progress ? u : { bg, dark: room.dataset.tone === 'dark', chapter, progress },
+      );
     };
     const onScroll = () => {
       if (!raf.current) raf.current = requestAnimationFrame(read);
@@ -49,7 +64,7 @@ export function Header() {
   const open = openOn === path;
 
   const section =
-    route.name === 'home' ? 'work' : route.name === 'projects' || route.name === 'project' ? 'index' : route.name === 'technical' || route.name === 'tech' ? 'ledger' : route.name === 'about' ? 'about' : null;
+    route.name === 'home' || (route.name === 'project' && selection(route.slug)) ? 'work' : route.name === 'projects' || route.name === 'project' ? 'index' : route.name === 'technical' || route.name === 'tech' ? 'ledger' : route.name === 'about' ? 'about' : null;
 
   const items = [
     { id: 'work', to: paths.home, label: c.nav.work },
@@ -59,6 +74,8 @@ export function Header() {
   ] as const;
 
   const dark = under.dark;
+  const chapter =
+    route.name === 'home' && under.chapter !== null ? { i: under.chapter, slug: SELECTED[under.chapter]!, name: getProject(SELECTED[under.chapter]!)!.name } : null;
   const style = under.bg ? { backgroundColor: under.bg.replace(/rgb\(([^)]+)\)/, 'rgba($1, 0.86)') } : undefined;
 
   return (
@@ -67,12 +84,19 @@ export function Header() {
       style={{ ...style, color: dark ? '#efeee9' : '#0e0e0d' }}
     >
       <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-4">
-        <Link to={paths.home} className="flex items-baseline gap-3 whitespace-nowrap">
-          <span className="text-[0.95rem] font-[750] tracking-[-0.01em]" style={{ fontStretch: '80%' }}>
+        <div className="flex min-w-0 items-baseline gap-3 whitespace-nowrap">
+          <Link to={paths.home} className="text-[0.95rem] font-[750] tracking-[-0.01em]" style={{ fontStretch: '80%' }}>
             CÉSAR MANZO
-          </span>
-          <span className="hidden text-[0.74rem] opacity-60 lg:inline">{lang === 'es' ? 'Ingeniero de software' : 'Software engineer'}</span>
-        </Link>
+          </Link>
+          {chapter ? (
+            <a href={`#${chapter.slug}`} className="mono truncate text-[0.7rem] opacity-70 transition-opacity hover:opacity-100">
+              <span className="sr-only">{c.nav.chapter} </span>
+              {String(chapter.i + 1).padStart(2, '0')}/{String(SELECTED.length).padStart(2, '0')} · {chapter.name}
+            </a>
+          ) : (
+            <span className="hidden text-[0.74rem] opacity-60 lg:inline">{lang === 'es' ? 'Ingeniero de software' : 'Software engineer'}</span>
+          )}
+        </div>
 
         <div className="flex items-center gap-4 sm:gap-7">
           <nav className="hidden items-center gap-6 text-[0.84rem] md:flex" aria-label={c.nav.primary}>
@@ -119,6 +143,23 @@ export function Header() {
           </button>
         </div>
       </div>
+
+      {route.name === 'home' && !open && (
+        <div className="wrap pointer-events-none absolute inset-x-0 bottom-0" aria-hidden="true">
+          <div className="relative h-[2px]">
+            <div className="chapters" style={{ opacity: chapter ? 1 : 0 }}>
+              {SELECTED.map((slug, i) => {
+                const fill = !chapter ? 0 : i < chapter.i ? 1 : i === chapter.i ? under.progress : 0;
+                return (
+                  <i key={slug}>
+                    <b style={{ transform: `scaleX(${fill})` }} />
+                  </i>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {open && (
         <nav id="mobile-nav" className="wrap border-t border-current/15 pb-6 md:hidden" aria-label={c.nav.primary}>

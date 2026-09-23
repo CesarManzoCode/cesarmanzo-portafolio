@@ -1,11 +1,11 @@
 /* ==================================================================== *
- * Atlas — the first thing a visitor sees after the headline: the work
- * itself, as a wall of real captures and charts drawn from real
- * evidence files. Each tile opens its room.
+ * Atlas — the opening of the index: the whole body of work at a glance,
+ * as a wall of real captures and charts drawn from real evidence files.
+ * Each tile opens its project.
  * ==================================================================== */
 import type { CSSProperties, ReactNode } from 'react';
 import { KERNEL_SCALING, SUPADIFF_MATRIX, SUPAKERNEL_GATES } from '../data/evidence';
-import { CATEGORIES, getProject, type MediaKey } from '../data/projects';
+import { CATEGORIES, getProject, ordered, type MediaKey } from '../data/projects';
 import { MEDIA } from '../data/media';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
@@ -14,7 +14,6 @@ import { tone } from './Rooms';
 
 type Tile = {
   slug: string;
-  n: string;
   media?: MediaKey;
   pos?: string;
   art?: 'kernel' | 'gates' | 'matrix' | 'tools';
@@ -23,16 +22,16 @@ type Tile = {
 
 /* Desktop: a 12-column wall, four rows. Phone: two columns. */
 const TILES: Tile[] = [
-  { slug: 'thalyx', n: '01', media: 'thalyx-authorisation', pos: 'left top', area: 'lg:col-[1/6] lg:row-[1/3] col-span-2' },
-  { slug: 'orux', n: '05', media: 'orux-tentative', pos: '22% top', area: 'lg:col-[6/10] lg:row-[1/3] col-span-2 sm:col-span-1' },
-  { slug: 'ferrol', n: '02', media: 'ferrol-category', pos: 'left 12%', area: 'lg:col-[10/13] lg:row-[1/2]' },
-  { slug: 'thalyx-kernel', n: '04', art: 'kernel', area: 'lg:col-[10/13] lg:row-[2/3]' },
-  { slug: 'indice-cero', n: '03', media: 'indice-challenge', pos: 'right top', area: 'lg:col-[1/5] lg:row-[3/5] col-span-2 sm:col-span-1' },
-  { slug: 'acredita-bach', n: '08', media: 'acredita-today', pos: 'left top', area: 'lg:col-[5/9] lg:row-[3/4]' },
-  { slug: 'supadiff', n: '06', art: 'matrix', area: 'lg:col-[9/13] lg:row-[3/4]' },
-  { slug: 'studymation', n: '09', media: 'studymation-brief', pos: '30% 12%', area: 'lg:col-[5/8] lg:row-[4/5]' },
-  { slug: 'supakernel', n: '07', art: 'gates', area: 'lg:col-[8/11] lg:row-[4/5]' },
-  { slug: 'ennard', n: '10', art: 'tools', area: 'lg:col-[11/13] lg:row-[4/5] col-span-2 sm:col-span-1' },
+  { slug: 'thalyx', media: 'thalyx-authorisation', pos: 'left top', area: 'lg:col-[1/6] lg:row-[1/3] col-span-2' },
+  { slug: 'orux', media: 'orux-tentative', pos: '22% top', area: 'lg:col-[6/10] lg:row-[1/3] col-span-2 sm:col-span-1' },
+  { slug: 'ferrol', media: 'ferrol-category', pos: 'left 12%', area: 'lg:col-[10/13] lg:row-[1/2]' },
+  { slug: 'thalyx-kernel', art: 'kernel', area: 'lg:col-[10/13] lg:row-[2/3]' },
+  { slug: 'indice-cero', media: 'indice-challenge', pos: 'right top', area: 'lg:col-[1/5] lg:row-[3/5] col-span-2 sm:col-span-1' },
+  { slug: 'acredita-bach', media: 'acredita-today', pos: 'left top', area: 'lg:col-[5/9] lg:row-[3/4]' },
+  { slug: 'supadiff', art: 'matrix', area: 'lg:col-[9/13] lg:row-[3/4]' },
+  { slug: 'studymation', media: 'studymation-brief', pos: '30% 12%', area: 'lg:col-[5/8] lg:row-[4/5]' },
+  { slug: 'supakernel', art: 'gates', area: 'lg:col-[8/11] lg:row-[4/5]' },
+  { slug: 'ennard', art: 'tools', area: 'lg:col-[11/13] lg:row-[4/5] col-span-2 sm:col-span-1' },
 ];
 
 function KernelArt({ seen }: { seen: boolean }) {
@@ -116,6 +115,8 @@ function ToolsArt() {
 export function Atlas() {
   const { t } = useI18n();
   const [ref, seen] = useInView<HTMLDivElement>('0px');
+  const all = ordered();
+  const n = (slug: string) => String(all.findIndex((p) => p.slug === slug) + 1).padStart(2, '0');
 
   return (
     <div ref={ref} className="grid auto-rows-[9.5rem] grid-cols-2 gap-2 sm:auto-rows-[11rem] sm:gap-2.5 lg:auto-rows-[minmax(9.5rem,15vh)] lg:grid-cols-12">
@@ -145,7 +146,7 @@ export function Atlas() {
             )}
             <span className="tag">
               <span className="min-w-0">
-                <span className="mono mr-2 text-[0.64rem] opacity-60">{tile.n}</span>
+                <span className="mono mr-2 text-[0.64rem] opacity-60">{n(tile.slug)}</span>
                 <b className="text-[0.95rem] font-[680] transition-colors" style={{ fontStretch: '88%' }}>
                   {p.name}
                 </b>

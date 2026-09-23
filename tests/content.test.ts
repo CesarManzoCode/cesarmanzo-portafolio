@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { ALSO, CATEGORIES, EXHIBIT, PROJECTS, type CategoryId, type Depth, type T } from '../src/data/projects.ts';
+import { CATEGORIES, PROJECTS, REST, SELECTED, SELECTION, ordered, type CategoryId, type Depth, type T } from '../src/data/projects.ts';
 import * as EVIDENCE from '../src/data/evidence.ts';
 import { TECH } from '../src/data/technical.ts';
 
@@ -38,12 +38,33 @@ const EXPECTED_DEPTH: Record<string, Depth> = {
   'cesarmanzocode-rice': 'note',
 };
 
-test('Home places every project exactly once: seven rooms, then the smaller ones', () => {
-  assert.equal(EXHIBIT.length, 7);
-  assert.deepEqual([...EXHIBIT, ...ALSO].sort(), PROJECTS.map((p) => p.slug).sort());
+test('the root presents exactly the five selected projects, in order', () => {
+  assert.deepEqual([...SELECTED], ['thalyx', 'ferrol', 'indice-cero', 'orux', 'supadiff']);
+  assert.deepEqual(SELECTION.map((s) => s.slug), [...SELECTED]);
+  for (const s of SELECTION) assert.ok(s.against.en && s.against.es && s.verdict.en && s.verdict.es, `${s.slug}: selection copy`);
+});
+
+test('site order places every project exactly once: the selection first, then the rest', () => {
+  assert.deepEqual([...SELECTED, ...REST].sort(), PROJECTS.map((p) => p.slug).sort());
+  assert.equal(new Set([...SELECTED, ...REST]).size, PROJECTS.length);
+  assert.deepEqual(ordered().slice(0, SELECTED.length).map((p) => p.slug), [...SELECTED]);
   for (const p of PROJECTS) {
     assert.ok(p.proof.length >= 1 && p.proof.length <= 3, `${p.slug}: 1–3 proof points`);
     for (const st of p.stats) assert.ok(st.value.trim() && st.label.en && st.label.es, `${p.slug}: stat`);
+  }
+});
+
+/* The root page is built only from the selection. Its own modules may not
+   reach for the whole collection, nor name any other project. */
+test('nothing on the root page can present a project outside the selection', () => {
+  const rootModules = ['src/pages/Home.tsx', 'src/components/Doors.tsx'];
+  const others = PROJECTS.map((p) => p.slug).filter((slug) => !(SELECTED as readonly string[]).includes(slug));
+  for (const f of rootModules) {
+    const src = readFileSync(f, 'utf8');
+    for (const banned of ['ordered(', 'projectsIn(', 'PROJECTS.map', 'PROJECTS.filter', 'REST', 'Atlas', 'AlsoCard'])
+      assert.ok(!src.includes(banned), `${f}: uses ${banned}`);
+    for (const slug of others) assert.ok(!new RegExp(`['"\`]${slug}['"\`]`).test(src), `${f}: names ${slug}`);
+    for (const p of PROJECTS.filter((x) => others.includes(x.slug))) assert.ok(!src.includes(p.name), `${f}: names ${p.name}`);
   }
 });
 
@@ -108,14 +129,14 @@ function bilingual(v: unknown, out: T[] = []): T[] {
 }
 
 test('every bilingual string is filled in both languages', () => {
-  for (const t of bilingual([PROJECTS, TECH, CATEGORIES, EVIDENCE])) {
+  for (const t of bilingual([PROJECTS, TECH, CATEGORIES, EVIDENCE, SELECTION])) {
     assert.ok(t.en.trim() && t.es.trim(), JSON.stringify(t));
   }
 });
 
 test('numbers agree between English and Spanish', () => {
   const nums = (s: string) => (s.match(/\d[\d.,]*/g) ?? []).map((n) => n.replace(/[.,]$/, '').replace(/,/g, ''));
-  for (const t of bilingual([PROJECTS, TECH])) {
+  for (const t of bilingual([PROJECTS, TECH, SELECTION])) {
     assert.deepEqual(nums(t.es).sort(), nums(t.en).sort(), `${t.en}\n${t.es}`);
   }
 });

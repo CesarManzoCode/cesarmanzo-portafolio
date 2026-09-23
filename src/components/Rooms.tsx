@@ -8,11 +8,11 @@
  * top of the project page (at full size).
  * ==================================================================== */
 import type { ReactNode } from 'react';
-import { CATEGORIES, type FigureRef, type MediaKey, type Project } from '../data/projects';
+import { CATEGORIES, SELECTED, selection, type FigureRef, type MediaKey, type Project } from '../data/projects';
 import { getTech } from '../data/technical';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
-import { Figure, Framed, Reveal, Rich, Shot, Stat, Status } from './primitives';
+import { Figure, Framed, Reveal, Rich, Stat, Status } from './primitives';
 import {
   AreaDots,
   CapabilityMatrix,
@@ -40,14 +40,20 @@ function fig(p: Project, key: MediaKey): FigureRef {
  * The head of a room: index, category, name, kind, status.
  * -------------------------------------------------------------------- */
 export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; level?: 'home' | 'page' }) {
-  const { t } = useI18n();
+  const { t, c } = useI18n();
   const cat = CATEGORIES.find((k) => k.id === p.category)!;
+  const sel = selection(p.slug);
   const H = level === 'page' ? 'h1' : 'h2';
   return (
     <header>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-[var(--line-2)] pt-4">
         <p className="label fg-2">
-          {n && <span className="accent mr-3">{n}</span>}
+          {n && (
+            <span className="accent mr-3">
+              {n}
+              {sel && <span className="fg-3"> / {String(SELECTED.length).padStart(2, '0')}</span>}
+            </span>
+          )}
           {t(cat.name)}
         </p>
         <Status tone={p.statusTone} className="fg-2 max-w-[60ch]">
@@ -55,6 +61,7 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
         </Status>
       </div>
       <H
+        id={`${p.slug}-name`}
         className={`name mt-6 break-words ${
           p.name.length > 14
             ? 'text-[clamp(2.4rem,8.4vw,8rem)]'
@@ -71,7 +78,17 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
           p.name
         )}
       </H>
-      <p className="mono mt-4 fg-2">{t(p.kind)}</p>
+      <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3">
+        <p className="mono fg-2">{t(p.kind)}</p>
+        {sel && (
+          <p className="flex items-baseline gap-3">
+            <span className="label fg-3">{c.room.against}</span>
+            <span className="text-[clamp(1.05rem,1.5vw,1.3rem)] font-[650] tracking-[-0.01em] accent" style={{ fontStretch: '88%' }}>
+              {t(sel.against)}
+            </span>
+          </p>
+        )}
+      </div>
     </header>
   );
 }
@@ -84,10 +101,10 @@ export function RoomFoot({ p }: { p: Project }) {
       <p className="thesis md:col-span-8">{t(p.thesis)}</p>
       <div className="flex flex-col items-start gap-3 md:col-span-4 md:items-end md:justify-end">
         <Link to={paths.project(p.slug)} className="btn btn-solid">
-          {c.home.open} <span className="arrow" aria-hidden="true">→</span>
+          {c.room.open} <span className="arrow" aria-hidden="true">→</span>
         </Link>
         <Link to={`${paths.project(p.slug)}#record`} className="link mono text-[0.76rem]">
-          {c.home.record} <span className="arrow" aria-hidden="true">→</span>
+          {c.room.record} <span className="arrow" aria-hidden="true">→</span>
         </Link>
       </div>
     </div>
@@ -274,7 +291,7 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
       );
 
     case 'orux': {
-      const steps = c.home.storyboard;
+      const steps = c.room.storyboard;
       const shot = (key: MediaKey, i: number, priority?: boolean) => (
         <figure>
           <p className="mb-3 flex items-baseline gap-3">
@@ -327,7 +344,7 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
           </Reveal>
           <Reveal className="lg:col-span-5" delay={120}>
             <Point p={p} i={0} />
-            <p className="label mt-12 fg-3">{c.home.findings}</p>
+            <p className="label mt-12 fg-3">{c.room.findings}</p>
             <ol className="mt-3 grid gap-5">
               {findings.items.map((f, i) => (
                 <li key={f.title.en} className="border-l-2 border-[var(--accent)] pl-4">
@@ -351,7 +368,7 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
       return (
         <>
           <Reveal>
-            <p className="label fg-3">{c.home.evidenceModel}</p>
+            <p className="label fg-3">{c.room.evidenceModel}</p>
             <ol className="mt-3 flex flex-wrap items-center gap-y-2">
               {chain.map((x, i) => (
                 <li key={x} className="flex items-center">
@@ -499,49 +516,4 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
     default:
       return null;
   }
-}
-
-/* -------------------------------------------------------------------- *
- * A compact card for the smaller rooms on Home.
- * -------------------------------------------------------------------- */
-export function AlsoCard({ p, className = '' }: { p: Project; className?: string }) {
-  const { t } = useI18n();
-  let art: ReactNode = null;
-  if (p.slug === 'acredita-bach') art = <Framed media="acredita-today" alt={t(fig(p, 'acredita-today').alt)} label="acredita-bach · hoy" />;
-  else if (p.slug === 'studymation')
-    art = (
-      <div className="frame aspect-[16/10]">
-        <Shot media="studymation-brief" alt={t(fig(p, 'studymation-brief').alt)} className="h-full object-cover object-left-top" />
-      </div>
-    );
-  else if (p.slug === 'ennard') art = <ToolPolicy />;
-  else if (p.slug === 'cesarmanzocode-rice')
-    art = <Shot media="rice-signal" alt={t(p.figures[0]!.alt)} className="aspect-[3/1] rounded-md border border-[var(--line)] object-cover" />;
-  else if (p.slug === 'one')
-    art = (
-      <div className="flex flex-wrap items-end gap-x-10 gap-y-6">
-        {p.stats.map((s) => (
-          <Stat key={s.value} value={s.value} label={t(s.label)} size="md" />
-        ))}
-        <span className="mono border border-[var(--fg)] bg-[var(--fg)] px-2.5 py-1 text-[0.76rem] text-[var(--bg)]">every claim: untested</span>
-      </div>
-    );
-
-  return (
-    <Link
-      to={paths.project(p.slug)}
-      data-tone={tone(p.slug)}
-      className={`surface room-${p.slug} ${tone(p.slug) === 'dark' ? 'tone-dark' : ''} group flex flex-col p-6 sm:p-8 ${className}`}
-    >
-      <div className="flex items-baseline justify-between gap-4">
-        <p className="label fg-2">{t(p.kind)}</p>
-        <span className="arrow accent" aria-hidden="true">
-          →
-        </span>
-      </div>
-      <h3 className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${p.name.length > 14 ? "text-[clamp(2rem,4vw,3.4rem)]" : "text-[clamp(2.6rem,5vw,4.4rem)]"}`}>{p.name}</h3>
-      <p className="mt-4 max-w-[52ch] text-[0.98rem] leading-relaxed fg-2">{t(p.thesis)}</p>
-      <div className="mt-8 flex-1 content-end">{art}</div>
-    </Link>
-  );
 }

@@ -1170,10 +1170,84 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-/** The rooms of the Home exhibition, in order: chosen for range and rhythm, not rank. */
-export const EXHIBIT = ['thalyx', 'ferrol', 'indice-cero', 'thalyx-kernel', 'orux', 'supadiff', 'supakernel'] as const;
-/** Smaller rooms, shown together after the exhibition. */
-export const ALSO = ['acredita-bach', 'studymation', 'ennard', 'one', 'cesarmanzocode-rice'] as const;
+/* -------------------------------------------------------------------- *
+ * The selection — the only projects presented at the root of the site.
+ *
+ * `/` is the surface almost every visitor sees, so it presents five
+ * projects in full rather than twelve in part. Everything else lives in
+ * the index, the evidence ledger and its own project page.
+ *
+ * Each selected project is shown next to what judged it: the real thing
+ * it was checked against. Numbers here are the ones already quoted in the
+ * project’s own entry above.
+ * -------------------------------------------------------------------- */
+export const SELECTED = ['thalyx', 'ferrol', 'indice-cero', 'orux', 'supadiff'] as const;
+export type SelectedSlug = (typeof SELECTED)[number];
+
+export type Selection = {
+  slug: SelectedSlug;
+  /** What it is, in two or three words. */
+  short: T;
+  /** What it was checked against — completes “Checked against …”. */
+  against: T;
+  /** One line of evidence behind that, for the opening index. */
+  verdict: T;
+};
+
+export const SELECTION: Selection[] = [
+  {
+    slug: 'thalyx',
+    short: { en: 'Operating system', es: 'Sistema operativo' },
+    against: { en: 'a real PC', es: 'una PC real' },
+    verdict: {
+      en: 'Booted from USB, installed, booted again. 156 checks proven, 2 not proven, 0 failed.',
+      es: 'Arrancó desde USB, se instaló, volvió a arrancar. 156 comprobaciones probadas, 2 no probadas, 0 fallidas.',
+    },
+  },
+  {
+    slug: 'ferrol',
+    short: { en: 'Hardware store', es: 'Ferretería' },
+    against: { en: '12,027 real products', es: '12,027 productos reales' },
+    verdict: {
+      en: 'A hardware store’s own catalogue, supplier files and tax rules — not a demo dataset.',
+      es: 'El catálogo, los archivos de proveedores y las reglas fiscales de una ferretería — no datos de demostración.',
+    },
+  },
+  {
+    slug: 'indice-cero',
+    short: { en: 'Learn to code', es: 'Aprender a programar' },
+    against: { en: 'a real compiler', es: 'un compilador real' },
+    verdict: {
+      en: '227 exercises compiled, run and graded against test cases, some of them hidden.',
+      es: '227 prácticas compiladas, ejecutadas y calificadas contra casos de prueba, algunos ocultos.',
+    },
+  },
+  {
+    slug: 'orux',
+    short: { en: 'Live coding on Git', es: 'Código en vivo' },
+    against: { en: 'real Git, in production', es: 'Git real, en producción' },
+    verdict: {
+      en: 'Every team’s workspace a real Git repository. Reached production, then shut down.',
+      es: 'El workspace de cada equipo, un repositorio Git real. Llegó a producción y se apagó.',
+    },
+  },
+  {
+    slug: 'supadiff',
+    short: { en: 'Verification', es: 'Verificación' },
+    against: { en: 'real Supabase', es: 'Supabase real' },
+    verdict: {
+      en: '27 capabilities on 6 real targets, hosted Supabase included. 2 real bugs found.',
+      es: '27 capacidades en 6 targets reales, Supabase hospedado incluido. 2 bugs reales encontrados.',
+    },
+  },
+];
+
+/** The rest of the work, in the order the index and the ledger continue with. */
+export const REST = ['thalyx-kernel', 'supakernel', 'acredita-bach', 'studymation', 'ennard', 'one', 'cesarmanzocode-rice'] as const;
+
+export function selection(slug: string): Selection | undefined {
+  return SELECTION.find((s) => s.slug === slug);
+}
 
 export function getProject(slug: string): Project | undefined {
   return PROJECTS.find((p) => p.slug === slug);
@@ -1191,7 +1265,7 @@ export function bySlugs(slugs: readonly string[]): Project[] {
   });
 }
 
-/** Site order: the exhibition, then the smaller rooms. */
+/** Site order: the selection (01–05), then the rest of the work. */
 export function ordered(): Project[] {
-  return bySlugs([...EXHIBIT, ...ALSO]);
+  return bySlugs([...SELECTED, ...REST]);
 }

@@ -1,20 +1,31 @@
-import { ALSO, EXHIBIT, bySlugs, ordered, type Project } from '../data/projects';
+/* ==================================================================== *
+ * The root page — the surface almost every visitor sees.
+ *
+ * It presents exactly the five selected projects (SELECTED in
+ * src/data/projects.ts) and nothing else: an opening that shows all
+ * five at once, then one chapter each, then the loop they share, a
+ * door to the rest of the work, and contact. `npm test` guards that
+ * no other project is presented here.
+ * ==================================================================== */
+import { PROJECTS, SELECTED, bySlugs, type Project } from '../data/projects';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
-import { Atlas } from '../components/Atlas';
-import { AlsoCard, RoomFoot, RoomHead, Showcase, tone } from '../components/Rooms';
+import { Doors } from '../components/Doors';
+import { RoomFoot, RoomHead, Showcase, tone } from '../components/Rooms';
 import { Contact, Method } from '../components/Sections';
 import { Reveal } from '../components/primitives';
 
 const num = (i: number) => String(i + 1).padStart(2, '0');
 
-function Room({ p, i }: { p: Project; i: number }) {
+function Chapter({ p, i }: { p: Project; i: number }) {
+  const dark = tone(p.slug) === 'dark';
   return (
     <section
       id={p.slug}
       data-tone={tone(p.slug)}
+      data-chapter={i}
       aria-labelledby={`${p.slug}-name`}
-      className={`surface room-${p.slug} ${tone(p.slug) === 'dark' ? 'tone-dark' : ''} py-20 md:py-32`}
+      className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} scroll-mt-0 py-20 md:py-32`}
     >
       <div className="wrap">
         <Reveal>
@@ -31,115 +42,85 @@ function Room({ p, i }: { p: Project; i: number }) {
   );
 }
 
-export function Home() {
-  const { c, t } = useI18n();
+/* The one way out to everything that is not on this page. */
+function Beyond() {
+  const { c } = useI18n();
   const h = c.home;
-  const rooms = bySlugs(EXHIBIT);
-  const also = bySlugs(ALSO);
-  const verifyAt = rooms.findIndex((p) => p.slug === 'supadiff');
+  const doors = [
+    { to: paths.projects, title: h.beyondIndex, body: h.beyondIndexBody(PROJECTS.length) },
+    { to: paths.technical, title: h.beyondLedger, body: h.beyondLedgerBody },
+  ];
+  return (
+    <section data-tone="light" className="surface py-20 md:py-28">
+      <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <Reveal className="lg:col-span-5">
+          <p className="label fg-3">{h.beyondLabel}</p>
+          <h2 className="display mt-4 text-[clamp(2.2rem,4.2vw,3.8rem)]">{h.beyondTitle}</h2>
+          <p className="body mt-6 max-w-[48ch]">{h.beyondBody}</p>
+        </Reveal>
+        <Reveal as="div" delay={100} className="self-end lg:col-span-6 lg:col-start-7">
+          <ul className="border-t border-[var(--fg)]">
+            {doors.map((d) => (
+              <li key={d.to} className="border-b border-[var(--line-2)]">
+                <Link to={d.to} className="group flex items-end justify-between gap-6 py-6">
+                  <span>
+                    <span className="name block text-[clamp(2.4rem,4.6vw,4rem)] transition-colors group-hover:text-[var(--accent)]">{d.title}</span>
+                    <span className="mt-3 block text-[0.92rem] fg-2">{d.body}</span>
+                  </span>
+                  <span className="arrow pb-1 text-[1.6rem] accent" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+export function Home() {
+  const { c } = useI18n();
+  const h = c.home;
+  const chapters = bySlugs(SELECTED);
 
   return (
     <>
-      {/* ---- the statement and the wall of work ---- */}
-      <section data-tone="dark" className="surface surface-ink tone-dark relative overflow-hidden pt-[calc(var(--header-h)+2.5rem)] pb-16 md:pt-[calc(var(--header-h)+3.5rem)] md:pb-24">
+      {/* ---- the statement, and all five at once ---- */}
+      <section data-tone="dark" className="surface surface-ink tone-dark pt-[calc(var(--header-h)+2rem)] pb-14 md:pt-[calc(var(--header-h)+2.75rem)] md:pb-20 lg:pb-10">
         <div className="wrap">
-          <p className="label fg-3">{h.who}</p>
-          <div className="mt-5 grid gap-10 lg:grid-cols-12 lg:gap-14">
-            <div className="lg:col-span-8">
-              <h1 className="display text-[clamp(2.7rem,5.6vw,6.2rem)]">
-                {h.headline[0]} <span className="fg-3">{h.headline[1]}</span>
-              </h1>
-              <p className="lede mt-8 max-w-[60ch]">{h.lead}</p>
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-                <div className="flex flex-wrap gap-3">
-                  <a href="#work" className="btn btn-solid">
-                    {h.ctaWork} <span aria-hidden="true">↓</span>
-                  </a>
-                  <Link to={paths.technical} className="btn">
-                    {h.ctaLedger} <span className="arrow" aria-hidden="true">→</span>
-                  </Link>
-                </div>
-                <p className="mono text-[0.74rem] fg-3">
-                  <span className="dot dot-active mr-2 inline-block translate-y-[-1px]" aria-hidden="true" />
-                  {h.available}
-                </p>
-              </div>
-            </div>
-            {/* The range, as a table of contents. */}
-            <nav aria-label={c.a11y.rooms} className="hidden self-end lg:col-span-4 lg:block xl:col-span-3 xl:col-start-10">
-              <ol className="border-t border-[var(--line-2)]">
-                {ordered().map((p, i) => (
-                  <li key={p.slug}>
-                    <Link to={paths.project(p.slug)} className="group flex items-baseline gap-3 border-b border-[var(--line)] py-[5px] text-[0.8rem]">
-                      <span className="mono w-5 text-[0.62rem] fg-3">{num(i)}</span>
-                      <span className="whitespace-nowrap font-semibold transition-colors group-hover:text-[var(--accent)]">{p.name}</span>
-                      <span className="ml-auto truncate text-[0.72rem] fg-3">{t(p.kind).split(' · ')[0]}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </nav>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+            <p className="label fg-3">{h.who}</p>
+            <p className="mono text-[0.72rem] fg-3">
+              <span className="dot dot-active mr-2 inline-block translate-y-[-1px]" aria-hidden="true" />
+              {h.available}{' '}
+              <a href="#contact" className="text-[var(--fg)] underline decoration-[var(--line-2)] underline-offset-4 transition-colors hover:text-[var(--accent)]">
+                {h.write}
+              </a>
+            </p>
           </div>
 
-          <div className="mt-12 md:mt-14">
-            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
-              <p className="label fg-2">{h.atlasLabel}</p>
-              <p className="max-w-[70ch] text-[0.78rem] fg-3">{h.atlasNote}</p>
-            </div>
-            <Atlas />
+          <div className="mt-6 grid gap-6 lg:mt-7 lg:grid-cols-12 lg:gap-14">
+            <h1 className="display text-[clamp(2.6rem,5.1vw,5.4rem)] lg:col-span-8">
+              {h.headline[0]} <span className="fg-3">{h.headline[1]}</span>
+            </h1>
+            <p className="lede max-w-[44ch] self-end lg:col-span-4 lg:pb-1">{h.lead}</p>
+          </div>
+
+          <div className="mt-10 lg:mt-12">
+            <Doors />
           </div>
         </div>
       </section>
 
-      {/* ---- the rooms ---- */}
-      <div id="work" aria-label={c.a11y.rooms}>
-        {rooms.map((p, i) => (
-          <div key={p.slug}>
-            {i === verifyAt && (
-              <section data-tone="light" className="surface room-supadiff border-b border-[var(--line)] pt-20 md:pt-32">
-                <div className="wrap">
-                  <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-14">
-                    <h2 className="display text-[clamp(2.4rem,5.2vw,4.8rem)] lg:col-span-7">{h.verification}</h2>
-                    <p className="lede max-w-[50ch] self-end lg:col-span-5">{h.verificationBody}</p>
-                  </Reveal>
-                </div>
-              </section>
-            )}
-            <Room p={p} i={i} />
-          </div>
-        ))}
-      </div>
+      {/* ---- one chapter each ---- */}
+      {chapters.map((p, i) => (
+        <Chapter key={p.slug} p={p} i={i} />
+      ))}
 
-      {/* ---- the smaller rooms ---- */}
-      <section data-tone="light" className="surface py-24 md:py-32">
-        <div className="wrap">
-          <Reveal className="grid gap-6 lg:grid-cols-12 lg:gap-14">
-            <div className="lg:col-span-7">
-              <p className="label fg-3">{h.moreLabel}</p>
-              <h2 className="display mt-4 text-[clamp(2.6rem,5.4vw,5rem)]">{h.moreTitle}</h2>
-            </div>
-            <p className="lede max-w-[52ch] self-end lg:col-span-5">{h.moreBody}</p>
-          </Reveal>
-          <div className="mt-14 grid gap-2.5 lg:grid-cols-12">
-            {also.map((p, i) => (
-              <Reveal
-                key={p.slug}
-                delay={(i % 2) * 80}
-                className={['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-5', 'lg:col-span-7', 'lg:col-span-12'][i] + ' flex'}
-              >
-                <AlsoCard p={p} className="w-full" />
-              </Reveal>
-            ))}
-          </div>
-          <p className="mt-10">
-            <Link to={paths.projects} className="link text-[0.95rem]">
-              {h.allWork} <span className="arrow" aria-hidden="true">→</span>
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      <Method />
+      <Method title={h.methodTitle} dark />
+      <Beyond />
       <Contact />
     </>
   );

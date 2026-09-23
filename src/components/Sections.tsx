@@ -2,16 +2,16 @@ import { useI18n } from '../i18n/context';
 import { Reveal } from './primitives';
 
 /* The loop that every project on the site went through. */
-export function Method({ id = 'method' }: { id?: string }) {
+export function Method({ id = 'method', title, dark = false }: { id?: string; title?: string; dark?: boolean }) {
   const { c } = useI18n();
   const m = c.method;
   return (
-    <section id={id} data-tone="light" className="surface py-24 md:py-36">
+    <section id={id} data-tone={dark ? 'dark' : 'light'} className={`surface py-24 md:py-36 ${dark ? 'surface-ink tone-dark' : ''}`}>
       <div className="wrap">
         <Reveal className="grid gap-8 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
             <p className="label fg-3">{m.eyebrow}</p>
-            <h2 className="display mt-4 text-[clamp(2.8rem,6vw,5.6rem)]">{m.title}</h2>
+            <h2 className="display mt-4 text-[clamp(2.8rem,6vw,5.6rem)]">{title ?? m.title}</h2>
           </div>
           <p className="lede max-w-[52ch] self-end lg:col-span-6 lg:col-start-7">{m.lede}</p>
         </Reveal>

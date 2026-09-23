@@ -10,7 +10,7 @@ export type { Lang };
 export type Link = { label: string; href: string };
 
 export type SiteContent = {
-  nav: { work: string; index: string; ledger: string; about: string; github: string; primary: string; menu: string; close: string };
+  nav: { work: string; index: string; ledger: string; about: string; github: string; primary: string; menu: string; close: string; chapter: string };
   a11y: { language: string; skip: string; swipe: string; openInNew: string; rooms: string };
   meta: { title: string; description: string; index: string; ledger: string; about: string; notFound: string };
 
@@ -19,27 +19,43 @@ export type SiteContent = {
     headline: string[];
     lead: string;
     available: string;
-    ctaWork: string;
-    ctaLedger: string;
-    atlasLabel: string;
-    atlasNote: string;
+    write: string;
+    doors: string;
+    of: string;
+    methodTitle: string;
+    beyondLabel: string;
+    beyondTitle: string;
+    beyondBody: string;
+    beyondIndex: string;
+    beyondIndexBody: (n: number) => string;
+    beyondLedger: string;
+    beyondLedgerBody: string;
+  };
+
+  room: {
+    against: string;
     open: string;
     record: string;
-    moreLabel: string;
-    moreTitle: string;
-    moreBody: string;
-    allWork: string;
-    verification: string;
-    verificationBody: string;
     storyboard: { step: string; title: string }[];
     findings: string;
     evidenceModel: string;
   };
 
-  index: { eyebrow: string; title: string; lede: string; count: (n: number, c: number) => string; privateRepo: string; open: string };
+  index: {
+    eyebrow: string;
+    title: string;
+    lede: string;
+    count: (n: number, c: number) => string;
+    privateRepo: string;
+    open: string;
+    selected: string;
+    atlasLabel: string;
+    atlasNote: string;
+  };
 
   project: {
     back: string;
+    backSelected: string;
     why: string;
     how: string;
     gallery: string;
@@ -97,7 +113,7 @@ const LINKEDIN = 'https://www.linkedin.com/in/c%C3%A9sar-alberto-manzo-olivares-
  * English
  * ==================================================================== */
 const en: SiteContent = {
-  nav: { work: 'Work', index: 'Index', ledger: 'Evidence', about: 'About', github: 'GitHub', primary: 'Primary', menu: 'Menu', close: 'Close' },
+  nav: { work: 'Selected', index: 'Index', ledger: 'Evidence', about: 'About', github: 'GitHub', primary: 'Primary', menu: 'Menu', close: 'Close', chapter: 'Chapter' },
   a11y: {
     language: 'Language',
     skip: 'Skip to content',
@@ -108,7 +124,7 @@ const en: SiteContent = {
   meta: {
     title: 'César Manzo — Software Engineer',
     description:
-      'Software engineer in Guadalajara, México. An operating system booted on real hardware, a kernel written from scratch and measured against Linux, the software a hardware store runs on, a platform where students learn to program — each with its evidence and its limits.',
+      'Software engineer in Guadalajara, México. Five systems, each checked against the thing that decides: an operating system on a real PC, a hardware store’s software on its real catalogue, a learn-to-code platform graded by a real compiler, live coding on real Git, and a verifier run against real Supabase.',
     index: 'Index of work — César Manzo',
     ledger: 'Evidence ledger — César Manzo',
     about: 'About — César Manzo',
@@ -116,22 +132,27 @@ const en: SiteContent = {
   },
 
   home: {
-    who: 'César Manzo · Software engineer · Guadalajara, México',
-    headline: ['From a kernel written from scratch', 'to the counter of a hardware store.'],
-    lead: 'I build complete systems — operating systems, backends, business software, learning platforms — and then check them against the thing that decides: real hardware, a real catalogue, a real student. What passed is shown below. What has not been proven yet is published too.',
+    who: 'Software engineer · Guadalajara, México',
+    headline: ['Complete systems,', 'checked against the thing that decides.'],
+    lead: 'I’m César Manzo. These are five systems I built, each shown next to what judged it — and next to what it has not proven yet.',
     available: 'Open to new work — remote or in Guadalajara.',
-    ctaWork: 'See the work',
-    ctaLedger: 'Evidence ledger',
-    atlasLabel: 'Real captures, real output',
-    atlasNote: 'Every screen here is a capture from the project itself, or a chart drawn from its own evidence files. Nothing is a mock-up.',
+    write: 'Write to me',
+    doors: 'Five projects on this page',
+    of: 'of',
+    methodTitle: 'Five systems, one loop.',
+    beyondLabel: 'Beyond these five',
+    beyondTitle: 'The rest of the work is one step away.',
+    beyondBody: 'This page shows five projects in full. The others — kernels, runtimes, research, smaller tools — keep their own pages, their captures and their engineering records.',
+    beyondIndex: 'Index',
+    beyondIndexBody: (n) => `All ${n} projects, by what they are.`,
+    beyondLedger: 'Evidence ledger',
+    beyondLedgerBody: 'Every measured result next to its main limitation.',
+  },
+
+  room: {
+    against: 'Checked against',
     open: 'Open the project',
     record: 'Engineering record',
-    moreLabel: 'Also built',
-    moreTitle: 'Smaller rooms, same standard.',
-    moreBody: 'An exam-prep engine, a document pipeline that refuses to invent citations, an assistant that asks before it acts, a research program written to be proven wrong, and the machine I work on.',
-    allWork: 'Index of all work',
-    verification: 'Checking claims against real systems',
-    verificationBody: '“Compatible” is a claim, not a guarantee. These two projects turn it into something that can be run: one compares a product against the real service, the other only calls something supported once a real test proves it.',
     storyboard: [
       { step: '01', title: 'Kai types into a file Ana owns. Nothing blocks him — it becomes a proposal.' },
       { step: '02', title: 'Ana gets a diff: approve or reject in one click.' },
@@ -148,10 +169,14 @@ const en: SiteContent = {
     count: (n, c) => `${n} projects · ${c} kinds`,
     privateRepo: 'Private repository',
     open: 'Open',
+    selected: 'Selected',
+    atlasLabel: 'Real captures, real output',
+    atlasNote: 'Every screen here is a capture from the project itself, or a chart drawn from its own evidence files. Nothing is a mock-up.',
   },
 
   project: {
     back: 'Index',
+    backSelected: 'Selected work',
     why: 'Why it exists',
     how: 'How it works',
     gallery: 'Captures',
@@ -260,7 +285,7 @@ const en: SiteContent = {
  * Español
  * ==================================================================== */
 const es: SiteContent = {
-  nav: { work: 'Trabajo', index: 'Índice', ledger: 'Evidencia', about: 'Sobre mí', github: 'GitHub', primary: 'Principal', menu: 'Menú', close: 'Cerrar' },
+  nav: { work: 'Selección', index: 'Índice', ledger: 'Evidencia', about: 'Sobre mí', github: 'GitHub', primary: 'Principal', menu: 'Menú', close: 'Cerrar', chapter: 'Capítulo' },
   a11y: {
     language: 'Idioma',
     skip: 'Saltar al contenido',
@@ -271,7 +296,7 @@ const es: SiteContent = {
   meta: {
     title: 'César Manzo — Ingeniero de software',
     description:
-      'Ingeniero de software en Guadalajara, México. Un sistema operativo arrancado en hardware real, un kernel escrito desde cero y medido contra Linux, el software con el que trabaja una ferretería, una plataforma donde los estudiantes aprenden a programar — cada uno con su evidencia y sus límites.',
+      'Ingeniero de software en Guadalajara, México. Cinco sistemas, cada uno comprobado contra lo que decide: un sistema operativo en una PC real, el software de una ferretería sobre su catálogo real, una plataforma para aprender a programar calificada por un compilador real, código en vivo sobre Git real y un verificador corrido contra Supabase real.',
     index: 'Índice del trabajo — César Manzo',
     ledger: 'Libro de evidencia — César Manzo',
     about: 'Sobre mí — César Manzo',
@@ -279,22 +304,27 @@ const es: SiteContent = {
   },
 
   home: {
-    who: 'César Manzo · Ingeniero de software · Guadalajara, México',
-    headline: ['De un kernel escrito desde cero', 'al mostrador de una ferretería.'],
-    lead: 'Construyo sistemas completos — sistemas operativos, backends, software de negocio, plataformas de aprendizaje — y después los compruebo contra lo que decide: hardware real, un catálogo real, un estudiante real. Abajo está lo que pasó la prueba. Lo que todavía no está probado también se publica.',
+    who: 'Ingeniero de software · Guadalajara, México',
+    headline: ['Sistemas completos,', 'comprobados contra lo que decide.'],
+    lead: 'Soy César Manzo. Estos son cinco sistemas que construí, cada uno junto a lo que lo juzgó — y junto a lo que todavía no ha probado.',
     available: 'Abierto a nuevos proyectos — en remoto o en Guadalajara.',
-    ctaWork: 'Ver el trabajo',
-    ctaLedger: 'Libro de evidencia',
-    atlasLabel: 'Capturas reales, salida real',
-    atlasNote: 'Cada pantalla aquí es una captura del propio proyecto, o una gráfica dibujada con sus propios archivos de evidencia. Nada es un mock-up.',
+    write: 'Escríbeme',
+    doors: 'Cinco proyectos en esta página',
+    of: 'de',
+    methodTitle: 'Cinco sistemas, un solo ciclo.',
+    beyondLabel: 'Más allá de estos cinco',
+    beyondTitle: 'El resto del trabajo está a un paso.',
+    beyondBody: 'Esta página muestra cinco proyectos completos. Los demás — kernels, runtimes, investigación, herramientas más chicas — conservan su propia página, sus capturas y su registro de ingeniería.',
+    beyondIndex: 'Índice',
+    beyondIndexBody: (n) => `Los ${n} proyectos, por lo que son.`,
+    beyondLedger: 'Libro de evidencia',
+    beyondLedgerBody: 'Cada resultado medido junto a su limitación principal.',
+  },
+
+  room: {
+    against: 'Comprobado contra',
     open: 'Abrir el proyecto',
     record: 'Registro de ingeniería',
-    moreLabel: 'También construido',
-    moreTitle: 'Salas más chicas, el mismo estándar.',
-    moreBody: 'Un motor para preparar un examen nacional, un pipeline de documentos que se niega a inventar citas, un asistente que pregunta antes de actuar, un programa de investigación escrito para poder refutarse, y la máquina en la que trabajo.',
-    allWork: 'Índice de todo el trabajo',
-    verification: 'Comprobar lo que se afirma contra sistemas reales',
-    verificationBody: '«Compatible» es una afirmación, no una garantía. Estos dos proyectos la convierten en algo que se puede correr: uno compara un producto contra el servicio real, el otro solo llama soportado a algo cuando una prueba real lo demuestra.',
     storyboard: [
       { step: '01', title: 'Kai escribe en un archivo de Ana. Nada lo bloquea — se vuelve una propuesta.' },
       { step: '02', title: 'Ana recibe un diff: aprueba o rechaza con un clic.' },
@@ -311,10 +341,14 @@ const es: SiteContent = {
     count: (n, c) => `${n} proyectos · ${c} tipos`,
     privateRepo: 'Repositorio privado',
     open: 'Abrir',
+    selected: 'Selección',
+    atlasLabel: 'Capturas reales, salida real',
+    atlasNote: 'Cada pantalla aquí es una captura del propio proyecto, o una gráfica dibujada con sus propios archivos de evidencia. Nada es un mock-up.',
   },
 
   project: {
     back: 'Índice',
+    backSelected: 'Selección',
     why: 'Por qué existe',
     how: 'Cómo funciona',
     gallery: 'Capturas',

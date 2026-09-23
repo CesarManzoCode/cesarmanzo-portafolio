@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { CATEGORIES, ordered, type MediaKey, type Project as P } from '../data/projects';
+import { CATEGORIES, ordered, selection, type MediaKey, type Project as P } from '../data/projects';
 import { getTech } from '../data/technical';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
@@ -64,8 +64,9 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
       <article data-tone={tone(p.slug)} className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} pt-[calc(var(--header-h)+2.5rem)] pb-20 md:pb-32`}>
         <div className="wrap">
           <p className="mono mb-8 text-[0.74rem] fg-3">
-            <Link to={paths.projects} className="transition-colors hover:text-[var(--accent)]">
-              ← {k.back}
+            {/* A selected project leads back to its chapter on the root page. */}
+            <Link to={selection(p.slug) ? `${paths.home}#${p.slug}` : paths.projects} className="transition-colors hover:text-[var(--accent)]">
+              ← {selection(p.slug) ? k.backSelected : k.back}
             </Link>
             <span className="px-2">/</span>
             {t(cat.name)}

@@ -1,7 +1,9 @@
 <!doctype html>
 <!-- Source of public/og.png (1200x630). Render it with any headless browser:
-     open this file at a 1200x630 viewport and screenshot. The captures are
-     the real ones from src/assets/work. -->
+     open this file at a 1200x630 viewport and screenshot. It mirrors the
+     opening of the root page: the five selected projects, each in its own
+     palette. The captures are the real ones from src/assets/work; the
+     SupaDiff panel is drawn from its capability matrix (src/data/evidence.ts). -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -13,8 +15,11 @@
         src: url("../src/assets/fonts/archivo-latin.woff2") format("woff2-variations");
       }
       @font-face {
-        font-family: "JetBrains Mono";
-        src: url("../src/assets/fonts/jetbrains-mono-400-normal-latin.woff2") format("woff2");
+        font-family: "Archivo";
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+        src: url("../src/assets/fonts/archivo-latin-ext.woff2") format("woff2-variations");
+        unicode-range: U+0100-02BA;
       }
       * { box-sizing: border-box; margin: 0; }
       body {
@@ -24,27 +29,68 @@
         background: #0b0c0e;
         color: #efeee9;
         font-family: Archivo, sans-serif;
-        padding: 52px 60px 0;
+        padding: 46px 52px 0;
       }
-      .label { font-stretch: 125%; font-weight: 620; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #77766f; }
-      h1 { margin-top: 20px; font-stretch: 74%; font-weight: 720; font-size: 76px; line-height: 0.93; letter-spacing: -0.022em; max-width: 21ch; }
+      .label { font-stretch: 125%; font-weight: 620; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #77766f; }
+      h1 { margin-top: 16px; font-stretch: 74%; font-weight: 720; font-size: 64px; line-height: 0.95; letter-spacing: -0.022em; }
       h1 span { color: #77766f; }
-      .wall { position: absolute; left: 60px; right: 60px; top: 360px; display: grid; grid-template-columns: 1.35fr 1.1fr 1fr 1fr; gap: 10px; height: 280px; }
-      .wall div { position: relative; overflow: hidden; border-radius: 8px; border: 1px solid rgba(239,238,233,.14); background: #15161a; }
-      .wall img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
-      .wall b { position: absolute; left: 12px; bottom: 58px; font-size: 17px; font-weight: 680; font-stretch: 88%; color: #fff; text-shadow: 0 1px 8px #000; }
-      .wall div::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,7,9,.9) 20%, transparent 55%); }
-      .wall b { z-index: 2; }
+      .doors { position: absolute; left: 52px; right: 52px; top: 250px; bottom: 40px; display: flex; gap: 8px; }
+      .door { flex: 1; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); background: var(--bg); color: var(--fg); }
+      .door.wide { flex: 1.5; }
+      .top { display: flex; gap: 10px; align-items: baseline; padding: 13px 14px 11px; }
+      .top b { font-stretch: 66%; font-weight: 780; font-size: 22px; color: var(--accent); }
+      .top i { font-style: normal; font-stretch: 125%; font-weight: 620; font-size: 9px; letter-spacing: .07em; text-transform: uppercase; color: var(--fg2); white-space: nowrap; }
+      .art { position: relative; flex: 1; margin: 0 10px; overflow: hidden; border-radius: 5px; border: 1px solid var(--line); background: var(--panel); }
+      .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .foot { padding: 12px 14px 14px; }
+      .name { font-stretch: 68%; font-weight: 800; font-size: 34px; line-height: .85; letter-spacing: -.02em; text-transform: uppercase; white-space: nowrap; }
+      .vs { margin-top: 8px; font-stretch: 88%; font-weight: 650; font-size: 14px; color: var(--accent); }
+      .matrix { position: absolute; inset: 8px; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(27, 1fr); gap: 2px; }
+      .matrix span.E { background: #0b0b0b; }
+      .matrix span.U { box-shadow: inset 0 0 0 1px rgba(11,11,11,.32); }
+      .matrix span.X { box-shadow: inset 0 0 0 1.5px #c2700a; background: rgba(194,112,10,.18); }
+      .matrix span.A { background: linear-gradient(135deg, #0b0b0b 50%, transparent 50%); box-shadow: inset 0 0 0 1px #0b0b0b; }
+      .thalyx { --bg:#0a0c10; --panel:#12161c; --fg:#dfe5ee; --fg2:#a4adbb; --line:rgba(215,222,233,.12); --accent:#7fd8a4; }
+      .ferrol { --bg:#eef0f2; --panel:#fff; --fg:#111418; --fg2:#454c58; --line:rgba(17,20,24,.12); --accent:#b35a10; }
+      .indice { --bg:#1d3cc0; --panel:#2548d4; --fg:#fff; --fg2:#d6ddff; --line:rgba(255,255,255,.2); --accent:#ffd35c; }
+      .orux { --bg:#0b0e0f; --panel:#141a1b; --fg:#e1e8e6; --fg2:#9fb0ad; --line:rgba(225,232,230,.11); --accent:#5fe0b0; }
+      .supadiff { --bg:#f3f2ed; --panel:#fff; --fg:#0b0b0b; --fg2:#3a3a38; --line:rgba(11,11,11,.12); --accent:#15803d; }
     </style>
   </head>
   <body>
     <p class="label">César Manzo · Software engineer · Guadalajara, México</p>
-    <h1>From a kernel written from scratch <span>to the counter of a hardware store.</span></h1>
-    <div class="wall">
-      <div><img src="../src/assets/work/thalyx-authorisation.svg" /><b>Thalyx</b></div>
-      <div><img src="../src/assets/work/orux-tentative.webp" style="object-position: 22% top" /><b>Orux</b></div>
-      <div><img src="../src/assets/work/ferrol-category.webp" style="object-position: left 12%" /><b>Ferrol</b></div>
-      <div><img src="../src/assets/work/indice-cero-challenge.webp" style="object-position: right top" /><b>Índice Cero</b></div>
+    <h1>Complete systems, <span>checked against<br />the thing that decides.</span></h1>
+    <div class="doors">
+      <div class="door thalyx wide">
+        <p class="top"><b>01</b><i>Operating system</i></p>
+        <div class="art"><img src="../src/assets/work/thalyx-authorisation.svg" style="object-position: left top" /></div>
+        <div class="foot"><p class="name">Thalyx</p><p class="vs">a real PC</p></div>
+      </div>
+      <div class="door ferrol">
+        <p class="top"><b>02</b><i>Hardware store</i></p>
+        <div class="art"><img src="../src/assets/work/ferrol-category.webp" style="object-position: 6% 10%" /></div>
+        <div class="foot"><p class="name">Ferrol</p><p class="vs">12,027 real products</p></div>
+      </div>
+      <div class="door indice wide">
+        <p class="top"><b>03</b><i>Learn to code</i></p>
+        <div class="art"><img src="../src/assets/work/indice-cero-challenge.webp" style="object-position: 96% 4%" /></div>
+        <div class="foot"><p class="name">Índice Cero</p><p class="vs">a real compiler</p></div>
+      </div>
+      <div class="door orux">
+        <p class="top"><b>04</b><i>Live coding on Git</i></p>
+        <div class="art"><img src="../src/assets/work/orux-tentative.webp" style="object-position: 24% top" /></div>
+        <div class="foot"><p class="name">Orux</p><p class="vs">real Git, in production</p></div>
+      </div>
+      <div class="door supadiff">
+        <p class="top"><b>05</b><i>Verification</i></p>
+        <div class="art"><div class="matrix" id="m"></div></div>
+        <div class="foot"><p class="name">SupaDiff</p><p class="vs">real Supabase</p></div>
+      </div>
     </div>
+    <script>
+      // release-evidence/v1.0.0.json — 27 capabilities × 6 targets (as in src/data/evidence.ts; N = not measured).
+      const rows = ['EEUEEE','EEUEEE','EEUEEE','EEUEEE','EEUEEE','EEUEEE','EEEEEE','EEEEEE','EEEEEE','EEEEEE','EEEEEE','EEEEEE','EEEEEE','EEEEEE','UUUUUU','EEEEEE','EEEEEE','UUUAUU','EEUUEE','EEEEEE','NNUNNN','EEEEEE','EEUXXX','EEUXXX','EEUXXX','EEUXXX','EEUUUU'];
+      document.getElementById('m').innerHTML = rows.map((r) => [...r].map((l) => `<span class="${l}"></span>`).join('')).join('');
+    </script>
   </body>
 </html>
