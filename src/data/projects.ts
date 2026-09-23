@@ -228,9 +228,8 @@ export const PROJECTS: Project[] = [
       },
     ],
     stats: [
-      { value: '156', label: { en: 'checks proven on a real PC', es: 'comprobaciones probadas en una PC real' } },
-      { value: '0', label: { en: 'failed', es: 'fallidas' } },
-      { value: '1,600+', label: { en: 'tests in the workspace', es: 'pruebas en el workspace' } },
+      { value: '1', label: { en: 'program in the machine image, next to the Linux kernel', es: 'programa en la imagen de la máquina, junto al kernel de Linux' } },
+      { value: '1,600+', label: { en: 'tests, including fault injection that kills the real binary', es: 'pruebas, incluida inyección de fallos que mata el binario real' } },
     ],
     cover: 'thalyx-authorisation',
     points: [
