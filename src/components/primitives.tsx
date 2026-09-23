@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
-import type { Head } from '../i18n/content';
+import type { FigureRef, StatusTone } from '../data/projects';
+import { MEDIA } from '../data/media';
+import { useI18n } from '../i18n/context';
 
 /* -------------------------------------------------------------------- *
- * Rise — the page's only entrance gesture: 12px and 450ms, once, on
+ * Rise — the site’s only entrance gesture: 12px and 450ms, once, on
  * first view. IntersectionObserver + CSS, so nothing runs per frame.
  * -------------------------------------------------------------------- */
 export function Rise({
@@ -11,15 +13,14 @@ export function Rise({
   delay = 0,
 }: PropsWithChildren<{ className?: string; delay?: number }>) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
+  // Without an observer, or under reduced motion, there is no gesture at all.
+  const [shown, setShown] = useState(
+    () => typeof IntersectionObserver === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setShown(true);
-      return;
-    }
+    if (!el || shown) return;
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -31,7 +32,7 @@ export function Rise({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [shown]);
 
   return (
     <div
@@ -45,38 +46,22 @@ export function Rise({
 }
 
 /* -------------------------------------------------------------------- *
- * Project masthead — shared by all six, so six different compositions
- * still read as one document.
+ * Rich — inline `code` spans inside otherwise plain copy.
  * -------------------------------------------------------------------- */
-export function ProjectHead({ head, dark = false }: { head: Head; dark?: boolean }) {
-  const muted = dark ? 'text-[var(--dark-ink-2)]' : 'text-[var(--ink-3)]';
-  const rule = dark ? 'border-[var(--dark-rule)]' : 'border-[var(--rule)]';
-
+export function Rich({ text }: { text: string }) {
+  const parts = text.split('`');
   return (
-    <header className={`border-b pb-8 sm:pb-10 ${rule}`}>
-      <p className={`mono ${muted}`}>{head.n}</p>
-      <h3 className="display mt-1 text-[2.6rem] leading-[0.95] sm:text-[3.6rem] md:text-[4.4rem]">{head.name}</h3>
-
-      <div className="mt-4 grid gap-x-10 gap-y-4 md:mt-6 md:grid-cols-12">
-        <p className={`mono md:col-span-4 ${muted}`}>{head.kind}</p>
-        <p className={`prose-lede md:col-span-8 ${dark ? 'text-[var(--dark-ink)]' : ''}`}>{head.lede}</p>
-      </div>
-
-      <div className="mt-5 grid gap-x-10 gap-y-3 md:grid-cols-12">
-        <p className={`text-[0.8125rem] leading-relaxed md:col-span-4 ${muted}`}>{head.status}</p>
-        {head.links.length > 0 && (
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm md:col-span-8">
-            {head.links.map((l) => (
-              <li key={l.href}>
-                <a className={`link ${dark ? 'link-dark' : ''}`} href={l.href} target="_blank" rel="noreferrer noopener">
-                  {l.label} <span aria-hidden="true">↗</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </header>
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <code key={i} className="inline-code">
+            {part}
+          </code>
+        ) : (
+          part
+        ),
+      )}
+    </>
   );
 }
 
@@ -92,7 +77,6 @@ export function Figure({
   className = '',
   priority = false,
   zoom,
-  swipeHint,
 }: {
   src: string;
   alt: string;
@@ -102,8 +86,8 @@ export function Figure({
   priority?: boolean;
   /** Dense captures stay legible on a phone by panning instead of shrinking. */
   zoom?: 'md' | 'lg';
-  swipeHint?: string;
 }) {
+  const { c } = useI18n();
   return (
     <figure className={className}>
       <div className={`figure-frame ${dark ? 'on-dark' : ''}`}>
@@ -111,9 +95,9 @@ export function Figure({
           <img src={src} alt={alt} loading={priority ? 'eager' : 'lazy'} decoding="async" className="w-full" />
         </div>
       </div>
-      {(caption || (zoom && swipeHint)) && (
-        <figcaption className={`caption ${dark ? 'caption-dark' : ''}`}>
-          {zoom && swipeHint && <span className="mono mr-2 md:hidden">↔ {swipeHint}</span>}
+      {(caption || zoom) && (
+        <figcaption className="caption">
+          {zoom && <span className="mono mr-2 md:hidden">↔ {c.a11y.swipe}</span>}
           {caption}
         </figcaption>
       )}
@@ -121,33 +105,60 @@ export function Figure({
   );
 }
 
-/* -------------------------------------------------------------------- *
- * Rule-separated titled paragraphs. No cards, no chips.
- * -------------------------------------------------------------------- */
-export function PointList({
-  points,
-  dark = false,
-  columns = 2,
-}: {
-  points: { title: string; body: string }[];
-  dark?: boolean;
-  columns?: 1 | 2 | 3;
-}) {
-  const rule = dark ? 'border-[var(--dark-rule)]' : 'border-[var(--rule)]';
-  const muted = dark ? 'text-[var(--dark-ink-2)]' : 'text-[var(--ink-2)]';
-
+export function ProjectFigure({ f, className = '', priority = false }: { f: FigureRef; className?: string; priority?: boolean }) {
+  const { t } = useI18n();
   return (
-    <ul className={`grid gap-x-12 ${columns === 2 ? 'sm:grid-cols-2' : ''}${columns === 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : ''}`}>
-      {points.map((p) => (
-        <li key={p.title} className={`border-t py-6 ${rule}`}>
-          <h4 className="text-[0.95rem] font-semibold leading-snug tracking-[-0.01em]">{p.title}</h4>
-          <p className={`mt-2 text-[0.9rem] leading-relaxed ${muted}`}>{p.body}</p>
-        </li>
-      ))}
-    </ul>
+    <Figure
+      className={className}
+      src={MEDIA[f.media]}
+      alt={t(f.alt)}
+      caption={t(f.caption)}
+      zoom={f.zoom}
+      dark={f.dark}
+      priority={priority}
+    />
   );
 }
 
-export function SectionLabel({ children, dark = false }: PropsWithChildren<{ dark?: boolean }>) {
-  return <p className={`label ${dark ? 'text-[var(--dark-ink-2)]' : ''}`}>{children}</p>;
+/* -------------------------------------------------------------------- *
+ * Status — a tone dot and the status line.
+ * -------------------------------------------------------------------- */
+export function Status({ tone, children, className = '' }: PropsWithChildren<{ tone: StatusTone; className?: string }>) {
+  const { c } = useI18n();
+  return (
+    <p className={`flex items-baseline gap-2 text-[0.8125rem] leading-snug ${className}`}>
+      <span className={`tone-dot tone-${tone}`} aria-hidden="true" />
+      <span>
+        <span className="sr-only">{c.tone[tone]}: </span>
+        {children}
+      </span>
+    </p>
+  );
+}
+
+export function ExternalLink({ href, children, className = 'link' }: PropsWithChildren<{ href: string; className?: string }>) {
+  const { c } = useI18n();
+  return (
+    <a className={className} href={href} target="_blank" rel="noreferrer noopener">
+      {children} <span aria-hidden="true">↗</span>
+      <span className="sr-only"> ({c.a11y.openInNew})</span>
+    </a>
+  );
+}
+
+/** A rule-topped section heading used across the accessible pages. */
+export function SectionHead({ label, title, children, id }: PropsWithChildren<{ label: string; title?: string; id?: string }>) {
+  return (
+    <div id={id} className="border-t border-[var(--ink)] pt-6 md:pt-8">
+      <div className="grid gap-4 md:grid-cols-12 md:gap-12">
+        <p className="label md:col-span-4">{label}</p>
+        {(title || children) && (
+          <div className="md:col-span-8">
+            {title && <h2 className="display text-[2.2rem] leading-[1.02] sm:text-[2.8rem]">{title}</h2>}
+            {children}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

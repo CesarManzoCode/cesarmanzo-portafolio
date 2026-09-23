@@ -3,8 +3,8 @@
 
 /* ==================================================================== *
  * Tokens — a warm paper ground, ink type, one oxide accent.
- * The dark tokens are lifted straight from the Thalyx captures so the
- * diagrams sit inside their section instead of on top of it.
+ * The technical layer swaps the same tokens for the Thalyx capture
+ * palette, so every component works on both surfaces unchanged.
  * ==================================================================== */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -26,6 +26,8 @@
   --rule-strong: #c3bcab;
 
   --accent: #a8371a;
+  --warn: #9a5a0c;
+  --ok: #2f7a4f;
 
   /* Thalyx capture palette — used verbatim by the dark section */
   --dark: #0f1116;
@@ -34,6 +36,24 @@
   --dark-ink: #d7dee9;
   --dark-ink-2: #8b95a6;
   --dark-accent: #7fd8a4;
+}
+
+/* The engineering surface: set on <html> for /technical, and locally on
+   the cards that lead into it. */
+:root[data-surface='tech'],
+.tech-card {
+  color-scheme: dark;
+  --paper: var(--dark);
+  --paper-alt: var(--dark-2);
+  --card: var(--dark-2);
+  --ink: var(--dark-ink);
+  --ink-2: #aeb7c6;
+  --ink-3: var(--dark-ink-2);
+  --rule: var(--dark-rule);
+  --rule-strong: #3a4352;
+  --accent: var(--dark-accent);
+  --warn: #e3ad6a;
+  --ok: var(--dark-accent);
 }
 
 html {
@@ -45,6 +65,7 @@ html {
 body {
   margin: 0;
   background: var(--paper);
+  transition: background-color 0.2s ease;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -75,9 +96,14 @@ video {
   max-width: 100%;
 }
 
-/* Anchored targets clear the sticky bar. */
+/* Anchored targets clear the sticky bar (two rows on phones). */
 [id] {
-  scroll-margin-top: 5.25rem;
+  scroll-margin-top: 7rem;
+}
+@media (min-width: 640px) {
+  [id] {
+    scroll-margin-top: 5.25rem;
+  }
 }
 
 a:focus-visible,
@@ -176,13 +202,6 @@ button:focus-visible {
     border-color: var(--accent);
   }
 
-  .link-dark {
-    border-bottom-color: var(--dark-rule);
-  }
-  .link-dark:hover {
-    color: var(--dark-accent);
-    border-color: var(--dark-accent);
-  }
 
   /* ---- figures ---- */
   .figure-frame {
@@ -200,21 +219,190 @@ button:focus-visible {
     line-height: 1.55;
     color: var(--ink-3);
   }
-  .caption-dark {
-    color: var(--dark-ink-2);
-  }
 }
 
 /* ==================================================================== *
- * The dark band (Thalyx)
+ * Content devices
  * ==================================================================== */
-.band-dark {
+.tech-card {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+}
+.tech-card ::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+:root[data-surface='tech'] ::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.card {
+  border: 1px solid var(--rule);
+  background: var(--card);
+  transition: border-color 0.2s ease;
+}
+.card:hover {
+  border-color: var(--rule-strong);
+}
+.card-major {
+  border-color: var(--rule-strong);
+  border-top: 2px solid var(--ink);
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* A proof point: a short rule, not a checkmark. */
+.proof,
+.bullet {
+  position: relative;
+  padding-left: 1.15rem;
+}
+.proof::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--accent);
+}
+.bullet::before {
+  content: "";
+  position: absolute;
+  left: 0.1rem;
+  top: 0.62em;
+  width: 0.3rem;
+  height: 0.3rem;
+  border: 1px solid var(--ink-3);
+}
+
+.note {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: 0.75rem;
+}
+
+.caveat {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-left: 2px solid var(--warn);
+  padding-left: 0.85rem;
+}
+
+.tone-dot {
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  transform: translateY(-0.05rem);
+  background: var(--ink-3);
+}
+.tone-active { background: var(--ok); }
+.tone-complete { background: var(--ink); }
+.tone-archived { background: transparent; border: 1px solid var(--ink-3); }
+.tone-research { background: var(--warn); }
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  padding: 0.3rem 0.5rem;
   background: var(--dark);
   color: var(--dark-ink);
+  transition: color 0.2s ease;
 }
-.band-dark ::selection {
-  background: var(--dark-accent);
-  color: var(--dark);
+.tech-badge span {
+  color: var(--dark-accent);
+}
+.tech-badge:hover {
+  color: var(--dark-accent);
+}
+:root[data-surface='tech'] .tech-badge {
+  background: var(--dark-2);
+}
+
+.nav-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.05em 0.3em;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+}
+
+.code-block {
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  background: var(--paper-alt);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.evidence-table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.evidence-table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 1rem 0.6rem 0;
+  border-bottom: 1px solid var(--ink);
+}
+.evidence-table td {
+  vertical-align: top;
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+.evidence-table td.first {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+  min-width: 8rem;
 }
 
 /* ==================================================================== *

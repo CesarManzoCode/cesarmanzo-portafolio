@@ -1,7 +1,14 @@
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 import { content, type Lang, type SiteContent } from './content';
+import type { T } from '../data/projects';
 
-type I18nValue = { lang: Lang; setLang: (l: Lang) => void; c: SiteContent };
+type I18nValue = {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  c: SiteContent;
+  /** Picks the reader’s language from a bilingual value. */
+  t: (v: T | string) => string;
+};
 
 const LanguageContext = createContext<I18nValue | null>(null);
 const STORAGE_KEY = 'cm-lang';
@@ -29,7 +36,9 @@ export function LanguageProvider({ children }: PropsWithChildren) {
     }
   };
 
-  return <LanguageContext.Provider value={{ lang, setLang, c: content[lang] }}>{children}</LanguageContext.Provider>;
+  const t = (v: T | string) => (typeof v === 'string' ? v : v[lang]);
+
+  return <LanguageContext.Provider value={{ lang, setLang, c: content[lang], t }}>{children}</LanguageContext.Provider>;
 }
 
 export function useI18n(): I18nValue {

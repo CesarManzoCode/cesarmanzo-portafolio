@@ -1,29 +1,54 @@
 import { useEffect } from 'react';
-import { About } from './components/About';
-import { Acredita } from './components/Acredita';
-import { Contact } from './components/Contact';
-import { CppCeti } from './components/CppCeti';
-import { Ferrol } from './components/Ferrol';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { Method } from './components/Method';
-import { More } from './components/More';
-import { Orux } from './components/Orux';
-import { Studymation } from './components/Studymation';
-import { Thalyx } from './components/Thalyx';
-import { SecondaryHeading, WorkHeading } from './components/WorkHeading';
+import { getProject } from './data/projects';
+import { getTech } from './data/technical';
 import { useI18n } from './i18n/context';
+import { About } from './pages/About';
+import { Home } from './pages/Home';
+import { NotFound } from './pages/NotFound';
+import { ProjectDetail } from './pages/ProjectDetail';
+import { Projects } from './pages/Projects';
+import { TechDetail } from './pages/TechDetail';
+import { Technical } from './pages/Technical';
+import { useRouter } from './router';
 
 export default function App() {
-  const { c, lang } = useI18n();
+  const { c, lang, t } = useI18n();
+  const { route } = useRouter();
 
-  // Keep the document title and description in the reader's language.
+  const project = route.name === 'project' ? getProject(route.slug) : undefined;
+  const doc = route.name === 'tech' ? getTech(route.slug) : undefined;
+  const missing = (route.name === 'project' && !project) || (route.name === 'tech' && !doc) || route.name === 'notFound';
+  const technical = !missing && (route.name === 'technical' || route.name === 'tech');
+
+  let title = c.meta.title;
+  if (missing) title = c.meta.notFound;
+  else if (route.name === 'projects') title = c.meta.projects;
+  else if (route.name === 'technical') title = c.meta.technical;
+  else if (route.name === 'about') title = c.meta.about;
+  else if (project) title = `${project.name} — César Manzo`;
+  else if (doc) title = `${getProject(doc.slug)!.name} · ${c.nav.technical} — César Manzo`;
+
+  const description = project ? t(project.thesis) : doc ? t(doc.abstract) : c.meta.description;
+
+  // Title, language, description and the surface (the technical layer is dark).
   useEffect(() => {
-    document.title = c.meta.title;
+    document.title = title;
     document.documentElement.lang = lang;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', c.meta.description);
-  }, [c, lang]);
+    document.documentElement.dataset.surface = technical ? 'tech' : 'paper';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', technical ? '#0f1116' : '#f3f0ea');
+  }, [title, lang, technical, description]);
+
+  let page;
+  if (missing) page = <NotFound />;
+  else if (route.name === 'home') page = <Home />;
+  else if (route.name === 'projects') page = <Projects />;
+  else if (project) page = <ProjectDetail p={project} />;
+  else if (route.name === 'technical') page = <Technical />;
+  else if (doc) page = <TechDetail doc={doc} />;
+  else page = <About />;
 
   return (
     <>
@@ -36,29 +61,8 @@ export default function App() {
 
       <Header />
 
-      <main id="main">
-        <Hero />
-
-        <div className="pt-16 pb-16 sm:pt-20 sm:pb-20 md:pt-24 md:pb-24">
-          <WorkHeading />
-        </div>
-
-        <Thalyx />
-        <Orux />
-        <Ferrol />
-
-        <div className="pt-16 sm:pt-20 md:pt-24">
-          <SecondaryHeading />
-        </div>
-
-        <Acredita />
-        <Studymation />
-        <CppCeti />
-        <More />
-
-        <Method />
-        <About />
-        <Contact />
+      <main id="main" key={route.name + ('slug' in route ? route.slug : '')}>
+        {page}
       </main>
 
       <Footer />

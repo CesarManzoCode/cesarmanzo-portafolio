@@ -1,18 +1,44 @@
 import { useI18n } from '../i18n/context';
-import { Rise } from './primitives';
+import { Contact } from '../components/Contact';
+import { Rise } from '../components/primitives';
 
-/* -------------------------------------------------------------------- *
- * The piece that sits between the six projects and the About: what the
- * six have in common. Same vocabulary as the rest of the page — a rule,
- * a numbered run, and paragraphs. No new device.
- * -------------------------------------------------------------------- */
-export function Method() {
+export function About() {
   const { c } = useI18n();
+  const a = c.about;
   const m = c.method;
 
   return (
-    <section id="method" className="py-16 sm:py-20 md:py-24">
-      <div className="shell">
+    <>
+      <section className="shell pt-10 sm:pt-14">
+        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+          <div className="md:col-span-4">
+            <p className="label">{a.eyebrow}</p>
+            <h1 className="display mt-3 text-[2.8rem] leading-[1.0] sm:text-[3.4rem]">{a.title}</h1>
+          </div>
+          <div className="md:col-span-8">
+            {a.body.map((p, i) => (
+              <p key={p} className={`prose-lede max-w-[62ch] ${i > 0 ? 'mt-5' : ''}`}>
+                {p}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <Rise className="mt-12 md:mt-16">
+          <p className="label">{a.practiceLabel}</p>
+          <dl className="mt-4 grid gap-x-12 sm:grid-cols-2">
+            {a.practice.map((p) => (
+              <div key={p.area} className="border-t border-[var(--rule)] py-4">
+                <dt className="text-[0.95rem] font-semibold tracking-[-0.01em]">{p.area}</dt>
+                <dd className="mt-1 text-[0.875rem] leading-relaxed text-[var(--ink-2)]">{p.detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </Rise>
+      </section>
+
+      {/* The method: what the projects have in common. */}
+      <section id="method" className="shell pt-16 sm:pt-20 md:pt-24">
         <Rise className="border-t border-[var(--ink)] pt-6 md:pt-8">
           <div className="grid gap-4 md:grid-cols-12 md:gap-12">
             <p className="label md:col-span-4">{m.eyebrow}</p>
@@ -23,17 +49,6 @@ export function Method() {
           </div>
         </Rise>
 
-        <Rise className="mt-10 md:mt-12">
-          <div className="grid gap-x-12 gap-y-2 border-t border-[var(--rule)] pt-5 md:grid-cols-12">
-            <p className="label md:col-span-4">{m.toolingLabel}</p>
-            <p className="max-w-[62ch] text-[0.95rem] leading-relaxed text-[var(--ink-2)] md:col-span-8">
-              {m.tooling}
-            </p>
-          </div>
-        </Rise>
-
-        {/* The loop, drawn the way Studymation's pipeline is: numbering,
-            rules and type, nothing else. */}
         <Rise className="mt-10 md:mt-14">
           <p className="label">{m.loopLabel}</p>
           <ol className="mt-4 grid border-t border-[var(--ink)] sm:grid-cols-2 lg:grid-cols-3">
@@ -64,7 +79,9 @@ export function Method() {
             <p className="prose-lede max-w-[62ch] md:col-span-8">{m.ends}</p>
           </div>
         </Rise>
-      </div>
-    </section>
+      </section>
+
+      <Contact />
+    </>
   );
 }
