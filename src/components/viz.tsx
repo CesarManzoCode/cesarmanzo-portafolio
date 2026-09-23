@@ -438,12 +438,12 @@ export function CapabilityMatrix({ compact = false }: { compact?: boolean }) {
   return (
     <div ref={ref}>
       <div className="scroll-x">
-        <table className="min-w-[520px] border-separate border-spacing-[3px]" aria-label="SupaDiff capability matrix">
+        <table className="border-separate border-spacing-[3px]" aria-label="SupaDiff capability matrix">
           <thead>
             <tr>
               <th />
               {SUPADIFF_TARGETS.map((tg, i) => (
-                <th key={tg} scope="col" className="h-[5.6rem] w-[2.4rem] align-bottom" title={tg}>
+                <th key={tg} scope="col" className="h-[5.6rem] w-[1.5rem] align-bottom sm:w-[2.4rem]" title={tg}>
                   <span className="mono inline-block origin-bottom-left translate-x-[1.1rem] -rotate-[55deg] whitespace-nowrap text-[0.64rem] font-normal fg-2">
                     {TARGET_SHORT[i]}
                   </span>
@@ -460,7 +460,7 @@ export function CapabilityMatrix({ compact = false }: { compact?: boolean }) {
                 {r.levels.map((l, ci) => (
                   <td key={ci} className="p-0">
                     <span
-                      className="block h-[15px] w-full min-w-[2.2rem]"
+                      className="block h-[15px] w-full min-w-[1.35rem] sm:min-w-[2.2rem]"
                       title={`${r.cap} · ${SUPADIFF_TARGETS[ci]} · ${l}`}
                       style={{
                         ...levelStyle(l),

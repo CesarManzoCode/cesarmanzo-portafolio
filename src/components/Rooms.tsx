@@ -56,7 +56,11 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
       </div>
       <H
         className={`name mt-6 break-words ${
-          level === 'page' ? 'text-[clamp(3.6rem,15vw,13.5rem)]' : 'text-[clamp(3.4rem,12.5vw,11rem)]'
+          p.name.length > 14
+            ? 'text-[clamp(2.4rem,8.4vw,8rem)]'
+            : level === 'page'
+              ? 'text-[clamp(3.6rem,15vw,13.5rem)]'
+              : 'text-[clamp(3.4rem,12.5vw,11rem)]'
         }`}
       >
         {level === 'home' ? (
@@ -535,7 +539,7 @@ export function AlsoCard({ p, className = '' }: { p: Project; className?: string
           →
         </span>
       </div>
-      <h3 className="name mt-4 text-[clamp(2.6rem,5vw,4.4rem)] transition-colors group-hover:text-[var(--accent)]">{p.name}</h3>
+      <h3 className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${p.name.length > 14 ? "text-[clamp(2rem,4vw,3.4rem)]" : "text-[clamp(2.6rem,5vw,4.4rem)]"}`}>{p.name}</h3>
       <p className="mt-4 max-w-[52ch] text-[0.98rem] leading-relaxed fg-2">{t(p.thesis)}</p>
       <div className="mt-8 flex-1 content-end">{art}</div>
     </Link>

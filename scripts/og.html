@@ -1,57 +1,50 @@
 <!doctype html>
 <!-- Source of public/og.png (1200x630). Render it with any headless browser:
-     open this file at a 1200x630 viewport and screenshot. -->
+     open this file at a 1200x630 viewport and screenshot. The captures are
+     the real ones from src/assets/work. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <style>
       @font-face {
-        font-family: "Instrument Serif";
-        src: url("../src/assets/fonts/instrument-serif-400-normal-latin.woff2") format("woff2");
+        font-family: "Archivo";
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+        src: url("../src/assets/fonts/archivo-latin.woff2") format("woff2-variations");
       }
       @font-face {
         font-family: "JetBrains Mono";
         src: url("../src/assets/fonts/jetbrains-mono-400-normal-latin.woff2") format("woff2");
       }
-      @font-face {
-        font-family: "Inter";
-        src: url("../src/assets/fonts/inter-400-600-normal-latin.woff2") format("woff2");
-      }
       * { box-sizing: border-box; margin: 0; }
       body {
         width: 1200px;
         height: 630px;
-        background: #f3f0ea;
-        color: #15140f;
-        font-family: Inter, sans-serif;
-        padding: 62px 72px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        overflow: hidden;
+        background: #0b0c0e;
+        color: #efeee9;
+        font-family: Archivo, sans-serif;
+        padding: 52px 60px 0;
       }
-      .top { display: flex; justify-content: space-between; align-items: baseline; }
-      .mono { font-family: "JetBrains Mono", monospace; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; }
-      .muted { color: #787266; }
-      h1 { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 92px; line-height: 0.98; letter-spacing: -0.015em; max-width: 15ch; }
-      .rule { border-top: 1px solid #c3bcab; padding-top: 18px; display: flex; gap: 26px; flex-wrap: wrap; }
-      .rule span { font-family: "Instrument Serif", serif; font-size: 26px; }
-      .rule i { font-family: "JetBrains Mono", monospace; font-size: 13px; font-style: normal; color: #a8371a; margin-right: 6px; vertical-align: 6px; }
+      .label { font-stretch: 125%; font-weight: 620; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #77766f; }
+      h1 { margin-top: 20px; font-stretch: 74%; font-weight: 720; font-size: 76px; line-height: 0.93; letter-spacing: -0.022em; max-width: 21ch; }
+      h1 span { color: #77766f; }
+      .wall { position: absolute; left: 60px; right: 60px; top: 360px; display: grid; grid-template-columns: 1.35fr 1.1fr 1fr 1fr; gap: 10px; height: 280px; }
+      .wall div { position: relative; overflow: hidden; border-radius: 8px; border: 1px solid rgba(239,238,233,.14); background: #15161a; }
+      .wall img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+      .wall b { position: absolute; left: 12px; bottom: 58px; font-size: 17px; font-weight: 680; font-stretch: 88%; color: #fff; text-shadow: 0 1px 8px #000; }
+      .wall div::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,7,9,.9) 20%, transparent 55%); }
+      .wall b { z-index: 2; }
     </style>
   </head>
   <body>
-    <div class="top">
-      <p class="mono">César Manzo</p>
-      <p class="mono muted">Software engineer · Guadalajara, México</p>
-    </div>
-
-    <h1>I build systems, and I finish them.</h1>
-
-    <div class="rule">
-      <span><i>01</i>Thalyx</span>
-      <span><i>02</i>Ferrol</span>
-      <span><i>03</i>Índice Cero</span>
-      <span><i>04</i>Orux</span>
-      <span><i>05</i>SupaDiff</span>
+    <p class="label">César Manzo · Software engineer · Guadalajara, México</p>
+    <h1>From a kernel written from scratch <span>to the counter of a hardware store.</span></h1>
+    <div class="wall">
+      <div><img src="../src/assets/work/thalyx-authorisation.svg" /><b>Thalyx</b></div>
+      <div><img src="../src/assets/work/orux-tentative.webp" style="object-position: 22% top" /><b>Orux</b></div>
+      <div><img src="../src/assets/work/ferrol-category.webp" style="object-position: left 12%" /><b>Ferrol</b></div>
+      <div><img src="../src/assets/work/indice-cero-challenge.webp" style="object-position: right top" /><b>Índice Cero</b></div>
     </div>
   </body>
 </html>

@@ -72,7 +72,7 @@ export function Home() {
                   <li key={p.slug}>
                     <Link to={paths.project(p.slug)} className="group flex items-baseline gap-3 border-b border-[var(--line)] py-[5px] text-[0.8rem]">
                       <span className="mono w-5 text-[0.62rem] fg-3">{num(i)}</span>
-                      <span className="font-semibold transition-colors group-hover:text-[var(--accent)]">{p.name}</span>
+                      <span className="whitespace-nowrap font-semibold transition-colors group-hover:text-[var(--accent)]">{p.name}</span>
                       <span className="ml-auto truncate text-[0.72rem] fg-3">{t(p.kind).split(' · ')[0]}</span>
                     </Link>
                   </li>

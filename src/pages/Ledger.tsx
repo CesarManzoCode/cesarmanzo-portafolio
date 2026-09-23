@@ -38,8 +38,7 @@ export function Ledger() {
               <Reveal>
                 <Link
                   to={`${paths.project(p.slug)}#record`}
-                  className={`room-${p.slug} group grid gap-6 border-b border-[var(--line)] py-8 lg:grid-cols-12`}
-                  style={{ ['--accent' as string]: 'var(--rec-accent)' }}
+                  className={`surface room-${p.slug} surface-record group grid gap-6 border-b border-[var(--line)] py-8 lg:grid-cols-12`}
                 >
                   <div className="lg:col-span-3">
                     <p className="name text-[clamp(2.2rem,3.6vw,3.2rem)] transition-colors group-hover:text-[var(--accent)]">{p.name}</p>

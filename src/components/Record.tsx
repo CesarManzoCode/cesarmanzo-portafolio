@@ -36,7 +36,7 @@ export function Record({ p, doc }: { p: Project; doc: TechDoc }) {
               <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
                 {doc.headline.map((m) => (
                   <li key={m.label.en} className="border-t border-[var(--line)] pt-3">
-                    <span className="num block break-words text-[2.3rem] accent sm:text-[2.7rem]">{t(m.value)}</span>
+                    <span className={`num block break-words accent ${t(m.value).length > 7 ? 'text-[1.7rem] sm:text-[1.9rem]' : 'text-[2.3rem] sm:text-[2.7rem]'}`}>{t(m.value)}</span>
                     <span className="mt-2 block text-[0.76rem] leading-snug fg-3">{t(m.label)}</span>
                   </li>
                 ))}

@@ -45,7 +45,7 @@ export function Index() {
                           <p className="mono text-[0.7rem] fg-3">
                             {n(p.slug)} · {p.year}
                           </p>
-                          <p className="name mt-2 break-words text-[clamp(2.6rem,6vw,5.2rem)] transition-colors group-hover:text-[var(--accent)]">
+                          <p className={`name mt-2 break-words transition-colors group-hover:text-[var(--accent)] ${p.name.length > 14 ? "text-[clamp(2rem,3.6vw,3.2rem)]" : "text-[clamp(2.6rem,6vw,5.2rem)]"}`}>
                             {p.name}
                           </p>
                           <p className="mono mt-3 text-[0.74rem] fg-2">{t(p.kind)}</p>

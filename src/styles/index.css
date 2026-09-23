@@ -325,6 +325,11 @@ button:focus-visible,
  * Components
  * ==================================================================== */
 @layer components {
+  /* Grid tracks never grow to fit a wide capture: captures pan instead. */
+  .grid > * {
+    min-width: 0;
+  }
+
   .wrap {
     margin-inline: auto;
     width: 100%;

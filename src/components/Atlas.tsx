@@ -32,7 +32,7 @@ const TILES: Tile[] = [
   { slug: 'supadiff', n: '06', art: 'matrix', area: 'lg:col-[9/13] lg:row-[3/4]' },
   { slug: 'studymation', n: '09', media: 'studymation-brief', pos: '30% 12%', area: 'lg:col-[5/8] lg:row-[4/5]' },
   { slug: 'supakernel', n: '07', art: 'gates', area: 'lg:col-[8/11] lg:row-[4/5]' },
-  { slug: 'ennard', n: '10', art: 'tools', area: 'lg:col-[11/13] lg:row-[4/5]' },
+  { slug: 'ennard', n: '10', art: 'tools', area: 'lg:col-[11/13] lg:row-[4/5] col-span-2 sm:col-span-1' },
 ];
 
 function KernelArt({ seen }: { seen: boolean }) {

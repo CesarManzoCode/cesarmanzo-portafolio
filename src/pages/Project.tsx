@@ -80,7 +80,7 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
                   {t(l.label)}
                 </ExternalLink>
               ))}
-              {p.privateRepo && <span className="chip">{c.index.privateRepo}</span>}
+              {p.privateRepo && <span className="chip self-start lg:self-end">{c.index.privateRepo}</span>}
               {doc && (
                 <a href="#record" className="link mono text-[0.76rem]">
                   {k.record} <span aria-hidden="true">↓</span>
@@ -151,11 +151,11 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
       <Link
         to={paths.project(next.slug)}
         data-tone={tone(next.slug)}
-        className={`surface room-${next.slug} ${tone(next.slug) === 'dark' ? 'tone-dark' : ''} group block py-16 md:py-24`}
+        className={`surface room-${next.slug} ${tone(next.slug) === 'dark' ? 'tone-dark' : ''} group block border-t border-[var(--line)] py-16 md:py-24`}
       >
         <div className="wrap">
           <p className="label fg-3">{k.next}</p>
-          <p className="name mt-4 text-[clamp(3rem,11vw,9rem)] transition-colors group-hover:text-[var(--accent)]">
+          <p className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${next.name.length > 14 ? 'text-[clamp(2.4rem,7.6vw,7rem)]' : 'text-[clamp(3rem,11vw,9rem)]'}`}>
             {next.name} <span className="arrow text-[0.5em]">→</span>
           </p>
           <p className="mono mt-3 fg-2">{t(next.kind)}</p>
