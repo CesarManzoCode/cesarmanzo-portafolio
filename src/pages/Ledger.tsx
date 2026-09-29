@@ -41,7 +41,11 @@ export function Ledger() {
                   className={`surface room-${p.slug} surface-record group grid gap-6 border-b border-[var(--line)] py-8 lg:grid-cols-12`}
                 >
                   <div className="lg:col-span-3">
-                    <p className="name text-[clamp(2.2rem,3.6vw,3.2rem)] transition-colors group-hover:text-[var(--accent)]">{p.name}</p>
+                    <p
+                      className={`name break-words transition-colors group-hover:text-[var(--accent)] ${p.name.length > 14 ? 'text-[clamp(1.6rem,2.1vw,2rem)]' : 'text-[clamp(2.2rem,3.6vw,3.2rem)]'}`}
+                    >
+                      {p.name}
+                    </p>
                     <p className="mono mt-2 text-[0.7rem] fg-3">{t(p.kind)}</p>
                   </div>
                   <ul className="grid grid-cols-2 gap-x-5 gap-y-4 self-start lg:col-span-4">

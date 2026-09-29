@@ -62,7 +62,7 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
       </div>
       <H
         id={`${p.slug}-name`}
-        className={`name mt-6 break-words ${
+        className={`name mt-7 break-words md:mt-8 ${
           p.name.length > 14
             ? 'text-[clamp(2.4rem,8.4vw,8rem)]'
             : level === 'page'
@@ -93,20 +93,23 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
   );
 }
 
-/** Thesis + the two ways in. */
+/** What the project is, in one sentence — read before its evidence. */
+export function RoomThesis({ p }: { p: Project }) {
+  const { t } = useI18n();
+  return <p className="thesis mt-10 max-w-[44ch] md:mt-12">{t(p.thesis)}</p>;
+}
+
+/** The two ways in, after the evidence. */
 export function RoomFoot({ p }: { p: Project }) {
-  const { t, c } = useI18n();
+  const { c } = useI18n();
   return (
-    <div className="mt-14 grid gap-8 border-t border-[var(--line)] pt-8 md:grid-cols-12 md:mt-20">
-      <p className="thesis md:col-span-8">{t(p.thesis)}</p>
-      <div className="flex flex-col items-start gap-3 md:col-span-4 md:items-end md:justify-end">
-        <Link to={paths.project(p.slug)} className="btn btn-solid">
-          {c.room.open} <span className="arrow" aria-hidden="true">→</span>
-        </Link>
-        <Link to={`${paths.project(p.slug)}#record`} className="link mono text-[0.76rem]">
-          {c.room.record} <span className="arrow" aria-hidden="true">→</span>
-        </Link>
-      </div>
+    <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[var(--line)] pt-8 md:mt-20">
+      <Link to={paths.project(p.slug)} className="btn btn-solid">
+        {c.room.open} <span className="arrow" aria-hidden="true">→</span>
+      </Link>
+      <Link to={`${paths.project(p.slug)}#record`} className="link mono text-[0.76rem]">
+        {c.room.record} <span className="arrow" aria-hidden="true">→</span>
+      </Link>
     </div>
   );
 }
@@ -136,7 +139,7 @@ function Stats({ p, cols = 3, size = 'lg' as const }: { p: Project; cols?: 2 | 3
 }
 
 function Panel({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`border border-[var(--line)] bg-[var(--panel)] p-5 sm:p-7 ${className}`}>{children}</div>;
+  return <div className={`border border-[var(--line)] bg-[var(--panel)] p-4 sm:p-7 ${className}`}>{children}</div>;
 }
 
 /* -------------------------------------------------------------------- *
@@ -352,9 +355,12 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
                     <span className="mono mr-2 fg-3">0{i + 1}</span>
                     <Rich text={t(f.title)} />
                   </p>
-                  <p className="body mt-2 text-[0.88rem]">
-                    <Rich text={t(f.body)} />
-                  </p>
+                  {/* On the project page the record below carries the full account. */}
+                  {!full && (
+                    <p className="body mt-2 text-[0.88rem]">
+                      <Rich text={t(f.body)} />
+                    </p>
+                  )}
                 </li>
               ))}
             </ol>
