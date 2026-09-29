@@ -13,7 +13,7 @@ import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
 import { Reveal, Status } from '../components/primitives';
 import { Preview } from '../components/Previews';
-import { tone } from '../components/Rooms';
+import { OneClaims, tone } from '../components/Rooms';
 import { CapabilityBand, GateGrid, ScalingChart, ToolPolicy } from '../components/viz';
 
 /* Projects whose evidence is a dataset: the index draws it at size
@@ -32,6 +32,7 @@ const DRAWN: Record<string, ReactNode> = {
     </>
   ),
   ennard: <ToolPolicy />,
+  one: <OneClaims />,
 };
 
 function Row({ p, n }: { p: Project; n: string }) {

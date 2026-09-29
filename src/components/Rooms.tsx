@@ -47,15 +47,20 @@ export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; lev
   const cat = CATEGORIES.find((k) => k.id === p.category)!;
   const sel = selection(p.slug);
   const H = level === 'page' ? 'h1' : 'h2';
-  const long = p.name.length > 12;
+  // Sized by length, so a name never breaks inside a word on a wide screen.
+  const len = p.name.length;
   const size =
     level === 'page'
-      ? long
-        ? 'text-[clamp(2.6rem,7.4vw,7.2rem)]'
-        : 'text-[clamp(3.8rem,12vw,11rem)]'
-      : long
-        ? 'text-[clamp(2.4rem,6vw,5.6rem)]'
-        : 'text-[clamp(3.4rem,8.6vw,8rem)]';
+      ? len <= 8
+        ? 'text-[clamp(3.8rem,12vw,11rem)]'
+        : len <= 11
+          ? 'text-[clamp(3rem,8.4vw,7.6rem)]'
+          : 'text-[clamp(2.2rem,6.2vw,6rem)]'
+      : len <= 8
+        ? 'text-[clamp(3.4rem,8.6vw,8rem)]'
+        : len <= 11
+          ? 'text-[clamp(2.8rem,6.6vw,6.2rem)]'
+          : 'text-[clamp(2.2rem,5.2vw,5rem)]';
   return (
     <header className="grid gap-x-14 gap-y-8 lg:grid-cols-12">
       <div className="lg:col-span-7">
@@ -549,8 +554,7 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
         </div>
       );
 
-    case 'one': {
-      const states = ['untested', 'supported', 'refuted', 'inconclusive', 'withdrawn'];
+    case 'one':
       return (
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
           <Reveal className="lg:col-span-6">
@@ -561,33 +565,11 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
           </Reveal>
           <Reveal className="lg:col-span-6" delay={120}>
             <Panel>
-              <p className="label fg-3">{t({ en: 'Claim states in the registry', es: 'Estados de un claim en el registro' })}</p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {states.map((st) => (
-                  <li
-                    key={st}
-                    className={`mono border px-2.5 py-1 text-[0.76rem] ${st === 'untested' ? 'border-[var(--fg)] bg-[var(--fg)] text-[var(--bg)]' : 'border-dashed border-[var(--line-2)] fg-3'}`}
-                  >
-                    {st}
-                  </li>
-                ))}
-              </ul>
-              <p className="body mt-5 text-[0.9rem]">
-                {t({
-                  en: 'Every claim sits in the first state. “Supported” means it survived its falsifier — never “proven”.',
-                  es: 'Todos los claims están en el primer estado. «Supported» significa que sobrevivió a su falsador — nunca «probado».',
-                })}
-              </p>
-              <p className="mono mt-6 border-t border-[var(--line)] pt-4 text-[0.74rem] leading-relaxed fg-2">
-                ONE-C-O1 · RV64IM-O1 → Core-O1 → x86-64
-                <br />
-                <span className="fg-3">{t({ en: 'the first experiment — designed, not built', es: 'el primer experimento — diseñado, no construido' })}</span>
-              </p>
+              <OneClaims />
             </Panel>
           </Reveal>
         </div>
       );
-    }
 
     case 'cesarmanzocode-rice':
       return (
@@ -599,4 +581,36 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
     default:
       return null;
   }
+}
+
+/** ONE’s registry: every claim sits in its first state. */
+export function OneClaims() {
+  const { t } = useI18n();
+  const states = ['untested', 'supported', 'refuted', 'inconclusive', 'withdrawn'];
+  return (
+    <div>
+      <p className="label fg-3">{t({ en: 'Claim states in the registry', es: 'Estados de un claim en el registro' })}</p>
+      <ul className="mt-4 flex flex-wrap gap-2">
+        {states.map((st) => (
+          <li
+            key={st}
+            className={`mono border px-2.5 py-1 text-[0.76rem] ${st === 'untested' ? 'border-[var(--fg)] bg-[var(--fg)] text-[var(--bg)]' : 'border-dashed border-[var(--line-2)] fg-3'}`}
+          >
+            {st}
+          </li>
+        ))}
+      </ul>
+      <p className="body mt-5 text-[0.9rem]">
+        {t({
+          en: 'Every claim sits in the first state. “Supported” means it survived its falsifier — never “proven”.',
+          es: 'Todos los claims están en el primer estado. «Supported» significa que sobrevivió a su falsador — nunca «probado».',
+        })}
+      </p>
+      <p className="mono mt-6 border-t border-[var(--line)] pt-4 text-[0.74rem] leading-relaxed fg-2">
+        ONE-C-O1 · RV64IM-O1 → Core-O1 → x86-64
+        <br />
+        <span className="fg-3">{t({ en: 'the first experiment — designed, not built', es: 'el primer experimento — diseñado, no construido' })}</span>
+      </p>
+    </div>
+  );
 }

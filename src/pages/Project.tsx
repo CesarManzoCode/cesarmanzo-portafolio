@@ -155,7 +155,7 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
         <div className="wrap grid items-center gap-x-14 gap-y-8 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="text-[0.82rem] fg-3">{k.next}</p>
-            <p className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${next.name.length > 12 ? 'text-[clamp(2.4rem,6vw,6rem)]' : 'text-[clamp(3rem,9vw,8rem)]'}`}>
+            <p className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${next.name.length > 11 ? 'text-[clamp(2.2rem,5vw,5rem)]' : next.name.length > 8 ? 'text-[clamp(2.8rem,6.4vw,6rem)]' : 'text-[clamp(3rem,9vw,8rem)]'}`}>
               {next.name} <span className="arrow text-[0.5em]">→</span>
             </p>
             <p className="mt-4 max-w-[52ch] text-[1rem] leading-relaxed fg-2">{t(next.thesis)}</p>

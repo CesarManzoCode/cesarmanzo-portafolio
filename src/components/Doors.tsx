@@ -97,7 +97,7 @@ export function Doors() {
                   ))}
                 </span>
                 <span className="door-against">
-                  <span className="label fg-3">{c.room.against}</span>
+                  <span>{c.room.against}</span>
                   <span className="door-against-value accent">{t(sel.against)}</span>
                 </span>
                 <span className="door-verdict">

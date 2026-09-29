@@ -10,11 +10,11 @@ release gates. An operating system, a hardware store and a classroom never share
 | Route | What it is |
 |---|---|
 | `/` | **The selection — five projects and nothing else**: Thalyx, Ferrol, Índice Cero, Orux, SupaDiff. Five “doors” side by side, then one chapter each, the loop they share, one door to the rest of the work, contact |
-| `/projects` | The whole body of work: the Atlas (a wall of real captures and charts), then every project by kind, each row in its own palette |
+| `/projects` | The whole body of work by kind: a contents list, then one band per project in its own palette, led by its capture or by its own evidence drawn at size (the kernel’s scaling curve, the release gates, the capability matrix, the tool policy); a band’s size follows the project’s weight |
 | `/projects/:slug` | One continuous descent: the room at full size → the plain story → captures → the **engineering record** (architecture, invariants, trust boundaries, measurements, failures, limitations, what is not proven, how to reproduce) |
-| `/technical` | Evidence ledger: every project’s strongest measured result next to its main limitation |
+| `/technical` | Evidence ledger, kept like one: what was measured on one side of a spine, the main limitation on the other, grouped by how deep each record goes |
 | `/technical/:slug` | Kept for old links: opens the project page at its engineering record |
-| `/about` | Who, where the work happens, the loop, contact |
+| `/about` | Who, where the work happens (each practice area linked to the projects that show it), the loop, contact |
 
 Bilingual (English / Spanish), English by default.
 
@@ -45,6 +45,16 @@ the evidence behind it — and each opens a chapter further down, where the head
 Every selected project carries the same line: what it was **checked against** (a real PC, 12,027 real
 products, a real compiler, real Git in production, real Supabase). The rest of the work is one link away,
 in the index and the evidence ledger; project pages of the selection lead back to their chapter.
+
+## How the evidence is shown
+
+- **Annotated captures** (`Annotated` in `src/components/primitives.tsx`): numbered pins placed by hand on a real
+  capture, each pointing at something visibly there, with the notes beside it. The notes are the accessible content.
+  Pins live in `PINS` in `src/components/Rooms.tsx`; if a capture is replaced, its pins must be re-placed.
+- **One composition per selected project**: Thalyx’s signed-module frame next to its verify run; Ferrol’s catalogue,
+  the 12,027 → 1,642 → 1,800 reduction and the photo rubric with the TOR result on its scale; Índice Cero’s compiler
+  feedback; Orux’s save as a three-step storyboard (the steps are the controls); SupaDiff’s matrix turned on its side.
+- **The loop** on Home and About is drawn as one: six steps and a return from the last to the first.
 
 ## Design system
 
