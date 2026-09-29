@@ -78,7 +78,7 @@ function Row({ p, n }: { p: Project; n: string }) {
         </div>
         <div className={`max-lg:-order-1 ${major ? 'lg:col-span-7' : 'lg:col-span-6'}`}>
           {DRAWN[p.slug] ? (
-            <div className="relative h-full rounded-[8px] border border-[var(--line)] bg-[var(--panel)] p-4 sm:p-6">{DRAWN[p.slug]}</div>
+            <div className="relative rounded-[8px] border border-[var(--line)] bg-[var(--panel)] p-4 sm:p-6">{DRAWN[p.slug]}</div>
           ) : (
           <div
             className={`relative overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--panel)] ${
