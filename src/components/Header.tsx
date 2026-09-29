@@ -62,6 +62,19 @@ export function Header() {
   const under = useUnderlay(path);
 
   const open = openOn === path;
+  const menuButton = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the menu and returns focus to the button that opened it.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpenOn(null);
+      menuButton.current?.focus();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
 
   const section =
     route.name === 'home' || (route.name === 'project' && selection(route.slug)) ? 'work' : route.name === 'projects' || route.name === 'project' ? 'index' : route.name === 'technical' || route.name === 'tech' ? 'ledger' : route.name === 'about' ? 'about' : null;
@@ -76,7 +89,8 @@ export function Header() {
   const dark = under.dark;
   const chapter =
     route.name === 'home' && under.chapter !== null ? { i: under.chapter, slug: SELECTED[under.chapter]!, name: getProject(SELECTED[under.chapter]!)!.name } : null;
-  const style = under.bg ? { backgroundColor: under.bg.replace(/rgb\(([^)]+)\)/, 'rgba($1, 0.86)') } : undefined;
+  // Translucent over the page; opaque while the menu covers it.
+  const style = under.bg ? { backgroundColor: open ? under.bg : under.bg.replace(/rgb\(([^)]+)\)/, 'rgba($1, 0.86)') } : undefined;
 
   return (
     <header
@@ -133,6 +147,7 @@ export function Header() {
           </div>
 
           <button
+            ref={menuButton}
             type="button"
             className="mono cursor-pointer px-1 py-2 text-[0.72rem] uppercase md:hidden"
             aria-expanded={open}
@@ -162,11 +177,15 @@ export function Header() {
       )}
 
       {open && (
-        <nav id="mobile-nav" className="wrap border-t border-current/15 pb-6 md:hidden" aria-label={c.nav.primary}>
+        <nav id="mobile-nav" className="wrap h-[calc(100svh-var(--header-h))] overflow-y-auto border-t border-current/15 pb-6 md:hidden" aria-label={c.nav.primary}>
           <ul className="grid">
             {items.map((it) => (
               <li key={it.id} className="border-b border-current/10">
-                <Link to={it.to} className="name block py-3 text-[2.4rem]" aria-current={section === it.id ? 'page' : undefined}>
+                <Link
+                  to={it.to}
+                  className={`name block py-3 text-[2.4rem] ${section === it.id ? '' : 'opacity-55'}`}
+                  aria-current={section === it.id ? 'page' : undefined}
+                >
                   {it.label}
                 </Link>
               </li>

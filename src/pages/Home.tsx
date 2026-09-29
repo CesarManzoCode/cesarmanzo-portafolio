@@ -103,7 +103,7 @@ export function Home() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:mt-7 lg:grid-cols-12 lg:gap-14">
-            <h1 className="display text-[clamp(2.6rem,5.1vw,5.4rem)] lg:col-span-8">
+            <h1 className="display text-[clamp(2.6rem,5.1vw,5.4rem)] [text-wrap:pretty] lg:col-span-8">
               {h.headline[0]} <span className="fg-3">{h.headline[1]}</span>
             </h1>
             <p className="lede max-w-[44ch] self-end lg:col-span-4 lg:pb-1">{h.lead}</p>

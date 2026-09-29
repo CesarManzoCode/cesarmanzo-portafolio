@@ -344,6 +344,7 @@ button:focus-visible,
     font-weight: 720;
     letter-spacing: -0.022em;
     line-height: 0.93;
+    text-wrap: balance;
   }
   .name {
     font-family: var(--font-sans);
@@ -378,6 +379,7 @@ button:focus-visible,
   }
   .lede {
     font-size: 1.12rem;
+    text-wrap: pretty;
     line-height: 1.5;
     color: var(--fg-2);
     font-weight: 420;
@@ -389,6 +391,7 @@ button:focus-visible,
     }
   }
   .thesis {
+    text-wrap: pretty;
     font-size: clamp(1.3rem, 2.1vw, 1.9rem);
     line-height: 1.22;
     font-weight: 460;
@@ -396,6 +399,7 @@ button:focus-visible,
     font-stretch: 96%;
   }
   .body {
+    text-wrap: pretty;
     color: var(--fg-2);
     font-size: 0.98rem;
     line-height: 1.6;
@@ -578,6 +582,7 @@ button:focus-visible,
   }
 
   .caption {
+    text-wrap: pretty;
     margin-top: 0.8rem;
     font-size: 0.8rem;
     line-height: 1.5;
