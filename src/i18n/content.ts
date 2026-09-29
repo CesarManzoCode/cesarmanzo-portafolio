@@ -38,6 +38,9 @@ export type SiteContent = {
     record: string;
     storyboard: { step: string; title: string }[];
     findings: string;
+    finding: string;
+    reproducible: string;
+    storyboardLabel: string;
     evidenceModel: string;
   };
 
@@ -49,8 +52,7 @@ export type SiteContent = {
     privateRepo: string;
     open: string;
     selected: string;
-    atlasLabel: string;
-    atlasNote: string;
+    contents: string;
   };
 
   project: {
@@ -73,9 +75,10 @@ export type SiteContent = {
 
   ledger: {
     eyebrow: string;
-    title: string;
+    title: [string, string];
     lede: string;
     rules: string[];
+    byDepth: string;
     cols: { project: string; proven: string; limit: string; depth: string };
     read: string;
   };
@@ -97,7 +100,9 @@ export type SiteContent = {
     title: string;
     body: string[];
     practiceLabel: string;
-    practice: { area: string; detail: string }[];
+    practice: { area: string; detail: string; work: string[] }[];
+    seenIn: string;
+    facts: { label: string; value: string }[];
   };
 
   contact: { eyebrow: string; title: string; body: string; email: string; channels: Link[]; place: string };
@@ -159,6 +164,9 @@ const en: SiteContent = {
       { step: '03', title: 'Whoever depends on the changed function is warned — before anything breaks.' },
     ],
     findings: 'What it found',
+    finding: 'Finding',
+    reproducible: 'reproducible',
+    storyboardLabel: 'One save, step by step',
     evidenceModel: 'Every public claim carries the full chain',
   },
 
@@ -170,8 +178,7 @@ const en: SiteContent = {
     privateRepo: 'Private repository',
     open: 'Open',
     selected: 'Selected',
-    atlasLabel: 'Real captures, real output',
-    atlasNote: 'Every screen here is a capture from the project itself, or a chart drawn from its own evidence files. Nothing is a mock-up.',
+    contents: 'By kind',
   },
 
   project: {
@@ -194,7 +201,8 @@ const en: SiteContent = {
 
   ledger: {
     eyebrow: 'Evidence ledger',
-    title: 'What is proven. What is not.',
+    title: ['What is proven.', 'What is not.'],
+    byDepth: 'Records by depth',
     lede: 'Every project on one sheet: the strongest measured result next to the most important limitation. Open any row for its full engineering record.',
     rules: [
       'Numbers are copied from the project’s own repository or documentation.',
@@ -202,7 +210,7 @@ const en: SiteContent = {
       'A section of a record only exists when there is evidence for it.',
     ],
     cols: { project: 'Project', proven: 'Measured / verified', limit: 'Main limitation', depth: 'Record' },
-    read: 'Read',
+    read: 'Open the record',
   },
 
   depth: {
@@ -251,13 +259,19 @@ const en: SiteContent = {
       'That is why the projects here look nothing like each other. An operating system, a kernel, business software, teaching platforms and verification tools share no stack. What they share is the loop, and the range it demands: schema, service, interface, deployment, and the evidence that each part does what it says.',
     ],
     practiceLabel: 'Where that work happens',
+    seenIn: 'Seen in',
+    facts: [
+      { label: 'Based in', value: 'Guadalajara, Jalisco, México' },
+      { label: 'Works', value: 'Remote, or in Guadalajara' },
+      { label: 'Site', value: 'English · Español' },
+    ],
     practice: [
-      { area: 'Systems', detail: 'Rust, Linux, BPF, kernels, sandboxing, signed artifacts.' },
-      { area: 'Backend', detail: 'TypeScript and Python services, PostgreSQL and SQLite, schema and migrations.' },
-      { area: 'Real time', detail: 'WebSocket state, presence, ownership, preventing collisions on shared state.' },
-      { area: 'Product & interface', detail: 'React, Next.js, accessibility, and design that comes from the content.' },
-      { area: 'Verification', detail: 'Differential testing, property and mutation testing, fault injection, reproducible artifacts.' },
-      { area: 'AI systems', detail: 'Agents with explicit trust boundaries, local models, cost-aware routing.' },
+      { area: 'Systems', detail: 'Rust, Linux, BPF, kernels, sandboxing, signed artifacts.' , work: ['thalyx', 'thalyx-kernel'] },
+      { area: 'Backend', detail: 'TypeScript and Python services, PostgreSQL and SQLite, schema and migrations.' , work: ['supakernel', 'ferrol', 'studymation'] },
+      { area: 'Real time', detail: 'WebSocket state, presence, ownership, preventing collisions on shared state.' , work: ['orux'] },
+      { area: 'Product & interface', detail: 'React, Next.js, accessibility, and design that comes from the content.' , work: ['ferrol', 'indice-cero', 'acredita-bach'] },
+      { area: 'Verification', detail: 'Differential testing, property and mutation testing, fault injection, reproducible artifacts.' , work: ['supadiff', 'supakernel', 'thalyx-kernel'] },
+      { area: 'AI systems', detail: 'Agents with explicit trust boundaries, local models, cost-aware routing.' , work: ['thalyx', 'ennard', 'studymation'] },
     ],
   },
 
@@ -331,6 +345,9 @@ const es: SiteContent = {
       { step: '03', title: 'A quien depende de la función cambiada se le avisa — antes de que algo se rompa.' },
     ],
     findings: 'Lo que encontró',
+    finding: 'Hallazgo',
+    reproducible: 'reproducible',
+    storyboardLabel: 'Un guardado, paso a paso',
     evidenceModel: 'Cada afirmación pública lleva la cadena completa',
   },
 
@@ -342,8 +359,7 @@ const es: SiteContent = {
     privateRepo: 'Repositorio privado',
     open: 'Abrir',
     selected: 'Selección',
-    atlasLabel: 'Capturas reales, salida real',
-    atlasNote: 'Cada pantalla aquí es una captura del propio proyecto, o una gráfica dibujada con sus propios archivos de evidencia. Nada es un mock-up.',
+    contents: 'Por tipo',
   },
 
   project: {
@@ -366,7 +382,8 @@ const es: SiteContent = {
 
   ledger: {
     eyebrow: 'Libro de evidencia',
-    title: 'Qué está probado. Qué no.',
+    title: ['Qué está probado.', 'Qué no.'],
+    byDepth: 'Registros por profundidad',
     lede: 'Todos los proyectos en una sola hoja: el resultado medido más fuerte junto a la limitación más importante. Abre cualquier fila para ver su registro de ingeniería completo.',
     rules: [
       'Los números se copian del repositorio o la documentación del propio proyecto.',
@@ -374,7 +391,7 @@ const es: SiteContent = {
       'Una sección de un registro solo existe cuando hay evidencia para ella.',
     ],
     cols: { project: 'Proyecto', proven: 'Medido / verificado', limit: 'Limitación principal', depth: 'Registro' },
-    read: 'Leer',
+    read: 'Abrir el registro',
   },
 
   depth: {
@@ -423,13 +440,19 @@ const es: SiteContent = {
       'Por eso los proyectos de aquí no se parecen entre sí. Un sistema operativo, un kernel, software de negocio, plataformas de enseñanza y herramientas de verificación no comparten stack. Lo que comparten es el ciclo, y la amplitud que exige: esquema, servicio, interfaz, despliegue, y la evidencia de que cada parte hace lo que dice.',
     ],
     practiceLabel: 'Dónde ocurre ese trabajo',
+    seenIn: 'Se ve en',
+    facts: [
+      { label: 'Vive en', value: 'Guadalajara, Jalisco, México' },
+      { label: 'Trabaja', value: 'En remoto, o en Guadalajara' },
+      { label: 'Sitio', value: 'English · Español' },
+    ],
     practice: [
-      { area: 'Sistemas', detail: 'Rust, Linux, BPF, kernels, sandboxing, artefactos firmados.' },
-      { area: 'Backend', detail: 'Servicios en TypeScript y Python, PostgreSQL y SQLite, esquema y migraciones.' },
-      { area: 'Tiempo real', detail: 'Estado por WebSocket, presencia, ownership, evitar colisiones sobre estado compartido.' },
-      { area: 'Producto e interfaz', detail: 'React, Next.js, accesibilidad, y diseño que sale del contenido.' },
-      { area: 'Verificación', detail: 'Pruebas diferenciales, de propiedades y de mutación, inyección de fallos, artefactos reproducibles.' },
-      { area: 'Sistemas de IA', detail: 'Agentes con fronteras de confianza explícitas, modelos locales, ruteo consciente del costo.' },
+      { area: 'Sistemas', detail: 'Rust, Linux, BPF, kernels, sandboxing, artefactos firmados.' , work: ['thalyx', 'thalyx-kernel'] },
+      { area: 'Backend', detail: 'Servicios en TypeScript y Python, PostgreSQL y SQLite, esquema y migraciones.' , work: ['supakernel', 'ferrol', 'studymation'] },
+      { area: 'Tiempo real', detail: 'Estado por WebSocket, presencia, ownership, evitar colisiones sobre estado compartido.' , work: ['orux'] },
+      { area: 'Producto e interfaz', detail: 'React, Next.js, accesibilidad, y diseño que sale del contenido.' , work: ['ferrol', 'indice-cero', 'acredita-bach'] },
+      { area: 'Verificación', detail: 'Pruebas diferenciales, de propiedades y de mutación, inyección de fallos, artefactos reproducibles.' , work: ['supadiff', 'supakernel', 'thalyx-kernel'] },
+      { area: 'Sistemas de IA', detail: 'Agentes con fronteras de confianza explícitas, modelos locales, ruteo consciente del costo.' , work: ['thalyx', 'ennard', 'studymation'] },
     ],
   },
 

@@ -15,15 +15,24 @@ export function Method({ id = 'method', title, dark = false }: { id?: string; ti
           </div>
           <p className="lede max-w-[52ch] self-end lg:col-span-6 lg:col-start-7">{m.lede}</p>
         </Reveal>
-        <ol className="mt-16 grid border-t border-[var(--fg)] sm:grid-cols-2 lg:grid-cols-6">
-          {m.loop.map((s, i) => (
-            <Reveal as="li" key={s.step} delay={i * 70} className="grid grid-cols-[3.25rem_1fr] border-b border-[var(--line)] py-5 sm:block sm:py-6 sm:pr-6 lg:border-b-0 lg:border-r lg:px-5 lg:first:pl-0 lg:last:border-r-0">
-              <p className="num row-span-2 text-[2rem] accent sm:text-[2.6rem]">{s.step}</p>
-              <h3 className="text-[1.15rem] font-semibold sm:mt-3">{s.title}</h3>
-              <p className="mt-2 text-[0.86rem] leading-relaxed fg-2">{s.body}</p>
-            </Reveal>
-          ))}
-        </ol>
+        <Reveal className="mt-16 md:mt-20">
+          <ol className="loop">
+            {m.loop.map((s) => (
+              <li key={s.step} className="loop-step">
+                <span className="loop-node" aria-hidden="true" />
+                <p className="num text-[2rem] accent sm:text-[2.4rem]">{s.step}</p>
+                <div>
+                  <h3 className="text-[1.15rem] font-semibold lg:mt-3">{s.title}</h3>
+                  <p className="mt-2 text-[0.86rem] leading-relaxed fg-2">{s.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          {/* The last step feeds the first: that is what makes it a loop. */}
+          <div className="loop-return" aria-hidden="true">
+            <span className="mono">{m.loop[m.loop.length - 1]!.step} → {m.loop[0]!.step}</span>
+          </div>
+        </Reveal>
         <Reveal className="mt-14 grid lg:grid-cols-12">
           <p className="text-[1.05rem] leading-relaxed fg-2 lg:col-span-7 lg:col-start-6">
             <span className="mr-3 inline-block h-[2px] w-8 translate-y-[-5px] bg-[var(--accent)]" aria-hidden="true" />

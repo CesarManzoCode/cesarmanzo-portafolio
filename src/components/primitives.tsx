@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type PropsWithChildren, type ReactNode } from 'react';
-import type { FigureRef, MediaKey, StatusTone } from '../data/projects';
+import type { FigureRef, MediaKey, StatusTone, T } from '../data/projects';
 import { MEDIA, MEDIA_SIZE } from '../data/media';
 import { useI18n } from '../i18n/context';
 
@@ -170,6 +170,93 @@ export function Figure({
       <figcaption className={`caption ${captionClassName}`}>
         {f.zoom && <span className="mono mr-2 md:hidden">↔ {c.a11y.swipe}</span>}
         <Rich text={t(f.caption)} />
+      </figcaption>
+    </figure>
+  );
+}
+
+/* -------------------------------------------------------------------- *
+ * Annotated — a real capture with numbered pins on what it shows, and
+ * the notes beside it. Pins are placed by hand on the capture (as a
+ * percentage of its size) and only point at what is visibly there; the
+ * notes are the accessible content, the pins are decoration.
+ * -------------------------------------------------------------------- */
+export type Pin = { x: number; y: number; note: T };
+
+export function Annotated({
+  f,
+  pins,
+  label,
+  kind,
+  priority,
+  side = false,
+  frameClassName = '',
+  aside,
+  children,
+}: {
+  f: FigureRef;
+  pins: Pin[];
+  label?: string;
+  kind?: FrameKind;
+  priority?: boolean;
+  /** Notes beside the capture on a wide screen, instead of under it. */
+  side?: boolean;
+  frameClassName?: string;
+  /** Rendered with the legend, e.g. a heading above the notes. */
+  aside?: ReactNode;
+  /** Rendered over the capture, e.g. a phone capture overlapping it. */
+  children?: ReactNode;
+}) {
+  const { t, c } = useI18n();
+  const [on, setOn] = useState<number | null>(null);
+  const frameKind: FrameKind = kind ?? (f.dark ? 'bare' : 'window');
+  const [w, h] = MEDIA_SIZE[f.media];
+  const stage = (
+    <div className="relative" style={{ aspectRatio: `${w} / ${h}` }}>
+      <Shot media={f.media} alt={t(f.alt)} priority={priority} className="absolute inset-0 h-full" />
+      <div className={`pins ${on !== null ? 'pins-active' : ''}`} aria-hidden="true">
+        {pins.map((p, i) => (
+          <span key={i} className={`pin ${on === i ? 'on' : ''}`} style={{ left: `${p.x}%`, top: `${p.y}%` }}>
+            {i + 1}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+  return (
+    <figure className={side ? 'grid gap-x-14 gap-y-10 lg:grid-cols-12' : 'grid gap-6'}>
+      <div className={`relative ${side ? 'lg:col-span-8' : ''} ${frameClassName}`}>
+        <div className={`frame ${frameKind === 'bare' ? 'frame-bare' : ''}`}>
+          {frameKind === 'window' && (
+            <div className="frame-bar" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              {label && <span>{label}</span>}
+            </div>
+          )}
+          {f.zoom ? <div className={`figure-scroll zoom-${f.zoom}`}>{stage}</div> : stage}
+        </div>
+        {children}
+        {f.zoom && <p className="mono mt-2 text-[0.68rem] fg-3 md:hidden">↔ {c.a11y.swipe}</p>}
+      </div>
+      <figcaption className={side ? 'lg:col-span-4' : ''}>
+        {aside}
+        <ol className={`legend ${side ? '' : 'legend-cols'}`}>
+          {pins.map((p, i) => (
+            <li key={i} onMouseEnter={() => setOn(i)} onMouseLeave={() => setOn(null)} className={on === i ? 'on' : ''}>
+              <span className="legend-n" aria-hidden="true">
+                {i + 1}
+              </span>
+              <span>
+                <Rich text={t(p.note)} />
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="caption">
+          <Rich text={t(f.caption)} />
+        </p>
       </figcaption>
     </figure>
   );

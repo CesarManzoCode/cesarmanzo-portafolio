@@ -7,17 +7,18 @@
  * gates. The same compositions are used on Home (as a room) and at the
  * top of the project page (at full size).
  * ==================================================================== */
-import type { ReactNode } from 'react';
-import { CATEGORIES, SELECTED, selection, type FigureRef, type MediaKey, type Project } from '../data/projects';
+import { useState, type ReactNode } from 'react';
+import { CATEGORIES, SELECTED, selection, type FigureRef, type MediaKey, type Project, type T } from '../data/projects';
 import { getTech } from '../data/technical';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
-import { Figure, Framed, Reveal, Rich, Stat, Status } from './primitives';
+import { Annotated, Figure, Framed, Reveal, Rich, Shot, Stat, Status, type Pin } from './primitives';
 import {
   AreaDots,
+  CapabilityBand,
   CapabilityMatrix,
   CourseBlocks,
-  FerrolFunnel,
+  FerrolReduction,
   FerrolRubric,
   GateGrid,
   PhaseLadder,
@@ -37,79 +38,79 @@ function fig(p: Project, key: MediaKey): FigureRef {
 }
 
 /* -------------------------------------------------------------------- *
- * The head of a room: index, category, name, kind, status.
+ * The head of a room: kept short, so the evidence starts within the
+ * first screen. The name, what it was checked against, and the one
+ * sentence that says what it is.
  * -------------------------------------------------------------------- */
 export function RoomHead({ p, n, level = 'home' }: { p: Project; n?: string; level?: 'home' | 'page' }) {
   const { t, c } = useI18n();
   const cat = CATEGORIES.find((k) => k.id === p.category)!;
   const sel = selection(p.slug);
   const H = level === 'page' ? 'h1' : 'h2';
+  const long = p.name.length > 12;
+  const size =
+    level === 'page'
+      ? long
+        ? 'text-[clamp(2.6rem,7.4vw,7.2rem)]'
+        : 'text-[clamp(3.8rem,12vw,11rem)]'
+      : long
+        ? 'text-[clamp(2.4rem,6vw,5.6rem)]'
+        : 'text-[clamp(3.4rem,8.6vw,8rem)]';
   return (
-    <header>
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-[var(--line-2)] pt-4">
-        <p className="label fg-2">
+    <header className="grid gap-x-14 gap-y-8 lg:grid-cols-12">
+      <div className="lg:col-span-7">
+        <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[0.8rem] fg-2">
           {n && (
-            <span className="accent mr-3">
+            <span className="num text-[1.3rem] accent">
               {n}
-              {sel && <span className="fg-3"> / {String(SELECTED.length).padStart(2, '0')}</span>}
+              {sel && <span className="fg-3">/{String(SELECTED.length).padStart(2, '0')}</span>}
             </span>
           )}
-          {t(cat.name)}
+          <span>{t(cat.name)}</span>
+          <span className="fg-3">{p.year}</span>
         </p>
-        <Status tone={p.statusTone} className="fg-2 max-w-[60ch]">
-          {t(p.status)}
-        </Status>
+        <H id={`${p.slug}-name`} className={`name mt-4 break-words ${size}`}>
+          {level === 'home' ? (
+            <Link to={paths.project(p.slug)} className="transition-colors duration-300 hover:text-[var(--accent)]">
+              {p.name}
+            </Link>
+          ) : (
+            p.name
+          )}
+        </H>
+        <p className="mono mt-4 fg-2">{t(p.kind)}</p>
       </div>
-      <H
-        id={`${p.slug}-name`}
-        className={`name mt-7 break-words md:mt-8 ${
-          p.name.length > 14
-            ? 'text-[clamp(2.4rem,8.4vw,8rem)]'
-            : level === 'page'
-              ? 'text-[clamp(3.6rem,15vw,13.5rem)]'
-              : 'text-[clamp(3.4rem,12.5vw,11rem)]'
-        }`}
-      >
-        {level === 'home' ? (
-          <Link to={paths.project(p.slug)} className="transition-colors duration-300 hover:text-[var(--accent)]">
-            {p.name}
-          </Link>
-        ) : (
-          p.name
-        )}
-      </H>
-      <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-10 gap-y-3">
-        <p className="mono fg-2">{t(p.kind)}</p>
+      <div className="flex flex-col justify-end gap-6 lg:col-span-5">
         {sel && (
-          <p className="flex items-baseline gap-3">
-            <span className="label fg-3">{c.room.against}</span>
-            <span className="text-[clamp(1.05rem,1.5vw,1.3rem)] font-[650] tracking-[-0.01em] accent" style={{ fontStretch: '88%' }}>
-              {t(sel.against)}
-            </span>
+          <p>
+            <span className="block text-[0.8rem] fg-3">{c.room.against}</span>
+            <span className="against mt-1 block accent">{t(sel.against)}</span>
           </p>
         )}
+        <p className="thesis">{t(p.thesis)}</p>
+        <Status tone={p.statusTone} className="fg-3">
+          {t(p.status)}
+        </Status>
       </div>
     </header>
   );
 }
 
-/** What the project is, in one sentence — read before its evidence. */
-export function RoomThesis({ p }: { p: Project }) {
-  const { t } = useI18n();
-  return <p className="thesis mt-10 max-w-[44ch] md:mt-12">{t(p.thesis)}</p>;
-}
-
 /** The two ways in, after the evidence. */
 export function RoomFoot({ p }: { p: Project }) {
-  const { c } = useI18n();
+  const { c, t } = useI18n();
+  const sel = selection(p.slug);
   return (
-    <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-[var(--line)] pt-8 md:mt-20">
-      <Link to={paths.project(p.slug)} className="btn btn-solid">
-        {c.room.open} <span className="arrow" aria-hidden="true">→</span>
-      </Link>
-      <Link to={`${paths.project(p.slug)}#record`} className="link mono text-[0.76rem]">
-        {c.room.record} <span className="arrow" aria-hidden="true">→</span>
-      </Link>
+    <div className="mt-16 flex flex-wrap items-center justify-between gap-x-8 gap-y-5 border-t border-[var(--line)] pt-7 md:mt-24">
+      {sel && <p className="max-w-[60ch] text-[0.95rem] leading-relaxed fg-2">{t(sel.verdict)}</p>}
+      <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
+        <Link to={`${paths.project(p.slug)}#record`} className="link mono text-[0.76rem]">
+          {c.room.record} <span className="arrow" aria-hidden="true">→</span>
+        </Link>
+        <Link to={paths.project(p.slug)} className="btn btn-solid">
+          {c.room.open} <span className="arrow" aria-hidden="true">→</span>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -124,6 +125,23 @@ function Point({ p, i, big = false }: { p: Project; i: number; big?: boolean }) 
         <Rich text={t(pt.body)} />
       </p>
     </div>
+  );
+}
+
+/** Numbered claims in a row, each with its reason — the story told as rules. */
+function Rules({ p, idx, className = '' }: { p: Project; idx: number[]; className?: string }) {
+  const { t } = useI18n();
+  return (
+    <ol className={`rules ${className}`}>
+      {idx.map((i, k) => (
+        <Reveal as="li" key={i} delay={k * 80}>
+          <p className="text-[1.15rem] font-semibold leading-snug tracking-[-0.01em]">{t(p.points[i]!.title)}</p>
+          <p className="body mt-3 text-[0.92rem]">
+            <Rich text={t(p.points[i]!.body)} />
+          </p>
+        </Reveal>
+      ))}
+    </ol>
   );
 }
 
@@ -143,6 +161,91 @@ function Panel({ children, className = '' }: { children: ReactNode; className?: 
 }
 
 /* -------------------------------------------------------------------- *
+ * Pins on the captures. Each one points at something visibly in the
+ * capture; the note says what it is, in the project’s own terms.
+ * -------------------------------------------------------------------- */
+const s2 = (en: string, es: string): T => ({ en, es });
+
+const PINS: Partial<Record<MediaKey, Pin[]>> = {
+  'thalyx-authorisation': [
+    { x: 62, y: 16.7, note: s2('The frame is drawn by the core from the module’s signed manifest — the agent cannot compose it or reword it.', 'El núcleo dibuja el aviso a partir del manifiesto firmado del módulo — el agente no puede redactarlo ni reformularlo.') },
+    { x: 62, y: 38.1, note: s2('The one permission requested, shown in full — never a subset.', 'El único permiso solicitado, completo — nunca una parte.') },
+    { x: 24, y: 59.6, note: s2('Nothing installs without a yes from the person at the keyboard.', 'Nada se instala sin un sí de la persona frente al teclado.') },
+    { x: 67, y: 76.8, note: s2('The module runs as its own user, and no other module’s.', 'El módulo corre con su propio usuario, y el de ningún otro módulo.') },
+  ],
+  'ferrol-category': [
+    { x: 43, y: 3.3, note: s2('One search field, by measurement, key or name.', 'Un solo buscador, por medida, por clave o por nombre.') },
+    { x: 39.8, y: 19.9, note: s2('A branch with 2,597 articles of the real list.', 'Una rama con 2,597 artículos de la lista real.') },
+    { x: 60.4, y: 25.1, note: s2('Names arrive the way the supplier writes them: “TOR” means tornillo — screw.', 'Los nombres llegan como los escribe el proveedor: «TOR» es tornillo.') },
+    { x: 51.8, y: 52.6, note: s2('Availability per article, and a filter for it: in stock, on order, out of stock.', 'Disponibilidad por artículo, con su filtro: disponible, sobre pedido, sin existencia.') },
+    { x: 82.6, y: 25.6, note: s2('A reference price per row, tax included — the margin in this capture is a trial figure, not the store’s.', 'Precio de referencia por renglón, IVA incluido — el margen de esta captura es de ensayo, no el de la tienda.') },
+  ],
+  'indice-challenge': [
+    { x: 79.5, y: 35.4, note: s2('The attempt divides by `3`, not `3.0` — the classic integer-division mistake.', 'El intento divide entre `3`, no entre `3.0` — el error clásico de la división entera.') },
+    { x: 44.8, y: 64.6, note: s2('Compiled and run against 2 tests: 0 passed.', 'Compilado y corrido contra 2 pruebas: 0 aprobadas.') },
+    { x: 69.6, y: 76.3, note: s2('Expected output next to the student’s.', 'La salida esperada junto a la del estudiante.') },
+    { x: 87.6, y: 81.4, note: s2('The exact place they part: line 1, column 12.', 'El lugar exacto donde se separan: línea 1, columna 12.') },
+    { x: 61.6, y: 88.9, note: s2('A hidden second case, so the fix cannot be fitted to the example.', 'Un segundo caso oculto, para que la solución no se ajuste al ejemplo.') },
+  ],
+};
+
+function pinned(p: Project, key: MediaKey) {
+  return { f: fig(p, key), pins: PINS[key]! };
+}
+
+/* -------------------------------------------------------------------- *
+ * Orux — the storyboard: one save, seen from three seats. The steps
+ * are the controls; the stage shows the capture of the chosen one.
+ * -------------------------------------------------------------------- */
+function Storyboard({ p, full }: { p: Project; full: boolean }) {
+  const { c, t } = useI18n();
+  const keys: MediaKey[] = ['orux-tentative', 'orux-review', 'orux-impact'];
+  const [at, setAt] = useState(0);
+  const steps = c.room.storyboard;
+  const f = fig(p, keys[at]!);
+  return (
+    <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+      <div className="lg:col-span-8">
+        <div className="frame frame-bare">
+          <div className="figure-scroll zoom-md">
+            <div className="relative" style={{ aspectRatio: '1600 / 1003' }}>
+              {keys.map((k, i) => (
+                <Shot
+                  key={k}
+                  media={k}
+                  alt={i === at ? t(fig(p, k).alt) : ''}
+                  priority={full && i === 0}
+                  className={`story-shot absolute inset-0 h-full ${i === at ? 'on' : ''}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+        <p className="caption" aria-live="polite">
+          <span className="mono mr-2 md:hidden">↔ {c.a11y.swipe}</span>
+          {t(f.caption)}
+        </p>
+      </div>
+      <ol className="story-steps lg:col-span-4" aria-label={c.room.storyboardLabel}>
+        {steps.map((st, i) => (
+          <li key={st.step}>
+            <button type="button" className={`story-step ${i === at ? 'on' : ''}`} aria-pressed={i === at} onClick={() => setAt(i)}>
+              <span className="story-thumb" aria-hidden="true">
+                <Shot media={keys[i]!} alt="" className="h-full object-cover object-left-top" />
+              </span>
+              <span className="min-w-0">
+                <span className="num block text-[1.9rem] accent">{st.step}</span>
+                <span className="mt-1 block text-[0.9rem] leading-snug">{st.title}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------- *
  * The compositions.
  * -------------------------------------------------------------------- */
 export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
@@ -152,49 +255,38 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
     case 'thalyx':
       return (
         <>
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
-            <Reveal className="lg:col-span-7">
-              <Figure f={fig(p, 'thalyx-authorisation')} priority={full} />
+          <div className="grid gap-x-14 gap-y-10 lg:grid-cols-12">
+            <Reveal className="grid gap-8 lg:col-span-7">
+              <Annotated {...pinned(p, 'thalyx-authorisation')} priority={full} />
             </Reveal>
-            <Reveal className="flex flex-col justify-center lg:col-span-5" delay={120}>
-              <Point p={p} i={0} big />
+            <Reveal className="lg:col-span-5" delay={120}>
+              <div className="border-t border-[var(--line-2)] pt-6">
+                <VerifyRun />
+              </div>
               <div className="mt-12">
-                <Stats p={p} />
+                <Stats p={p} cols={2} />
               </div>
             </Reveal>
           </div>
-          <Reveal className="mt-14 md:mt-20">
-            <Panel>
-              <VerifyRun />
-            </Panel>
-          </Reveal>
-          <div className="mt-14 grid gap-x-12 gap-y-10 md:mt-20 md:grid-cols-3">
-            {[1, 2, 3].map((i, k) => (
-              <Reveal key={i} delay={k * 90} className="border-t border-[var(--line)] pt-5">
-                <p className="text-[1.15rem] font-semibold leading-snug">{t(p.points[i]!.title)}</p>
-                <p className="body mt-3 text-[0.92rem]">{t(p.points[i]!.body)}</p>
-              </Reveal>
-            ))}
-          </div>
+          <Rules p={p} idx={[0, 1, 2, 3]} className="mt-20 md:mt-28" />
         </>
       );
 
     case 'ferrol':
       return (
         <>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
-            <Reveal className="relative lg:col-span-8">
-              <Framed media="ferrol-category" alt={t(fig(p, 'ferrol-category').alt)} label="ferrol · tornillería / tornillo hexagonal" priority={full} />
-              <div className="absolute -bottom-10 -right-3 hidden w-[23%] sm:block lg:-right-8">
+          <Reveal>
+            <Annotated {...pinned(p, 'ferrol-category')} side label="ferrol · tornillería / tornillo hexagonal" priority={full} frameClassName="sm:mb-20">
+              {/* The phone sits over the empty foot of the filter column. */}
+              <div className="absolute -bottom-20 left-[2.5%] hidden w-[19%] sm:block">
                 <Framed media="ferrol-mobile" alt={t(fig(p, 'ferrol-mobile').alt)} kind="phone" />
               </div>
-              <p className="caption pr-[26%]">{t(fig(p, 'ferrol-category').caption)}</p>
-            </Reveal>
-            <Reveal className="lg:col-span-4" delay={120}>
-              <FerrolFunnel />
-            </Reveal>
-          </div>
-          <div className="mt-20 grid gap-10 lg:mt-28 lg:grid-cols-12 lg:gap-14">
+            </Annotated>
+          </Reveal>
+          <Reveal className="mt-20 border-t border-[var(--line-2)] pt-8 md:mt-28">
+            <FerrolReduction />
+          </Reveal>
+          <div className="mt-20 grid gap-10 md:mt-28 lg:grid-cols-12 lg:gap-14">
             <Reveal className="lg:col-span-5">
               <Point p={p} i={2} />
             </Reveal>
@@ -202,38 +294,30 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
               <FerrolRubric />
             </Reveal>
           </div>
-          {full && (
-            <div className="mt-20 grid gap-x-12 gap-y-10 md:grid-cols-3">
-              {[0, 1, 3].map((i, k) => (
-                <Reveal key={i} delay={k * 90} className="border-t border-[var(--line)] pt-5">
-                  <p className="text-[1.15rem] font-semibold leading-snug">{t(p.points[i]!.title)}</p>
-                  <p className="body mt-3 text-[0.92rem]">{t(p.points[i]!.body)}</p>
-                </Reveal>
-              ))}
-            </div>
-          )}
+          {full && <Rules p={p} idx={[0, 1, 3]} className="mt-20 md:mt-28" />}
         </>
       );
 
     case 'indice-cero':
       return (
         <>
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
-            <Reveal className="lg:col-span-7">
-              <Figure f={fig(p, 'indice-challenge')} label="índice cero · reto" priority={full} />
-            </Reveal>
-            <Reveal className="flex flex-col justify-center lg:col-span-5" delay={120}>
-              <Point p={p} i={1} big />
-              <div className="mt-12">
-                <Stats p={p} />
-              </div>
-            </Reveal>
-          </div>
-          <Reveal className="mt-16 grid gap-10 md:mt-24 lg:grid-cols-12 lg:gap-14">
-            <div className="lg:col-span-5">
+          <Reveal>
+            <Annotated
+              {...pinned(p, 'indice-challenge')}
+              side
+              label="índice cero · reto"
+              priority={full}
+              aside={<p className="display mb-8 text-[clamp(2rem,3.2vw,3rem)]">{t(p.points[1]!.title)}</p>}
+            />
+          </Reveal>
+          <Reveal className="mt-20 grid gap-x-14 gap-y-12 border-t border-[var(--line-2)] pt-8 md:mt-28 lg:grid-cols-12">
+            <div className="lg:col-span-4">
               <Point p={p} i={0} />
+              <div className="mt-12">
+                <Stats p={p} cols={3} size="md" />
+              </div>
             </div>
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 lg:col-start-6">
               <CourseBlocks />
             </div>
           </Reveal>
@@ -293,40 +377,25 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
         </>
       );
 
-    case 'orux': {
-      const steps = c.room.storyboard;
-      const shot = (key: MediaKey, i: number, priority?: boolean) => (
-        <figure>
-          <p className="mb-3 flex items-baseline gap-3">
-            <span className="num text-[1.8rem] accent">{steps[i]!.step}</span>
-            <span className="text-[0.92rem] leading-snug fg-2">{steps[i]!.title}</span>
-          </p>
-          <Framed media={key} alt={t(fig(p, key).alt)} kind="bare" zoom="md" priority={priority} />
-        </figure>
-      );
+    case 'orux':
       return (
         <>
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
-            <Reveal className="lg:col-span-8">{shot('orux-tentative', 0, full)}</Reveal>
-            <div className="grid content-start gap-10 lg:col-span-4">
-              <Reveal delay={120}>{shot('orux-review', 1)}</Reveal>
-              <Reveal delay={200}>{shot('orux-impact', 2)}</Reveal>
-            </div>
-          </div>
-          <div className="mt-16 grid gap-10 md:mt-24 lg:grid-cols-12 lg:gap-14">
+          <Reveal>
+            <Storyboard p={p} full={full} />
+          </Reveal>
+          <div className="mt-20 grid gap-10 md:mt-28 lg:grid-cols-12 lg:gap-14">
             <Reveal className="lg:col-span-5">
               <Point p={p} i={1} />
             </Reveal>
             <Reveal className="lg:col-span-6 lg:col-start-7" delay={120}>
               <Stats p={p} cols={2} />
-              <p className="body mt-8 text-[0.92rem]">
+              <p className="body mt-10 border-t border-[var(--line)] pt-5 text-[0.95rem]">
                 <span className="font-semibold text-[var(--fg)]">{t(p.points[2]!.title)}</span> {t(p.points[2]!.body)}
               </p>
             </Reveal>
           </div>
         </>
       );
-    }
 
     case 'supadiff': {
       const doc = getTech('supadiff')!;
@@ -334,38 +403,46 @@ export function Showcase({ p, full = false }: { p: Project; full?: boolean }) {
         items: { title: { en: string; es: string }; body: { en: string; es: string } }[];
       };
       return (
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
-          <Reveal className="lg:col-span-7">
-            <Panel>
-              <p className="label fg-2">
-                {t({ en: '27 capabilities × 6 real targets', es: '27 capacidades × 6 targets reales' })}
-              </p>
+        <>
+          <Reveal>
+            <Panel className="max-lg:hidden">
+              <CapabilityBand />
+            </Panel>
+            <Panel className="lg:hidden">
+              <p className="label fg-2">{t({ en: '27 capabilities × 6 real targets', es: '27 capacidades × 6 targets reales' })}</p>
               <div className="mt-5">
                 <CapabilityMatrix compact={!full} />
               </div>
             </Panel>
           </Reveal>
-          <Reveal className="lg:col-span-5" delay={120}>
-            <Point p={p} i={0} />
-            <p className="label mt-12 fg-3">{c.room.findings}</p>
-            <ol className="mt-3 grid gap-5">
-              {findings.items.map((f, i) => (
-                <li key={f.title.en} className="border-l-2 border-[var(--accent)] pl-4">
-                  <p className="font-semibold leading-snug">
-                    <span className="mono mr-2 fg-3">0{i + 1}</span>
-                    <Rich text={t(f.title)} />
-                  </p>
-                  {/* On the project page the record below carries the full account. */}
-                  {!full && (
-                    <p className="body mt-2 text-[0.88rem]">
+          <div className="mt-20 grid gap-x-14 gap-y-12 md:mt-28 lg:grid-cols-12">
+            <Reveal className="lg:col-span-4">
+              <Point p={p} i={0} />
+              <div className="mt-12">
+                <Stats p={p} cols={3} size="md" />
+              </div>
+            </Reveal>
+            <Reveal className="lg:col-span-7 lg:col-start-6" delay={120}>
+              <p className="text-[0.8rem] fg-3">{c.room.findings}</p>
+              <ol className="mt-4 grid gap-4 md:grid-cols-2">
+                {findings.items.map((f, i) => (
+                  <li key={f.title.en} className="ticket">
+                    <p className="mono flex justify-between gap-4 text-[0.7rem] fg-3">
+                      <span>{c.room.finding} {String(i + 1).padStart(2, '0')}</span>
+                      <span className="accent">{c.room.reproducible}</span>
+                    </p>
+                    <p className="mt-4 text-[1.15rem] font-semibold leading-snug">
+                      <Rich text={t(f.title)} />
+                    </p>
+                    <p className="body mt-3 text-[0.9rem]">
                       <Rich text={t(f.body)} />
                     </p>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </Reveal>
-        </div>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </div>
+        </>
       );
     }
 

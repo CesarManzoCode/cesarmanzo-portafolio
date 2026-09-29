@@ -11,7 +11,7 @@ import { PROJECTS, SELECTED, bySlugs, type Project } from '../data/projects';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
 import { Doors } from '../components/Doors';
-import { RoomFoot, RoomHead, RoomThesis, Showcase, tone } from '../components/Rooms';
+import { RoomFoot, RoomHead, Showcase, tone } from '../components/Rooms';
 import { Contact, Method } from '../components/Sections';
 import { Reveal } from '../components/primitives';
 
@@ -25,14 +25,13 @@ function Chapter({ p, i }: { p: Project; i: number }) {
       data-tone={tone(p.slug)}
       data-chapter={i}
       aria-labelledby={`${p.slug}-name`}
-      className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} scroll-mt-0 py-20 md:py-32`}
+      className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} scroll-mt-0 pt-20 pb-16 md:pt-28 md:pb-20`}
     >
       <div className="wrap">
         <Reveal>
           <RoomHead p={p} n={num(i)} />
-          <RoomThesis p={p} />
         </Reveal>
-        <div className="mt-14 md:mt-20">
+        <div className="mt-12 md:mt-16">
           <Showcase p={p} />
         </div>
         <Reveal>

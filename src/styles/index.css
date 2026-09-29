@@ -927,3 +927,482 @@ button:focus-visible,
   background: var(--accent);
   animation: blink 1.1s steps(1) infinite;
 }
+
+/* ==================================================================== *
+ * Exhibits — the devices the rooms use to present their evidence.
+ * ==================================================================== */
+@layer components {
+  /* “Checked against …”: the line each selected project is judged by. */
+  .against {
+    font-size: clamp(1.7rem, 2.9vw, 2.7rem);
+    font-weight: 700;
+    font-stretch: 78%;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  /* ---- pins on a capture, and their notes ---- */
+  .pins {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .pin {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0b0b;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent),
+      0 2px 10px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.25s ease, scale 0.25s ease;
+  }
+  .pins-active .pin {
+    opacity: 0.3;
+  }
+  .pins-active .pin.on {
+    opacity: 1;
+    scale: 1.25;
+  }
+  @media (max-width: 767px) {
+    .pin {
+      width: 18px;
+      height: 18px;
+      font-size: 0.6rem;
+    }
+  }
+  .legend {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-2);
+  }
+  .legend > li {
+    display: grid;
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--fg-2);
+    transition: color 0.2s ease;
+  }
+  .legend > li.on {
+    color: var(--fg);
+  }
+  .legend-n {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.66rem;
+    font-weight: 750;
+    translate: 0 3px;
+  }
+  .legend > li.on .legend-n {
+    background: var(--accent);
+    color: #0b0b0b;
+  }
+  @media (min-width: 768px) {
+    .legend-cols {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2rem;
+    }
+  }
+
+  /* ---- numbered claims, set as rules across the room ---- */
+  .rules {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: rule;
+  }
+  .rules > li {
+    counter-increment: rule;
+    position: relative;
+    padding: 1.4rem 0 1.6rem;
+    border-top: 1px solid var(--line-2);
+  }
+  .rules > li::before {
+    content: counter(rule, decimal-leading-zero);
+    display: block;
+    margin-bottom: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+  }
+  @media (min-width: 768px) {
+    .rules {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      column-gap: 2.5rem;
+    }
+  }
+
+  /* ---- Orux storyboard ---- */
+  .story-shot {
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  .story-shot.on {
+    opacity: 1;
+  }
+  .story-steps {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-content: start;
+  }
+  .story-step {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--fg-2);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+  }
+  .story-step:hover {
+    border-color: var(--line-2);
+    color: var(--fg);
+  }
+  .story-step.on {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    color: var(--fg);
+  }
+  .story-thumb {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    opacity: 0.6;
+    transition: opacity 0.25s ease;
+  }
+  .story-step.on .story-thumb,
+  .story-step:hover .story-thumb {
+    opacity: 1;
+  }
+  @media (max-width: 1023px) {
+    .story-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .story-step {
+      grid-template-columns: 1fr;
+      align-items: start;
+      height: 100%;
+    }
+  }
+  @media (max-width: 639px) {
+    .story-thumb {
+      display: none;
+    }
+    .story-step {
+      padding: 10px 8px;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* ---- SupaDiff: the matrix on its side ---- */
+  .band {
+    display: grid;
+    gap: 4px;
+  }
+  .band-row {
+    display: grid;
+    grid-template-columns: 11.5rem repeat(27, minmax(0, 1fr));
+    column-gap: 10px;
+    align-items: end;
+  }
+  .band-corner {
+    align-self: end;
+    font-size: 0.64rem;
+    padding-bottom: 4px;
+  }
+  .band-group {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .band-group-name {
+    font-size: 0.66rem;
+    color: var(--fg);
+    border-bottom: 1px solid var(--line-2);
+    padding-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .band-caps,
+  .band-cells {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+  .band-cap {
+    position: relative;
+    height: 10.5rem;
+    order: 0;
+  }
+  .band-cap > span {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    translate: -50% 0;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    white-space: nowrap;
+    font-size: 0.64rem;
+    color: var(--fg-2);
+  }
+  .band-group {
+    grid-template-rows: auto auto;
+  }
+  .band-group-name {
+    order: 1;
+  }
+  .band-caps {
+    order: 0;
+  }
+  .band-target {
+    font-size: 0.72rem;
+    color: var(--fg-2);
+    align-self: center;
+  }
+  .band-cell {
+    display: block;
+    height: 24px;
+  }
+
+  /* ---- Ferrol: the reduction band ---- */
+  .reduction {
+    display: grid;
+    gap: 2.5rem 2rem;
+  }
+  @media (min-width: 768px) {
+    .reduction {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.15fr);
+      align-items: start;
+    }
+    .reduction-step {
+      position: relative;
+    }
+    .reduction-step:not(.reduction-result)::after {
+      content: "→";
+      position: absolute;
+      right: -1.5rem;
+      top: 0.9rem;
+      color: var(--fg-3);
+      font-size: 1.2rem;
+    }
+    .reduction-result {
+      padding-left: 2rem;
+      border-left: 1px solid var(--line-2);
+    }
+  }
+
+  /* ---- a ticket: a finding, or a receipt ---- */
+  .ticket {
+    position: relative;
+    padding: 1.2rem 1.3rem 1.4rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+  }
+
+  /* ---- Method: the loop, drawn as one ---- */
+  .loop {
+    position: relative;
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .loop-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    padding: 0 0 1.8rem 1.5rem;
+    border-left: 1.5px solid var(--line-2);
+  }
+  .loop-node {
+    position: absolute;
+    left: -6px;
+    top: 0.55rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  .loop-return {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .loop {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .loop::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: calc(100% / 6 - 6px);
+      top: 5px;
+      height: 1.5px;
+      background: var(--line-2);
+    }
+    .loop-step {
+      display: block;
+      padding: 1.9rem 1.5rem 0 0;
+      border-left: 0;
+    }
+    .loop-node {
+      left: 0;
+      top: 0;
+    }
+    /* From the last step, back under the row, into the first. */
+    .loop-return {
+      position: relative;
+      display: block;
+      height: 44px;
+      margin: 1.6rem calc(100% / 6 - 6px) 0 5px;
+      border: 1.5px solid var(--accent);
+      border-top: 0;
+      border-radius: 0 0 18px 18px;
+    }
+    .loop-return::before {
+      content: "";
+      position: absolute;
+      left: -6.5px;
+      top: -9px;
+      border: 5.5px solid transparent;
+      border-bottom: 9px solid var(--accent);
+      border-top: 0;
+    }
+    .loop-return > span {
+      position: absolute;
+      left: 50%;
+      bottom: -0.7em;
+      translate: -50% 0;
+      padding: 0 0.8rem;
+      background: var(--bg);
+      color: var(--accent);
+      font-size: 0.72rem;
+    }
+  }
+}
+
+@layer components {
+  .index-open {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    padding: 0.4rem 0.7rem;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 0.74rem;
+    font-weight: 650;
+    border-radius: 4px;
+    opacity: 0;
+    translate: 0 6px;
+    transition: opacity 0.25s ease, translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .index-open,
+  .group:focus-visible .index-open {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@layer components {
+  /* ---- the ledger: measured | spine | not proven ---- */
+  .ledger-cols,
+  .ledger-row {
+    display: grid;
+    gap: 1.75rem;
+  }
+  .ledger-cols > p {
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .ledger-limit {
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--fg);
+    padding-left: 1rem;
+    border-left: 2px solid var(--warn);
+    text-wrap: pretty;
+  }
+  .ledger-spine {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .ledger-cols,
+    .ledger-row {
+      grid-template-columns: minmax(0, 7fr) 1px minmax(0, 5fr);
+      gap: 3rem;
+    }
+    .ledger-spine {
+      display: block;
+      background: var(--line-2);
+    }
+    .ledger-limit {
+      padding-left: 0;
+      border-left: 0;
+      font-size: 1.12rem;
+    }
+    .ledger-limit::before {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 3px;
+      margin-bottom: 0.9rem;
+      background: var(--warn);
+    }
+  }
+}
+
+@layer components {
+  .proof-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0b0b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    translate: 0 -1px;
+  }
+}

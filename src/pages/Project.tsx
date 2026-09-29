@@ -6,6 +6,7 @@ import { Link, paths } from '../router';
 import { ExternalLink, Figure, Reveal, Rich } from '../components/primitives';
 import { RoomHead, Showcase, tone } from '../components/Rooms';
 import { Record } from '../components/Record';
+import { Preview } from '../components/Previews';
 
 /* What the showcase at the top already presents, so the story below
    and the gallery never repeat it. */
@@ -61,9 +62,9 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
 
   return (
     <>
-      <article data-tone={tone(p.slug)} className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} pt-[calc(var(--header-h)+2.5rem)] pb-20 md:pb-32`}>
+      <article data-tone={tone(p.slug)} className={`surface room-${p.slug} ${dark ? 'tone-dark' : ''} pt-[calc(var(--header-h)+2rem)] pb-20 md:pb-32`}>
         <div className="wrap">
-          <p className="mono mb-8 text-[0.74rem] fg-3">
+          <p className="mb-10 text-[0.82rem] fg-3">
             {/* A selected project leads back to its chapter on the root page. */}
             <Link to={selection(p.slug) ? `${paths.home}#${p.slug}` : paths.projects} className="transition-colors hover:text-[var(--accent)]">
               ← {selection(p.slug) ? k.backSelected : k.back}
@@ -73,35 +74,44 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
           </p>
           <RoomHead p={p} n={n} level="page" />
 
-          <div className="mt-10 grid gap-10 md:mt-14 lg:grid-cols-12 lg:gap-14">
-            <p className="thesis lg:col-span-8">{t(p.thesis)}</p>
-            <div className="flex flex-col gap-3 text-[0.88rem] lg:col-span-4 lg:items-end">
-              {p.links.map((l) => (
-                <ExternalLink key={l.href} href={l.href}>
-                  {t(l.label)}
-                </ExternalLink>
-              ))}
-              {p.privateRepo && <span className="chip self-start lg:self-end">{c.index.privateRepo}</span>}
-              {doc && (
-                <a href="#record" className="link mono text-[0.76rem]">
-                  {k.record} <span aria-hidden="true">↓</span>
-                </a>
-              )}
-            </div>
+          <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-[var(--line)] pt-5 text-[0.88rem]">
+            {p.links.map((l) => (
+              <ExternalLink key={l.href} href={l.href}>
+                {t(l.label)}
+              </ExternalLink>
+            ))}
+            {p.privateRepo && <span className="chip">{c.index.privateRepo}</span>}
+            {doc && (
+              <a href="#record" className="link mono text-[0.76rem] sm:ml-auto">
+                {k.record} <span aria-hidden="true">↓</span>
+              </a>
+            )}
           </div>
-          {p.note && <p className="mono mt-8 max-w-[80ch] border-l-2 border-[var(--line-2)] pl-3 text-[0.72rem] leading-relaxed fg-3">{t(p.note)}</p>}
+          {p.note && <p className="mt-5 max-w-[80ch] text-[0.8rem] leading-relaxed fg-3">{t(p.note)}</p>}
 
-          <div className="mt-16 md:mt-24">
+          <div className="mt-14 md:mt-20">
             <Showcase p={p} full />
           </div>
 
           {/* ---- the plain story ---- */}
-          <div className="mt-20 grid gap-10 border-t border-[var(--line-2)] pt-8 md:mt-32 lg:grid-cols-12 lg:gap-14">
-            <Reveal className="lg:col-span-4">
-              <p className="label fg-3">{k.why}</p>
+          <div className="mt-24 grid gap-x-14 gap-y-8 border-t border-[var(--line-2)] pt-8 md:mt-32 lg:grid-cols-12">
+            <Reveal className="lg:col-span-3">
+              <p className="text-[0.9rem] font-semibold">{k.why}</p>
             </Reveal>
-            <Reveal className="lg:col-span-8" delay={80}>
-              <p className="text-[clamp(1.15rem,1.7vw,1.45rem)] leading-[1.5]">{t(p.why)}</p>
+            <Reveal className="lg:col-span-9" delay={80}>
+              <p className="thesis">{t(p.why)}</p>
+              {p.proof.length > 0 && (
+                <ul className="mt-12 border-t border-[var(--line-2)]">
+                  {p.proof.map((pr) => (
+                    <li key={pr.en} className="grid grid-cols-[2.2rem_1fr] items-baseline border-b border-[var(--line)] py-4 text-[1rem] leading-relaxed">
+                      <span className="proof-mark" aria-hidden="true">
+                        ✓
+                      </span>
+                      {t(pr)}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {points.length > 0 && (
                 <dl className="mt-12 grid gap-x-10 md:grid-cols-2">
                   {points.map(({ pt, i }) => (
@@ -113,18 +123,6 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
                     </div>
                   ))}
                 </dl>
-              )}
-              {p.proof.length > 0 && (
-                <ul className="mt-10 grid gap-3">
-                  {p.proof.map((pr) => (
-                    <li key={pr.en} className="flex gap-3 text-[0.95rem] leading-relaxed fg-2">
-                      <span className="accent" aria-hidden="true">
-                        ✓
-                      </span>
-                      {t(pr)}
-                    </li>
-                  ))}
-                </ul>
               )}
             </Reveal>
           </div>
@@ -152,14 +150,19 @@ export function Project({ p, toRecord = false }: { p: P; toRecord?: boolean }) {
       <Link
         to={paths.project(next.slug)}
         data-tone={tone(next.slug)}
-        className={`surface room-${next.slug} ${tone(next.slug) === 'dark' ? 'tone-dark' : ''} group block border-t border-[var(--line)] py-16 md:py-24`}
+        className={`surface room-${next.slug} ${tone(next.slug) === 'dark' ? 'tone-dark' : ''} group block border-t border-[var(--line)] py-14 md:py-20`}
       >
-        <div className="wrap">
-          <p className="label fg-3">{k.next}</p>
-          <p className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${next.name.length > 14 ? 'text-[clamp(2.4rem,7.6vw,7rem)]' : 'text-[clamp(3rem,11vw,9rem)]'}`}>
-            {next.name} <span className="arrow text-[0.5em]">→</span>
-          </p>
-          <p className="mono mt-3 fg-2">{t(next.kind)}</p>
+        <div className="wrap grid items-center gap-x-14 gap-y-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="text-[0.82rem] fg-3">{k.next}</p>
+            <p className={`name mt-4 break-words transition-colors group-hover:text-[var(--accent)] ${next.name.length > 12 ? 'text-[clamp(2.4rem,6vw,6rem)]' : 'text-[clamp(3rem,9vw,8rem)]'}`}>
+              {next.name} <span className="arrow text-[0.5em]">→</span>
+            </p>
+            <p className="mt-4 max-w-[52ch] text-[1rem] leading-relaxed fg-2">{t(next.thesis)}</p>
+          </div>
+          <div className="relative h-[12rem] overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--panel)] sm:h-[16rem] lg:col-span-5" aria-hidden="true">
+            <Preview slug={next.slug} />
+          </div>
         </div>
       </Link>
     </>

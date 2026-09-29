@@ -538,21 +538,41 @@ export function FerrolFunnel() {
 
 export function FerrolRubric() {
   const { t } = useI18n();
+  // The scale runs from the TOR result to the best possible score.
+  const max = FERROL_RUBRIC.filter((r) => r.points > 0).reduce((a, r) => a + r.points, 0);
+  const min = Math.min(FERROL_TOR_SCORE, ...FERROL_RUBRIC.map((r) => r.points));
+  const at = (v: number) => `${((v - min) / (max - min)) * 100}%`;
   return (
     <div>
-      <div className="grid gap-px border border-[var(--line)] bg-[var(--line)]">
-        {FERROL_RUBRIC.map((r) => (
-          <div key={r.signal.en} className="flex items-center justify-between bg-[var(--panel)] px-3 py-2 text-[0.86rem]">
-            <span>{t(r.signal)}</span>
-            <span className="mono" style={{ color: r.points < 0 ? '#c0392b' : 'var(--ok)' }}>
-              {r.points > 0 ? `+${r.points}` : `−${Math.abs(r.points)}`}
-            </span>
-          </div>
-        ))}
-        <div className="flex items-center justify-between bg-[var(--panel)] px-3 py-2 text-[0.86rem] font-semibold">
+      <div className="ticket">
+        <p className="mono text-[0.7rem] fg-3">{t(s('Evidence rubric · per image result', 'Rúbrica de evidencia · por resultado de imagen'))}</p>
+        <ul className="mt-3">
+          {FERROL_RUBRIC.map((r) => (
+            <li key={r.signal.en} className="flex items-baseline gap-2 py-1.5 text-[0.9rem]">
+              <span>{t(r.signal)}</span>
+              <span className="min-w-4 flex-1 translate-y-[-3px] border-b border-dotted border-[var(--line-2)]" aria-hidden="true" />
+              <span className="mono" style={{ color: r.points < 0 ? '#c0392b' : 'var(--ok)' }}>
+                {r.points > 0 ? `+${r.points}` : `−${Math.abs(r.points)}`}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 flex items-baseline justify-between border-t border-dashed border-[var(--line-2)] pt-3 text-[0.9rem] font-semibold">
           <span>{t(s('Keep the photo at', 'Conservar la foto desde'))}</span>
           <span className="mono">≥ {FERROL_THRESHOLD}</span>
-        </div>
+        </p>
+      </div>
+      {/* Where the TOR result lands on the same scale. */}
+      <div className="relative mt-8 h-14" aria-hidden="true">
+        <div className="absolute inset-x-0 top-6 h-[6px] bg-[var(--bg-2)]" />
+        <div className="absolute top-6 h-[6px]" style={{ left: at(FERROL_THRESHOLD), right: 0, background: 'var(--ok)' }} />
+        <div className="absolute top-3 h-[18px] w-px bg-[var(--fg)]" style={{ left: at(FERROL_THRESHOLD) }} />
+        <span className="mono absolute top-10 -translate-x-1/2 text-[0.68rem] fg-2" style={{ left: at(FERROL_THRESHOLD) }}>
+          ≥ {FERROL_THRESHOLD}
+        </span>
+        <span className="mono absolute top-10 right-0 text-[0.68rem] fg-3">+{max}</span>
+        <span className="absolute top-[18px] block h-[18px] w-[18px] rounded-full border-2 border-[var(--panel)] bg-[#c0392b]" style={{ left: 0 }} />
+        <span className="mono absolute top-10 left-0 text-[0.68rem] font-semibold text-[#c0392b]">−{Math.abs(FERROL_TOR_SCORE)}</span>
       </div>
       <div className="mt-4 border-l-2 border-[#c0392b] pl-4">
         <p className="mono text-[0.76rem] fg-2">TOR SOCKET C/CILINDRO NGO NC - 1/4-20 x 4</p>
@@ -675,6 +695,119 @@ export function ToolPolicy() {
         </div>
         <p className="mt-3 text-[0.82rem] leading-relaxed fg-2">
           {t(s('Without an interactive terminal, approval is denied automatically.', 'Sin terminal interactiva, la aprobación se niega sola.'))}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------- *
+ * SupaDiff — the same matrix turned on its side for a wide screen:
+ * 6 real targets down, 27 capabilities across, grouped by surface.
+ * -------------------------------------------------------------------- */
+export function CapabilityBand() {
+  const { t } = useI18n();
+  const [ref, seen] = useInView<HTMLDivElement>();
+  const groups: { name: string; rows: typeof SUPADIFF_MATRIX }[] = [];
+  for (const r of SUPADIFF_MATRIX) {
+    const g = r.cap.split('.')[0]!;
+    const last = groups[groups.length - 1];
+    if (last && last.name === g) last.rows.push(r);
+    else groups.push({ name: g, rows: [r] });
+  }
+  return (
+    <div ref={ref}>
+      <div className="band" role="table" aria-label={t(s('SupaDiff capability matrix: 27 capabilities on 6 real targets', 'Matriz de capacidades de SupaDiff: 27 capacidades en 6 targets reales'))}>
+        <div className="band-row band-head" role="row">
+          <span role="columnheader" className="band-corner mono fg-3">
+            {t(s('target ↓ · capability →', 'target ↓ · capacidad →'))}
+          </span>
+          {groups.map((g) => (
+            <span key={g.name} className="band-group" style={{ gridColumn: `span ${g.rows.length}` }}>
+              {/* A group of one names itself in full on its column. */}
+              <span className="band-group-name mono">{g.rows.length > 1 ? g.name : '·'}</span>
+              <span className="band-caps">
+                {g.rows.map((r) => (
+                  <span key={r.cap} role="columnheader" className="band-cap mono" title={r.cap}>
+                    <span>{g.rows.length > 1 ? r.cap.slice(g.name.length + 1) : r.cap}</span>
+                  </span>
+                ))}
+              </span>
+            </span>
+          ))}
+        </div>
+        {SUPADIFF_TARGETS.map((tg, ti) => (
+          <div key={tg} className="band-row" role="row">
+            <span role="rowheader" className="band-target mono">
+              {tg}
+            </span>
+            {groups.map((g) => (
+              <span key={g.name} className="band-cells" style={{ gridColumn: `span ${g.rows.length}` }}>
+                {g.rows.map((r, ri) => {
+                  const l = r.levels[ti]!;
+                  return (
+                    <span
+                      key={r.cap}
+                      role="cell"
+                      className="band-cell"
+                      title={`${r.cap} · ${tg} · ${l}`}
+                      aria-label={`${r.cap}: ${l === 'none' ? '—' : t(LEVEL_LABEL[l])}`}
+                      style={{ ...levelStyle(l), opacity: seen ? 1 : 0, transition: `opacity .35s ease ${ti * 90 + ri * 14}ms` }}
+                    />
+                  );
+                })}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[0.78rem] fg-2">
+        {(Object.keys(LEVEL_LABEL) as Exclude<CapLevel, 'none'>[]).map((l) => (
+          <span key={l} className="flex items-center gap-2">
+            <i className="block h-3.5 w-5" style={levelStyle(l)} />
+            {t(LEVEL_LABEL[l])}
+          </span>
+        ))}
+      </div>
+      <Source>supadiff · release-evidence/v1.0.0.json · targets[].capabilities</Source>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------- *
+ * Ferrol — the same reduction, read left to right across the page.
+ * -------------------------------------------------------------------- */
+export function FerrolReduction() {
+  const { t, lang } = useI18n();
+  const [ref, seen] = useInView<HTMLDivElement>();
+  const { products, families, searches, saved } = FERROL_FUNNEL;
+  const steps = [
+    { v: products, l: s('products in the real catalogue', 'productos en el catálogo real') },
+    { v: families, l: s('visual families — one photo can serve a family', 'familias visuales — una foto puede servir a toda la familia') },
+    { v: searches, l: s('image searches actually needed', 'búsquedas de imagen realmente necesarias') },
+  ];
+  return (
+    <div ref={ref} className="reduction">
+      {steps.map((st, i) => (
+        <div key={i} className="reduction-step">
+          <p className="num text-[clamp(2.6rem,4.6vw,4.4rem)]">{fmt(st.v, lang)}</p>
+          <div className="mt-4 h-2.5 bg-[var(--bg-2)]">
+            <div
+              className="h-full"
+              style={{
+                width: seen ? `${(st.v / products) * 100}%` : '0%',
+                background: i === 0 ? 'var(--fg)' : 'var(--accent)',
+                transition: `width 1.1s cubic-bezier(.22,1,.36,1) ${i * 220}ms`,
+              }}
+            />
+          </div>
+          <p className="mt-3 max-w-[26ch] text-[0.84rem] leading-snug fg-2">{t(st.l)}</p>
+        </div>
+      ))}
+      <div className="reduction-step reduction-result">
+        <p className="num accent text-[clamp(3.4rem,6.4vw,6.2rem)]">{saved}%</p>
+        <p className="mt-3 max-w-[30ch] text-[0.84rem] leading-snug fg-2">
+          {t(s('of the searches saved, measured on the first grouping run against the production database.', 'de las búsquedas ahorradas, medido en la primera corrida del agrupador contra la base de producción.'))}
         </p>
       </div>
     </div>
