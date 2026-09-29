@@ -443,8 +443,9 @@ export function CapabilityMatrix({ compact = false }: { compact?: boolean }) {
             <tr>
               <th />
               {SUPADIFF_TARGETS.map((tg, i) => (
-                <th key={tg} scope="col" className="h-[5.6rem] w-[1.5rem] align-bottom sm:w-[2.4rem]" title={tg}>
-                  <span className="mono inline-block origin-bottom-left translate-x-[1.1rem] -rotate-[55deg] whitespace-nowrap text-[0.64rem] font-normal fg-2">
+                <th key={tg} scope="col" className="relative h-[5.6rem] w-[1.5rem] align-bottom sm:w-[2.4rem]" title={tg}>
+                  {/* Out of flow: a rotated name must not widen its column. */}
+                  <span className="mono absolute bottom-1 left-[45%] origin-bottom-left -rotate-[55deg] max-sm:left-[12%] max-sm:-rotate-90 whitespace-nowrap text-[0.64rem] font-normal fg-2">
                     {TARGET_SHORT[i]}
                   </span>
                 </th>
@@ -454,13 +455,20 @@ export function CapabilityMatrix({ compact = false }: { compact?: boolean }) {
           <tbody>
             {rows.map((r, ri) => (
               <tr key={r.cap}>
-                <th scope="row" className="mono pr-3 text-left text-[0.66rem] font-normal fg-2 whitespace-nowrap">
-                  {r.cap}
+                {/* On a phone the longest names break after a dot, so all six targets fit. */}
+                <th scope="row" className="mono pr-3 text-left text-[0.66rem] leading-tight font-normal fg-2 max-sm:w-[9.75rem] max-sm:min-w-[9.75rem] max-sm:pr-2 sm:whitespace-nowrap">
+                  {r.cap.split('.').map((part, k) => (
+                    <span key={k}>
+                      {k > 0 && '.'}
+                      {k > 0 && <wbr />}
+                      {part}
+                    </span>
+                  ))}
                 </th>
                 {r.levels.map((l, ci) => (
                   <td key={ci} className="p-0">
                     <span
-                      className="block h-[15px] w-full min-w-[1.35rem] sm:min-w-[2.2rem]"
+                      className="block h-[15px] w-full min-w-[1.1rem] sm:min-w-[2.2rem]"
                       title={`${r.cap} · ${SUPADIFF_TARGETS[ci]} · ${l}`}
                       style={{
                         ...levelStyle(l),

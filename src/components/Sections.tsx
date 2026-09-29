@@ -17,9 +17,9 @@ export function Method({ id = 'method', title, dark = false }: { id?: string; ti
         </Reveal>
         <ol className="mt-16 grid border-t border-[var(--fg)] sm:grid-cols-2 lg:grid-cols-6">
           {m.loop.map((s, i) => (
-            <Reveal as="li" key={s.step} delay={i * 70} className="border-b border-[var(--line)] py-6 sm:pr-6 lg:border-b-0 lg:border-r lg:px-5 lg:first:pl-0 lg:last:border-r-0">
-              <p className="num text-[2.6rem] accent">{s.step}</p>
-              <h3 className="mt-3 text-[1.15rem] font-semibold">{s.title}</h3>
+            <Reveal as="li" key={s.step} delay={i * 70} className="grid grid-cols-[3.25rem_1fr] border-b border-[var(--line)] py-5 sm:block sm:py-6 sm:pr-6 lg:border-b-0 lg:border-r lg:px-5 lg:first:pl-0 lg:last:border-r-0">
+              <p className="num row-span-2 text-[2rem] accent sm:text-[2.6rem]">{s.step}</p>
+              <h3 className="text-[1.15rem] font-semibold sm:mt-3">{s.title}</h3>
               <p className="mt-2 text-[0.86rem] leading-relaxed fg-2">{s.body}</p>
             </Reveal>
           ))}

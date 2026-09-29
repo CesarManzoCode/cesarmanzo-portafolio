@@ -11,7 +11,7 @@ import { PROJECTS, SELECTED, bySlugs, type Project } from '../data/projects';
 import { useI18n } from '../i18n/context';
 import { Link, paths } from '../router';
 import { Doors } from '../components/Doors';
-import { RoomFoot, RoomHead, Showcase, tone } from '../components/Rooms';
+import { RoomFoot, RoomHead, RoomThesis, Showcase, tone } from '../components/Rooms';
 import { Contact, Method } from '../components/Sections';
 import { Reveal } from '../components/primitives';
 
@@ -30,8 +30,9 @@ function Chapter({ p, i }: { p: Project; i: number }) {
       <div className="wrap">
         <Reveal>
           <RoomHead p={p} n={num(i)} />
+          <RoomThesis p={p} />
         </Reveal>
-        <div className="mt-12 md:mt-20">
+        <div className="mt-14 md:mt-20">
           <Showcase p={p} />
         </div>
         <Reveal>
@@ -102,7 +103,7 @@ export function Home() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:mt-7 lg:grid-cols-12 lg:gap-14">
-            <h1 className="display text-[clamp(2.6rem,5.1vw,5.4rem)] lg:col-span-8">
+            <h1 className="display text-[clamp(2.6rem,5.1vw,5.4rem)] [text-wrap:pretty] lg:col-span-8">
               {h.headline[0]} <span className="fg-3">{h.headline[1]}</span>
             </h1>
             <p className="lede max-w-[44ch] self-end lg:col-span-4 lg:pb-1">{h.lead}</p>
